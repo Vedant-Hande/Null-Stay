@@ -14,7 +14,6 @@ if (process.env.NODE_ENV !== "production") {
 
 const app = express();
 
-
 // Initialize Express app
 const port = process.env.CONN_PORT;
 app.listen(port, () => {
