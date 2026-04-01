@@ -1,0 +1,22 @@
+{
+  "name": "null-stay",
+  "version": "1.0.0",
+  "description": "Listing site where people find the home's flats and much more to stay",
+  "repository": {
+    "type": "git",
+    "url": "null-stay"
+  },
+  "license": "ISC",
+  "author": "vedant hande",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "env": "^0.0.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.3.3"
+  }
+}
