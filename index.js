@@ -16,6 +16,7 @@ const app = express();
 
 // Initialize Express app
 const port = process.env.CONN_PORT;
+
 app.listen(port, () => {
   console.log(`server is listening on port ${port}`);
 });
@@ -27,3 +28,4 @@ connectDB();
 app.get("/", (req, res) => {
   res.send("Hello");
 });
+
