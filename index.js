@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./config/database.js";
+import listings from "./models/listing.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,8 +25,15 @@ app.listen(port, () => {
 // connect to DB
 connectDB();
 
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 // API Routes
 app.get("/", (req, res) => {
   res.send("Hello");
 });
 
+app.get("/listings", async (req, res) => {
+  const allListing = await listings.find({});
+  res.render("listings/listings", { allListing });
+});   

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Null Stay</title>
+</head>
+
+<body>
+    <h1>All Listings</h1>
+    <ul>
+        <% for(let listings of allListing) { %>
+            <li>
+                <%= listings.title %>
+            </li>
+            <% } %>
+    </ul>
+    <% if(allListing.length===0) { %>
+        <p>No listings found</p>
+        <% } %>
+</body> 
+
+</html>
