@@ -1,26 +1,130 @@
 <% layout("/layouts/boilerplate") %>
-    <h3> Hello </h3>
-    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn">Edit Listing</a>
-    <form action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST">
-        <button class="btn btn-dark edit-btn">Delete Listing</button>
-    </form>
-    <Ul>
-        <li>
-            <%= listing.title %>
-        </li>
-        <li>
-            <%= listing.desc %>
-        </li>
-        <li>
-            &#8377; <%= listing.price.toLocaleString("en-IN") %>
-        </li>
-        <li>
-            <%= listing.location %>
-        </li>
-        <li>
-            <%= listing.createdAt.toDateString() %>
-        </li>
-        <li>
-            <%= listing.updatedAt.toDateString() %>
-        </li>
-    </Ul>
+
+<div class="max-w-[1120px] mx-auto pb-10">
+    <!-- Header -->
+    <div class="flex flex-col gap-2 pt-6 mb-6">
+        <h1 class="text-3xl font-semibold text-gray-900"><%= listing.title %></h1>
+        <div class="flex flex-row items-center justify-between flex-wrap gap-4">
+            <div class="flex flex-row items-center gap-2 sm:gap-4 text-sm font-medium text-gray-800 flex-wrap">
+                <span class="flex items-center gap-1"><i class="fa-solid fa-star"></i> 4.95</span>
+                <span class="underline cursor-pointer">128 reviews</span>
+                <span class="text-gray-400 hidden sm:inline">·</span>
+                <span class="flex items-center gap-1 hidden sm:flex"><i class="fa-solid fa-medal"></i> Superhost</span>
+                <span class="text-gray-400 hidden sm:inline">·</span>
+                <span class="underline cursor-pointer"><%= listing.location %>, <%= listing.country %></span>
+            </div>
+            <div class="flex flex-row gap-4 text-sm font-medium underline">
+                <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition"><i class="fa-solid fa-arrow-up-from-bracket"></i> Share</div>
+                <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition"><i class="fa-regular fa-heart"></i> Save</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Gallery -->
+    <div class="w-full h-[40vh] md:h-[60vh] overflow-hidden rounded-xl mb-8 relative">
+        <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>" 
+             alt="<%= listing.title %>" class="object-cover w-full h-full hover:scale-105 transition duration-500">
+        <div class="absolute bottom-4 right-4 bg-white border border-black px-4 py-1.5 rounded-lg text-sm font-medium shadow flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+            <i class="fa-solid fa-grip"></i> <span class="hidden sm:inline">Show all photos</span>
+        </div>
+    </div>
+
+    <!-- Content Split -->
+    <div class="grid grid-cols-1 md:grid-cols-7 md:gap-16 mt-6">
+        
+        <!-- Left Column -->
+        <div class="col-span-4 flex flex-col gap-8">
+            <div class="flex flex-row items-center justify-between border-b border-gray-200 pb-6">
+                <div>
+                    <h2 class="text-xl font-semibold">Entire home hosted by Void</h2>
+                    <div class="flex flex-row items-center gap-2 sm:gap-4 font-light text-gray-500 mt-1 flex-wrap text-sm sm:text-base">
+                        <span>4 guests</span>
+                        <span>·</span>
+                        <span>2 bedrooms</span>
+                        <span>·</span>
+                        <span>2 beds</span>
+                        <span>·</span>
+                        <span>1 bath</span>
+                    </div>
+                </div>
+                <div class="h-14 w-14 rounded-full bg-gray-500 overflow-hidden flex items-center justify-center text-white shrink-0">
+                    <i class="fa-solid fa-user text-2xl"></i>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="border-b border-gray-200 pb-6">
+                <p class="text-gray-700 font-light leading-relaxed">
+                    <%= listing.desc || 'Enjoy a luxurious experience in this highly rated property. Experience unmatched comfort, modern amenities, and beautiful surroundings.' %>
+                </p>
+                <div class="mt-4 font-semibold underline cursor-pointer">Show more <i class="fa-solid fa-chevron-right text-xs"></i></div>
+            </div>
+
+            <!-- Actions (Edit/Delete) -->
+            <div class="py-4 flex gap-4 flex-wrap">
+                <a href="/listings/<%= listing._id %>/edit" class="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
+                    Edit Listing
+                </a>
+                <form action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST" class="inline">
+                    <button class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition">
+                        Delete Listing
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column (Booking Card) -->
+        <div class="col-span-3 mt-8 md:mt-0">
+            <div class="sticky top-28 bg-white border border-gray-200 rounded-xl p-6 shadow-xl">
+                <div class="flex flex-row items-baseline gap-1 mb-4">
+                    <span class="text-2xl font-bold">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : 'N/A' %></span>
+                    <span class="text-gray-600">night</span>
+                </div>
+                
+                <div class="border border-gray-400 rounded-lg overflow-hidden mb-4">
+                    <div class="flex flex-row border-b border-gray-400">
+                        <div class="w-1/2 p-3 border-r border-gray-400 cursor-pointer">
+                            <div class="text-[10px] uppercase font-bold text-gray-900">Check-in</div>
+                            <div class="text-sm">Add date</div>
+                        </div>
+                        <div class="w-1/2 p-3 cursor-pointer">
+                            <div class="text-[10px] uppercase font-bold text-gray-900">Checkout</div>
+                            <div class="text-sm">Add date</div>
+                        </div>
+                    </div>
+                    <div class="p-3 flex justify-between items-center cursor-pointer">
+                        <div>
+                            <div class="text-[10px] uppercase font-bold text-gray-900">Guests</div>
+                            <div class="text-sm">1 guest</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-lg"></i>
+                    </div>
+                </div>
+
+                <button class="w-full bg-airbnb text-white rounded-lg py-3.5 font-semibold text-lg hover:bg-rose-600 transition mb-4">
+                    Reserve
+                </button>
+                <div class="text-center text-sm text-gray-500 font-light mb-4">You won't be charged yet</div>
+                
+                <div class="flex flex-col gap-3 pb-4 border-b border-gray-200">
+                    <div class="flex justify-between text-gray-700">
+                        <span class="underline">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> x 5 nights</span>
+                        <span>&#8377; <%= listing.price ? (listing.price * 5).toLocaleString("en-IN") : '0' %></span>
+                    </div>
+                    <div class="flex justify-between text-gray-700">
+                        <span class="underline">Cleaning fee</span>
+                        <span>&#8377; 1,500</span>
+                    </div>
+                    <div class="flex justify-between text-gray-700">
+                        <span class="underline">NullStay service fee</span>
+                        <span>&#8377; 2,100</span>
+                    </div>
+                </div>
+                <div class="flex justify-between text-gray-900 font-bold pt-4 text-lg">
+                    <span>Total before taxes</span>
+                    <span>&#8377; <%= listing.price ? (listing.price * 5 + 3600).toLocaleString("en-IN") : '0' %></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

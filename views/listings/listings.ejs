@@ -1,14 +1,46 @@
 <% layout("/layouts/boilerplate") %>
-<h1>All Listings</h1>
-<ul>
-  <% for(let listings of allListing) { %>
-  <li>
-    <a href="/listings/<%= listings._id %>">
-      <%= listings.title %>
+
+<!-- Listings Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+  <% for(let listing of allListing) { %>
+  <div class="col-span-1 group cursor-pointer">
+    <a href="/listings/<%= listing._id %>" class="block">
+      <!-- Image Container -->
+      <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3">
+        <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' %>" 
+             alt="<%= listing.title %>" 
+             class="object-cover h-full w-full group-hover:scale-105 transition duration-300">
+        <!-- Heart Icon -->
+        <div class="absolute top-3 right-3 text-white">
+          <i class="fa-regular fa-heart text-2xl drop-shadow-md transition"></i>
+        </div>
+      </div>
+      
+      <!-- Text Info -->
+      <div class="flex flex-col">
+        <div class="flex flex-row justify-between items-start">
+          <div class="font-semibold text-base text-gray-900 truncate pr-2"><%= listing.location %>, <%= listing.country %></div>
+          <div class="flex flex-row items-center gap-1 font-light text-sm text-gray-900">
+            <i class="fa-solid fa-star text-xs"></i>
+            <span>4.9</span>
+          </div>
+        </div>
+        <div class="font-light text-neutral-500 text-sm truncate"><%= listing.title %></div>
+        <div class="font-light text-neutral-500 text-sm">Added recently</div>
+        <div class="flex flex-row items-center gap-1 mt-1 text-gray-900">
+          <div class="font-semibold">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : 'N/A' %></div>
+          <div class="font-light text-sm">night</div>
+        </div>
+      </div>
     </a>
-  </li>
+  </div>
   <% } %>
-</ul>
-<% if(allListing.length===0) { %>
-<p>No listings found</p>
+</div>
+
+<% if(allListing.length === 0) { %>
+<div class="h-[50vh] flex flex-col items-center justify-center text-neutral-500 text-center">
+  <i class="fa-solid fa-house-circle-exclamation text-6xl mb-4 text-gray-300"></i>
+  <h2 class="text-2xl font-semibold text-gray-900">No properties found</h2>
+  <p class="mt-2 text-lg font-light">Be the first to add a property to the marketplace.</p>
+</div>
 <% } %>

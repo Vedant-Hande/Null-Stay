@@ -1,20 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NUll STAY</title>
+    <title>Null Stay - Vacation Rentals & Homes</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #222222;
+        }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              airbnb: '#ff385c',
+            }
+          }
+        }
+      }
+    </script>
 </head>
+<body class="min-h-screen flex flex-col bg-white">
+    <!-- Navbar -->
+    <nav class="sticky top-0 bg-white z-50 border-b border-gray-200">
+        <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+            <div class="flex flex-row items-center justify-between py-4 gap-3 md:gap-0">
+                
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="/listings" class="flex items-center text-airbnb text-2xl font-bold">
+                        <i class="fa-brands fa-airbnb text-3xl me-2"></i>
+                        <span class="hidden lg:block">NullStay</span>
+                    </a>
+                </div>
 
-<body>
-    <nav> </nav>
+                <!-- Search Bar Pill -->
+                <div class="border border-gray-300 w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
+                    <div class="flex flex-row items-center justify-between">
+                        <div class="text-sm font-semibold px-6">Anywhere</div>
+                        <div class="hidden sm:block text-sm font-semibold px-6 border-x border-gray-300 flex-1 text-center">Any week</div>
+                        <div class="text-sm pl-6 pr-2 text-gray-500 flex flex-row items-center gap-3">
+                            <div class="hidden sm:block">Add guests</div>
+                            <div class="p-2 bg-airbnb rounded-full text-white w-8 h-8 flex items-center justify-center">
+                                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <main>
+                <!-- Right Menu -->
+                <div class="hidden md:flex flex-row items-center gap-3">
+                    <div class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+                        <a href="/listings/new">Airbnb your home</a>
+                    </div>
+                    <div class="p-4 border border-gray-300 rounded-full flex flex-row items-center gap-3 hover:shadow-md transition cursor-pointer">
+                        <i class="fa-solid fa-bars text-sm"></i>
+                        <div class="bg-gray-500 rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center">
+                            <i class="fa-solid fa-user text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Categories Bar -->
+        <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-4">
+            <div class="flex flex-row items-center justify-between overflow-x-auto gap-8 pt-2 hide-scrollbar">
+                <div class="flex flex-col items-center justify-center gap-2 pb-2 border-b-2 border-neutral-800 text-neutral-800 hover:text-neutral-800 cursor-pointer opacity-100 min-w-max">
+                    <i class="fa-solid fa-water text-xl"></i>
+                    <div class="text-sm font-medium">Amazing pools</div>
+                </div>
+                <div class="flex flex-col items-center justify-center gap-2 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                    <i class="fa-solid fa-umbrella-beach text-xl"></i>
+                    <div class="text-sm font-medium">Beachfront</div>
+                </div>
+                <div class="flex flex-col items-center justify-center gap-2 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                    <i class="fa-brands fa-fort-awesome text-xl"></i>
+                    <div class="text-sm font-medium">Castles</div>
+                </div>
+                <div class="flex flex-col items-center justify-center gap-2 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                    <i class="fa-solid fa-tree text-xl"></i>
+                    <div class="text-sm font-medium">Treehouses</div>
+                </div>
+                <div class="flex flex-col items-center justify-center gap-2 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                    <i class="fa-solid fa-house-user text-xl"></i>
+                    <div class="text-sm font-medium">Cabins</div>
+                </div>
+                 <div class="flex flex-col items-center justify-center gap-2 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                    <i class="fa-solid fa-city text-xl"></i>
+                    <div class="text-sm font-medium">Iconic cities</div>
+                </div>
+            </div>
+            <style>
+                .hide-scrollbar::-webkit-scrollbar { display: none; }
+                .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            </style>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-8 w-full">
         <%- body %>
     </main>
 
-    <footer> </footer>
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 mt-auto">
+        <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+                <div class="flex flex-row items-center gap-3">
+                    <span>© <%= new Date().getFullYear() %> NullStay, Inc.</span>
+                    <span class="hidden md:inline">·</span>
+                    <a href="#" class="hover:underline hidden md:inline">Terms</a>
+                    <span class="hidden md:inline">·</span>
+                    <a href="#" class="hover:underline hidden md:inline">Sitemap</a>
+                    <span class="hidden md:inline">·</span>
+                    <a href="#" class="hover:underline hidden md:inline">Privacy</a>
+                </div>
+                <div class="flex flex-row items-center gap-4 font-medium text-gray-900">
+                    <a href="#" class="hover:underline flex items-center gap-1"><i class="fa-solid fa-globe"></i> English (IN)</a>
+                    <a href="#" class="hover:underline">&#8377; INR</a>
+                    <a href="#" class="hover:underline"><i class="fa-brands fa-square-facebook text-xl"></i></a>
+                    <a href="#" class="hover:underline"><i class="fa-brands fa-square-twitter text-xl"></i></a>
+                    <a href="#" class="hover:underline"><i class="fa-brands fa-square-instagram text-xl"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
-
 </html>
