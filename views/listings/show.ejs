@@ -9,6 +9,10 @@
 
 <body>
     <h3> Hello </h3>
+    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn">Edit Listing</a>
+    <form action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST">
+        <button class="btn btn-dark edit-btn">Delete Listing</button>
+    </form>
     <Ul>
         <li>
             <%= listing.title %>
