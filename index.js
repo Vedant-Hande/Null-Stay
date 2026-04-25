@@ -28,6 +28,10 @@ connectDB();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // API Routes
 app.get("/", (req, res) => {
   res.send("Hello");
@@ -38,17 +42,32 @@ app.get("/listings", async (req, res) => {
   res.render("listings/listings", { allListing });
 });
 
+// new listing route
+app.get("/listings/new", (req, res) => {
+  res.render("listings/newListing.ejs");
+});
+
+// Create listing route
+app.post("/listings", async (req, res) => {
+  try {
+    let newLisitng = await new listings(req.body.listing);
+    console.log("New listing created:", newLisitng);
+    newLisitng.save();
+    // res.redirect("/listings");
+  } catch (err) {
+    res.status(500).send("server error");
+  }
+});
+
 // Show route
 app.get("/listings/:id", async (req, res) => {
   try {
     let { id } = req.params;
-    const listing = await listings.findById(id); 
-    
+    const listing = await listings.findById(id);
+
     if (!listing) {
       return res.status(404).send("Listing not found");
     }
-
-    console.log(listing);
     res.render("listings/show.ejs", { listing }); // Render your view
   } catch (err) {
     res.status(500).send("Server Error");
