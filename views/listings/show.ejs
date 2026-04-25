@@ -1,156 +1,501 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="max-w-[1120px] mx-auto pb-10">
-    <!-- Header -->
-    <div class="flex flex-col gap-2 pt-6 mb-6">
-        <h1 class="text-3xl font-semibold text-gray-900"><%= listing.title %></h1>
-        <div class="flex flex-row items-center justify-between flex-wrap gap-4">
-            <div class="flex flex-row items-center gap-2 sm:gap-4 text-sm font-medium text-gray-800 flex-wrap">
-                <span class="flex items-center gap-1"><i class="fa-solid fa-star"></i> 4.95</span>
-                <span class="underline cursor-pointer">128 reviews</span>
-                <span class="text-gray-400 hidden sm:inline">·</span>
-                <span class="flex items-center gap-1 hidden sm:flex"><i class="fa-solid fa-medal"></i> Superhost</span>
-                <span class="text-gray-400 hidden sm:inline">·</span>
-                <span class="underline cursor-pointer"><%= listing.location %>, <%= listing.country %></span>
-            </div>
-            <div class="flex flex-row gap-4 text-sm font-medium underline">
-                <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition"><i class="fa-solid fa-arrow-up-from-bracket"></i> Share</div>
-                <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition"><i class="fa-regular fa-heart"></i> Save</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Photo Gallery -->
-    <div class="w-full h-[40vh] md:h-[60vh] overflow-hidden rounded-xl mb-8 relative">
-        <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>" 
-             alt="<%= listing.title %>" class="object-cover w-full h-full hover:scale-105 transition duration-500">
-        <div class="absolute bottom-4 right-4 bg-white border border-black px-4 py-1.5 rounded-lg text-sm font-medium shadow flex items-center gap-2 cursor-pointer hover:bg-gray-100">
-            <i class="fa-solid fa-grip"></i> <span class="hidden sm:inline">Show all photos</span>
-        </div>
-    </div>
-
-    <!-- Content Split -->
-    <div class="grid grid-cols-1 md:grid-cols-7 md:gap-16 mt-6">
-        
-        <!-- Left Column -->
-        <div class="col-span-4 flex flex-col gap-8">
-            <div class="flex flex-row items-center justify-between border-b border-gray-200 pb-6">
-                <div>
-                    <h2 class="text-xl font-semibold">Entire home hosted by Void</h2>
-                    <div class="flex flex-row items-center gap-2 sm:gap-4 font-light text-gray-500 mt-1 flex-wrap text-sm sm:text-base">
-                        <span><%= listing.guests || 1 %> guests</span>
-                        <span>·</span>
-                        <span><%= listing.bedrooms || 1 %> bedrooms</span>
-                        <span>·</span>
-                        <span><%= listing.beds || 1 %> beds</span>
-                        <span>·</span>
-                        <span><%= listing.baths || 1 %> bath</span>
+    <div class="max-w-[1120px] mx-auto pb-10">
+        <!-- Header -->
+        <div class="flex flex-col gap-2 pt-6 mb-6">
+            <h1 class="text-3xl font-semibold text-gray-900">
+                <%= listing.title %>
+            </h1>
+            <div class="flex flex-row items-center justify-between flex-wrap gap-4">
+                <div class="flex flex-row items-center gap-2 sm:gap-4 text-sm font-medium text-gray-800 flex-wrap">
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-star"></i> 4.95</span>
+                    <span class="underline cursor-pointer">128 reviews</span>
+                    <span class="text-gray-400 hidden sm:inline">·</span>
+                    <span class="flex items-center gap-1 hidden sm:flex"><i class="fa-solid fa-medal"></i>
+                        Superhost</span>
+                    <span class="text-gray-400 hidden sm:inline">·</span>
+                    <span class="underline cursor-pointer">
+                        <%= listing.location %>, <%= listing.country %>
+                    </span>
+                </div>
+                <div class="flex flex-row gap-4 text-sm font-medium underline">
+                    <div
+                        class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition">
+                        <i class="fa-solid fa-arrow-up-from-bracket"></i> Share
+                    </div>
+                    <div
+                        class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition">
+                        <i class="fa-regular fa-heart"></i> Save
                     </div>
                 </div>
-                <div class="h-14 w-14 rounded-full bg-gray-500 overflow-hidden flex items-center justify-center text-white shrink-0">
-                    <i class="fa-solid fa-user text-2xl"></i>
+            </div>
+        </div>
+
+        <!-- Photo Gallery -->
+        <div class="w-full h-[40vh] md:h-[60vh] overflow-hidden rounded-xl mb-8 relative">
+            <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>"
+                alt="<%= listing.title %>" class="object-cover w-full h-full hover:scale-105 transition duration-500">
+            <div
+                class="absolute bottom-4 right-4 bg-white border border-black px-4 py-1.5 rounded-lg text-sm font-medium shadow flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+                <i class="fa-solid fa-grip"></i> <span class="hidden sm:inline">Show all photos</span>
+            </div>
+        </div>
+
+        <!-- Content Split -->
+        <div class="grid grid-cols-1 md:grid-cols-7 md:gap-16 mt-6">
+
+            <!-- Left Column -->
+            <div class="col-span-4 flex flex-col gap-8">
+                <div class="flex flex-row items-center justify-between border-b border-gray-200 pb-6">
+                    <div>
+                        <h2 class="text-xl font-semibold">Entire home hosted by Void</h2>
+                        <div
+                            class="flex flex-row items-center gap-2 sm:gap-4 font-light text-gray-500 mt-1 flex-wrap text-sm sm:text-base">
+                            <span>
+                                <%= listing.guests || 1 %> guests
+                            </span>
+                            <span>·</span>
+                            <span>
+                                <%= listing.bedrooms || 1 %> bedrooms
+                            </span>
+                            <span>·</span>
+                            <span>
+                                <%= listing.beds || 1 %> beds
+                            </span>
+                            <span>·</span>
+                            <span>
+                                <%= listing.baths || 1 %> bath
+                            </span>
+                        </div>
+                    </div>
+                    <div
+                        class="h-14 w-14 rounded-full bg-gray-500 overflow-hidden flex items-center justify-center text-white shrink-0">
+                        <i class="fa-solid fa-user text-2xl"></i>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Description -->
-            <div class="border-b border-gray-200 py-6">
-                <p class="text-gray-700 font-light leading-relaxed">
-                    <%= listing.desc || 'Enjoy a luxurious experience in this highly rated property. Experience unmatched comfort, modern amenities, and beautiful surroundings.' %>
-                </p>
-                <div class="mt-4 font-semibold underline cursor-pointer">Show more <i class="fa-solid fa-chevron-right text-xs"></i></div>
-            </div>
-
-            <!-- Amenities -->
-            <% if(listing.amenities && listing.amenities.length > 0) { %>
-            <div class="border-b border-gray-200 py-6">
-                <h2 class="text-xl font-semibold mb-6">What this place offers</h2>
-                <div class="grid grid-cols-2 gap-y-4 gap-x-8">
-                    <% listing.amenities.forEach(amenity => { %>
-                        <div class="flex items-center gap-4 text-gray-700">
-                            <% 
-                                let icon = 'fa-check';
-                                if(amenity === 'Wifi') icon = 'fa-wifi';
-                                if(amenity === 'Kitchen') icon = 'fa-kitchen-set';
-                                if(amenity === 'Free Parking') icon = 'fa-car';
-                                if(amenity === 'Pool') icon = 'fa-water-ladder';
-                                if(amenity === 'Air Conditioning') icon = 'fa-snowflake';
-                                if(amenity === 'TV') icon = 'fa-tv';
-                                if(amenity === 'Heating') icon = 'fa-fire-burner';
-                                if(amenity === 'Washer') icon = 'fa-jug-detergent';
+                <!-- Description -->
+                <div class="border-b border-gray-200 py-6">
+                    <p class="text-gray-700 font-light leading-relaxed">
+                        <%= listing.desc
+                            || 'Enjoy a luxurious experience in this highly rated property. Experience unmatched comfort, modern amenities, and beautiful surroundings.'
                             %>
-                            <i class="fa-solid <%= icon %> text-xl w-6 text-center"></i>
-                            <span><%= amenity %></span>
-                        </div>
-                    <% }) %>
+                    </p>
+                    <div class="mt-4 font-semibold underline cursor-pointer">Show more <i
+                            class="fa-solid fa-chevron-right text-xs"></i></div>
                 </div>
-            </div>
-            <% } %>
 
-            <!-- Actions (Edit/Delete) -->
-            <div class="py-4 flex gap-4 flex-wrap">
-                <a href="/listings/<%= listing._id %>/edit" class="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
-                    Edit Listing
-                </a>
-                <form action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST" class="inline">
-                    <button class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition">
-                        Delete Listing
+                <!-- Amenities -->
+                <% if(listing.amenities && listing.amenities.length> 0) { %>
+                    <div class="border-b border-gray-200 py-6">
+                        <h2 class="text-xl font-semibold mb-6">What this place offers</h2>
+                        <div class="grid grid-cols-2 gap-y-4 gap-x-8">
+                            <% listing.amenities.forEach(amenity=> { %>
+                                <div class="flex items-center gap-4 text-gray-700">
+                                    <% let icon='fa-check' ; if(amenity==='Wifi' ) icon='fa-wifi' ;
+                                        if(amenity==='Kitchen' ) icon='fa-kitchen-set' ; if(amenity==='Free Parking' )
+                                        icon='fa-car' ; if(amenity==='Pool' ) icon='fa-water-ladder' ;
+                                        if(amenity==='Air Conditioning' ) icon='fa-snowflake' ; if(amenity==='TV' )
+                                        icon='fa-tv' ; if(amenity==='Heating' ) icon='fa-fire-burner' ;
+                                        if(amenity==='Washer' ) icon='fa-jug-detergent' ; %>
+                                        <i class="fa-solid <%= icon %> text-xl w-6 text-center"></i>
+                                        <span>
+                                            <%= amenity %>
+                                        </span>
+                                </div>
+                                <% }) %>
+                        </div>
+                    </div>
+                    <% } %>
+
+                        <!-- Reviews Section -->
+                        <div class="border-t border-gray-200 pt-8 pb-6 mt-2">
+                            <div class="flex items-center gap-2 text-2xl font-semibold mb-8">
+                                <i class="fa-solid fa-star"></i>
+                                <span>4.95 · 128 reviews</span>
+                            </div>
+
+                            <!-- Review Form -->
+                            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-10">
+                                <h3 class="text-lg font-semibold mb-4">Leave a Review</h3>
+                                <form action="#" method="POST" class="flex flex-col gap-4">
+                                    <!-- CSS Interactive Star Rating -->
+                                    <div class="flex flex-col gap-2">
+                                        <span class="text-sm font-semibold text-gray-700">Overall Rating</span>
+                                        <div class="flex flex-row-reverse justify-end gap-1 group">
+                                            <input type="radio" id="star5" name="rating" value="5"
+                                                class="peer hidden" />
+                                            <label for="star5"
+                                                class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                                                    class="fa-solid fa-star"></i></label>
+
+                                            <input type="radio" id="star4" name="rating" value="4"
+                                                class="peer hidden" />
+                                            <label for="star4"
+                                                class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                                                    class="fa-solid fa-star"></i></label>
+
+                                            <input type="radio" id="star3" name="rating" value="3"
+                                                class="peer hidden" />
+                                            <label for="star3"
+                                                class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                                                    class="fa-solid fa-star"></i></label>
+
+                                            <input type="radio" id="star2" name="rating" value="2"
+                                                class="peer hidden" />
+                                            <label for="star2"
+                                                class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                                                    class="fa-solid fa-star"></i></label>
+
+                                            <input type="radio" id="star1" name="rating" value="1"
+                                                class="peer hidden" />
+                                            <label for="star1"
+                                                class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                                                    class="fa-solid fa-star"></i></label>
+                                        </div>
+                                        <style>
+                                            /* Hack to make previous stars light up on hover/check using flex-row-reverse */
+                                            input:checked~label {
+                                                color: #facc15;
+                                            }
+
+                                            /* yellow-400 */
+                                        </style>
+                                    </div>
+
+                                    <!-- Comment Box -->
+                                    <div>
+                                        <textarea name="comment" rows="3" placeholder="Share your experience..."
+                                            required
+                                            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition resize-none"></textarea>
+                                    </div>
+
+                                    <div>
+                                        <button type="button"
+                                            class="px-6 py-3 bg-black hover:bg-gray-800 text-white font-semibold rounded-lg transition">
+                                            Submit Review
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Review Gallery Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+
+                                <!-- Dummy Review 1 -->
+                                <div class="flex flex-col gap-3">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-gray-800 text-white flex items-center justify-center text-lg font-bold">
+                                            A</div>
+                                        <div>
+                                            <h4 class="font-semibold text-gray-900">Alice</h4>
+                                            <div class="text-sm text-gray-500">October 2026</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                            class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed font-light">
+                                        "Absolutely incredible stay! The property was exactly as pictured, spotlessly
+                                        clean, and the host was extremely responsive. Would highly recommend to anyone
+                                        visiting the area."
+                                    </p>
+                                </div>
+
+                                <!-- Dummy Review 2 -->
+                                <div class="flex flex-col gap-3">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-rose-600 text-white flex items-center justify-center text-lg font-bold">
+                                            M</div>
+                                        <div>
+                                            <h4 class="font-semibold text-gray-900">Mark</h4>
+                                            <div class="text-sm text-gray-500">September 2026</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                            class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed font-light">
+                                        "The location is unbeatable. We could walk to all the major attractions. The
+                                        kitchen was well stocked which made cooking meals a breeze. We'll definitely be
+                                        back!"
+                                    </p>
+                                </div>
+
+                                <!-- Dummy Review 3 -->
+                                <div class="flex flex-col gap-3">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+                                            S</div>
+                                        <div>
+                                            <h4 class="font-semibold text-gray-900">Sarah</h4>
+                                            <div class="text-sm text-gray-500">August 2026</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                            class="fa-solid fa-star-half-stroke"></i>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed font-light">
+                                        "Beautiful place with great amenities. The Wi-Fi was very fast so I could work
+                                        comfortably. Only taking off half a star because parking was a little tricky to
+                                        find."
+                                    </p>
+                                </div>
+
+                                <!-- Dummy Review 4 -->
+                                <div class="flex flex-col gap-3">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center text-lg font-bold">
+                                            D</div>
+                                        <div>
+                                            <h4 class="font-semibold text-gray-900">David</h4>
+                                            <div class="text-sm text-gray-500">July 2026</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                            class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed font-light">
+                                        "Loved the smart lock check-in process. The space is decorated so well it felt
+                                        like a luxury hotel. Highly recommend!"
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <div class="mt-8">
+                                <button type="button" onclick="showAllReviews()"
+                                    class="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
+                                    Show all 128 reviews
+                                </button>
+                            </div>
+                        </div> <!-- Actions (Edit/Delete) -->
+                        <div class="py-4 flex gap-4 flex-wrap">
+                            <a href="/listings/<%= listing._id %>/edit"
+                                class="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
+                                Edit Listing
+                            </a>
+                            <form action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST"
+                                class="inline">
+                                <button
+                                    class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition">
+                                    Delete Listing
+                                </button>
+                            </form>
+                        </div>
+            </div>
+
+            <!-- Right Column (Booking Card) -->
+            <div class="col-span-3 mt-8 md:mt-0">
+                <div class="sticky top-28 bg-white border border-gray-200 rounded-xl p-6 shadow-xl">
+                    <div class="flex flex-row items-baseline gap-1 mb-4">
+                        <span class="text-2xl font-bold">&#8377; <%= listing.price ?
+                                listing.price.toLocaleString("en-IN") : 'N/A' %></span>
+                        <span class="text-gray-600">night</span>
+                    </div>
+
+                    <div class="border border-gray-400 rounded-lg overflow-hidden mb-4">
+                        <div class="flex flex-row border-b border-gray-400">
+                            <div class="w-1/2 p-3 border-r border-gray-400 cursor-pointer">
+                                <div class="text-[10px] uppercase font-bold text-gray-900">Check-in</div>
+                                <div class="text-sm">Add date</div>
+                            </div>
+                            <div class="w-1/2 p-3 cursor-pointer">
+                                <div class="text-[10px] uppercase font-bold text-gray-900">Checkout</div>
+                                <div class="text-sm">Add date</div>
+                            </div>
+                        </div>
+                        <div class="p-3 flex justify-between items-center cursor-pointer">
+                            <div>
+                                <div class="text-[10px] uppercase font-bold text-gray-900">Guests</div>
+                                <div class="text-sm">1 guest</div>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-lg"></i>
+                        </div>
+                    </div>
+
+                    <button
+                        class="w-full bg-airbnb text-white rounded-lg py-3.5 font-semibold text-lg hover:bg-rose-600 transition mb-4">
+                        Reserve
                     </button>
-                </form>
-            </div>
-        </div>
+                    <div class="text-center text-sm text-gray-500 font-light mb-4">You won't be charged yet</div>
 
-        <!-- Right Column (Booking Card) -->
-        <div class="col-span-3 mt-8 md:mt-0">
-            <div class="sticky top-28 bg-white border border-gray-200 rounded-xl p-6 shadow-xl">
-                <div class="flex flex-row items-baseline gap-1 mb-4">
-                    <span class="text-2xl font-bold">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : 'N/A' %></span>
-                    <span class="text-gray-600">night</span>
-                </div>
-                
-                <div class="border border-gray-400 rounded-lg overflow-hidden mb-4">
-                    <div class="flex flex-row border-b border-gray-400">
-                        <div class="w-1/2 p-3 border-r border-gray-400 cursor-pointer">
-                            <div class="text-[10px] uppercase font-bold text-gray-900">Check-in</div>
-                            <div class="text-sm">Add date</div>
+                    <div class="flex flex-col gap-3 pb-4 border-b border-gray-200">
+                        <div class="flex justify-between text-gray-700">
+                            <span class="underline">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN")
+                                    : '0' %> x 5 nights</span>
+                            <span>&#8377; <%= listing.price ? (listing.price * 5).toLocaleString("en-IN") : '0' %>
+                            </span>
                         </div>
-                        <div class="w-1/2 p-3 cursor-pointer">
-                            <div class="text-[10px] uppercase font-bold text-gray-900">Checkout</div>
-                            <div class="text-sm">Add date</div>
+                        <div class="flex justify-between text-gray-700">
+                            <span class="underline">Cleaning fee</span>
+                            <span>&#8377; 1,500</span>
+                        </div>
+                        <div class="flex justify-between text-gray-700">
+                            <span class="underline">NullStay service fee</span>
+                            <span>&#8377; 2,100</span>
                         </div>
                     </div>
-                    <div class="p-3 flex justify-between items-center cursor-pointer">
-                        <div>
-                            <div class="text-[10px] uppercase font-bold text-gray-900">Guests</div>
-                            <div class="text-sm">1 guest</div>
-                        </div>
-                        <i class="fa-solid fa-chevron-down text-lg"></i>
+                    <div class="flex justify-between text-gray-900 font-bold pt-4 text-lg">
+                        <span>Total before taxes</span>
+                        <span>&#8377; <%= listing.price ? (listing.price * 5 + 3600).toLocaleString("en-IN") : '0' %>
+                        </span>
                     </div>
-                </div>
-
-                <button class="w-full bg-airbnb text-white rounded-lg py-3.5 font-semibold text-lg hover:bg-rose-600 transition mb-4">
-                    Reserve
-                </button>
-                <div class="text-center text-sm text-gray-500 font-light mb-4">You won't be charged yet</div>
-                
-                <div class="flex flex-col gap-3 pb-4 border-b border-gray-200">
-                    <div class="flex justify-between text-gray-700">
-                        <span class="underline">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> x 5 nights</span>
-                        <span>&#8377; <%= listing.price ? (listing.price * 5).toLocaleString("en-IN") : '0' %></span>
-                    </div>
-                    <div class="flex justify-between text-gray-700">
-                        <span class="underline">Cleaning fee</span>
-                        <span>&#8377; 1,500</span>
-                    </div>
-                    <div class="flex justify-between text-gray-700">
-                        <span class="underline">NullStay service fee</span>
-                        <span>&#8377; 2,100</span>
-                    </div>
-                </div>
-                <div class="flex justify-between text-gray-900 font-bold pt-4 text-lg">
-                    <span>Total before taxes</span>
-                    <span>&#8377; <%= listing.price ? (listing.price * 5 + 3600).toLocaleString("en-IN") : '0' %></span>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Full-Screen Reviews Modal -->
+    <div id="reviewsModal" class="fixed inset-0 z-[100] bg-white hidden overflow-y-auto">
+        <div class="max-w-[1120px] mx-auto px-4 py-8">
+            <button type="button" onclick="closeReviews()"
+                class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center text-xl mb-8 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h2 class="text-3xl font-bold mb-8"><i class="fa-solid fa-star" onclick="showAllReviews()">
+                </i> 4.95 · 128
+                reviews</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                <!-- Duplicate Dummy Review 1 -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-gray-800 text-white flex items-center justify-center text-lg font-bold">
+                            A</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Alice</h4>
+                            <div class="text-sm text-gray-500">October 2026</div>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        "Absolutely incredible stay! The property was exactly as pictured, spotlessly clean, and the
+                        host was extremely responsive. Would highly recommend to anyone visiting the area."
+                    </p>
+                </div>
+                <!-- Duplicate Dummy Review 2 -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-rose-600 text-white flex items-center justify-center text-lg font-bold">
+                            M</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Mark</h4>
+                            <div class="text-sm text-gray-500">September 2026</div>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        "The location is unbeatable. We could walk to all the major attractions. The kitchen was well
+                        stocked which made cooking meals a breeze. We'll definitely be back!"
+                    </p>
+                </div>
+                <!-- Duplicate Dummy Review 3 -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+                            S</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Sarah</h4>
+                            <div class="text-sm text-gray-500">August 2026</div>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        "Beautiful place with great amenities. The Wi-Fi was very fast so I could work comfortably. Only
+                        taking off half a star because parking was a little tricky to find."
+                    </p>
+                </div>
+                <!-- Duplicate Dummy Review 4 -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center text-lg font-bold">
+                            D</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">David</h4>
+                            <div class="text-sm text-gray-500">July 2026</div>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        "Loved the smart lock check-in process. The space is decorated so well it felt like a luxury
+                        hotel. Highly recommend!"
+                    </p>
+                </div>
+                <!-- Extra Dummy Review 5 -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center text-lg font-bold">
+                            J</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Jessica</h4>
+                            <div class="text-sm text-gray-500">June 2026</div>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        "The best host we've ever had. We arrived very late and they still accommodated us wonderfully.
+                        The beds are huge and super soft."
+                    </p>
+                </div>
+                <!-- Extra Dummy Review 6 -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center text-lg font-bold">
+                            R</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Robert</h4>
+                            <div class="text-sm text-gray-500">May 2026</div>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-regular fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        "Great place, very quiet neighborhood. The only issue was the hot water ran out quickly in the
+                        mornings, but otherwise fantastic."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
