@@ -38,13 +38,13 @@
                 <div>
                     <h2 class="text-xl font-semibold">Entire home hosted by Void</h2>
                     <div class="flex flex-row items-center gap-2 sm:gap-4 font-light text-gray-500 mt-1 flex-wrap text-sm sm:text-base">
-                        <span>4 guests</span>
+                        <span><%= listing.guests || 1 %> guests</span>
                         <span>·</span>
-                        <span>2 bedrooms</span>
+                        <span><%= listing.bedrooms || 1 %> bedrooms</span>
                         <span>·</span>
-                        <span>2 beds</span>
+                        <span><%= listing.beds || 1 %> beds</span>
                         <span>·</span>
-                        <span>1 bath</span>
+                        <span><%= listing.baths || 1 %> bath</span>
                     </div>
                 </div>
                 <div class="h-14 w-14 rounded-full bg-gray-500 overflow-hidden flex items-center justify-center text-white shrink-0">
@@ -53,12 +53,38 @@
             </div>
 
             <!-- Description -->
-            <div class="border-b border-gray-200 pb-6">
+            <div class="border-b border-gray-200 py-6">
                 <p class="text-gray-700 font-light leading-relaxed">
                     <%= listing.desc || 'Enjoy a luxurious experience in this highly rated property. Experience unmatched comfort, modern amenities, and beautiful surroundings.' %>
                 </p>
                 <div class="mt-4 font-semibold underline cursor-pointer">Show more <i class="fa-solid fa-chevron-right text-xs"></i></div>
             </div>
+
+            <!-- Amenities -->
+            <% if(listing.amenities && listing.amenities.length > 0) { %>
+            <div class="border-b border-gray-200 py-6">
+                <h2 class="text-xl font-semibold mb-6">What this place offers</h2>
+                <div class="grid grid-cols-2 gap-y-4 gap-x-8">
+                    <% listing.amenities.forEach(amenity => { %>
+                        <div class="flex items-center gap-4 text-gray-700">
+                            <% 
+                                let icon = 'fa-check';
+                                if(amenity === 'Wifi') icon = 'fa-wifi';
+                                if(amenity === 'Kitchen') icon = 'fa-kitchen-set';
+                                if(amenity === 'Free Parking') icon = 'fa-car';
+                                if(amenity === 'Pool') icon = 'fa-water-ladder';
+                                if(amenity === 'Air Conditioning') icon = 'fa-snowflake';
+                                if(amenity === 'TV') icon = 'fa-tv';
+                                if(amenity === 'Heating') icon = 'fa-fire-burner';
+                                if(amenity === 'Washer') icon = 'fa-jug-detergent';
+                            %>
+                            <i class="fa-solid <%= icon %> text-xl w-6 text-center"></i>
+                            <span><%= amenity %></span>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+            <% } %>
 
             <!-- Actions (Edit/Delete) -->
             <div class="py-4 flex gap-4 flex-wrap">

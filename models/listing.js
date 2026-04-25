@@ -44,6 +44,30 @@ const listingSchema = new schema({
     maxLength: 50,
     index: true, // Index for country filtering
   },
+  guests: {
+    type: Number,
+    required: true,
+    default: 1,
+  },
+  bedrooms: {
+    type: Number,
+    required: true,
+    default: 1,
+  },
+  beds: {
+    type: Number,
+    required: true,
+    default: 1,
+  },
+  baths: {
+    type: Number,
+    required: true,
+    default: 1,
+  },
+  amenities: {
+    type: [String],
+    default: [],
+  },
   createdAt: {
     type: Date,
     default: Date.now,

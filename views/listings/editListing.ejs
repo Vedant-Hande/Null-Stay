@@ -1,67 +1,281 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="max-w-[600px] mx-auto py-10 px-4">
-    <div class="border border-gray-200 rounded-2xl shadow-xl bg-white overflow-hidden">
-        <!-- Form Header -->
-        <div class="border-b border-gray-200 px-6 py-4 flex justify-center items-center">
-            <h1 class="text-base font-bold text-gray-900">Edit listing</h1>
+<div class="max-w-[1100px] mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+        
+        <!-- Left Banner -->
+        <div class="lg:w-5/12 relative bg-gradient-to-br from-gray-900 to-gray-700 p-10 md:p-12 flex flex-col justify-between text-white overflow-hidden">
+            <div class="relative z-10">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Update your property</h2>
+                <p class="text-lg opacity-90 leading-relaxed">Keep your listing details fresh to attract more guests.</p>
+            </div>
+            
+            <div class="relative z-10 mt-12 space-y-6" id="stepIndicators">
+                <div class="step-indicator flex items-start gap-4 transition-opacity duration-300 opacity-100">
+                    <div class="step-icon w-10 h-10 rounded-full bg-white text-black flex items-center justify-center backdrop-blur-sm shrink-0 transition-colors duration-300">
+                        <i class="fa-solid fa-1 font-bold"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-xl mb-1">Make adjustments</h3>
+                        <p class="text-sm opacity-80">Update details as your space evolves</p>
+                    </div>
+                </div>
+                <div class="step-indicator flex items-start gap-4 transition-opacity duration-300 opacity-50">
+                    <div class="step-icon w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center backdrop-blur-sm shrink-0 transition-colors duration-300">
+                        <i class="fa-solid fa-2 font-bold"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-xl mb-1">Stay competitive</h3>
+                        <p class="text-sm opacity-80">Adjust capacity and amenities based on feedback</p>
+                    </div>
+                </div>
+                <div class="step-indicator flex items-start gap-4 transition-opacity duration-300 opacity-50">
+                    <div class="step-icon w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center backdrop-blur-sm shrink-0 transition-colors duration-300">
+                        <i class="fa-solid fa-3 font-bold"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-xl mb-1">Review & Save</h3>
+                        <p class="text-sm opacity-80">Check pricing and publish changes</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decorative background elements -->
+            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute top-10 -left-10 w-40 h-40 bg-black/20 rounded-full blur-2xl"></div>
         </div>
 
-        <!-- Form Body -->
-        <div class="p-6 md:p-8">
-            <h2 class="text-2xl font-semibold mb-6">Update your property</h2>
+        <!-- Right Form -->
+        <div class="lg:w-7/12 p-8 md:p-12 lg:p-14 flex flex-col min-h-[600px] lg:min-h-[700px]">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8" id="stepTitle">Step 1: The Basics</h2>
             
-            <form action="/listings/<%= listingToEdit._id %>?_method=PUT" method="POST" class="flex flex-col gap-5">
+            <form action="/listings/<%= listingToEdit._id %>?_method=PUT" method="POST" class="flex flex-col flex-1" id="multiStepForm">
                 
-                <div class="border border-gray-400 rounded-lg overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition">
-                    <div class="relative px-3 py-2">
-                        <label for="title" class="absolute text-[10px] uppercase font-bold text-gray-500 top-1.5">Property Title</label>
-                        <input type="text" id="title" name="listing[title]" value="<%= listingToEdit.title %>" required maxlength="50" class="w-full pt-4 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300">
-                    </div>
-                </div>
+                <!-- Step 1: Basics & Location -->
+                <div class="form-step flex flex-col gap-10 flex-1 overflow-y-auto pr-2 pb-4">
+                    <!-- Group: Basics -->
+                    <div class="flex flex-col gap-5">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">The Basics</h3>
+                        
+                        <div class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                            <div class="relative px-4 py-2">
+                                <label for="title" class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Property Title</label>
+                                <input type="text" id="title" name="listing[title]" value="<%= listingToEdit.title %>" required maxlength="50" class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 font-medium">
+                            </div>
+                        </div>
 
-                <div class="border border-gray-400 rounded-lg overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition">
-                    <div class="relative px-3 py-2">
-                        <label for="desc" class="absolute text-[10px] uppercase font-bold text-gray-500 top-1.5">Description</label>
-                        <textarea id="desc" name="listing[desc]" required maxlength="500" rows="3" class="w-full pt-4 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 resize-none"><%= listingToEdit.desc %></textarea>
-                    </div>
-                </div>
+                        <div class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                            <div class="relative px-4 py-2">
+                                <label for="desc" class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Description</label>
+                                <textarea id="desc" name="listing[desc]" required maxlength="500" rows="3" class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 resize-none font-medium"><%= listingToEdit.desc %></textarea>
+                            </div>
+                        </div>
 
-                <div class="border border-gray-400 rounded-lg overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition">
-                    <div class="relative px-3 py-2">
-                        <label for="image" class="absolute text-[10px] uppercase font-bold text-gray-500 top-1.5">Image URL</label>
-                        <input type="url" id="image" name="listing[image][url]" value="<%= listingToEdit.image ? listingToEdit.image.url : '' %>" class="w-full pt-4 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300">
-                    </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row gap-5">
-                    <div class="flex-1 border border-gray-400 rounded-lg overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition">
-                        <div class="relative px-3 py-2">
-                            <label for="price" class="absolute text-[10px] uppercase font-bold text-gray-500 top-1.5">Price (per night)</label>
-                            <input type="number" id="price" name="listing[price]" value="<%= listingToEdit.price %>" required min="0" class="w-full pt-4 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300">
+                        <div class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                            <div class="relative px-4 py-2">
+                                <label for="image" class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Image URL</label>
+                                <input type="url" id="image" name="listing[image][url]" value="<%= listingToEdit.image ? listingToEdit.image.url : '' %>" class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 font-medium">
+                            </div>
                         </div>
                     </div>
-                    <div class="flex-1 border border-gray-400 rounded-lg overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition">
-                        <div class="relative px-3 py-2">
-                            <label for="country" class="absolute text-[10px] uppercase font-bold text-gray-500 top-1.5">Country</label>
-                            <input type="text" id="country" name="listing[country]" value="<%= listingToEdit.country %>" required maxlength="50" class="w-full pt-4 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300">
+
+                    <!-- Group: Location -->
+                    <div class="flex flex-col gap-5">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">Location</h3>
+                        
+                        <div class="flex flex-col sm:flex-row gap-5">
+                            <div class="flex-1 border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                                <div class="relative px-4 py-2">
+                                    <label for="country" class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Country</label>
+                                    <input type="text" id="country" name="listing[country]" value="<%= listingToEdit.country %>" required maxlength="50" class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 font-medium">
+                                </div>
+                            </div>
+                            
+                            <div class="flex-1 border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                                <div class="relative px-4 py-2">
+                                    <label for="location" class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Location (City, State)</label>
+                                    <input type="text" id="location" name="listing[location]" value="<%= listingToEdit.location %>" required maxlength="100" class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 font-medium">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="border border-gray-400 rounded-lg overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition">
-                    <div class="relative px-3 py-2">
-                        <label for="location" class="absolute text-[10px] uppercase font-bold text-gray-500 top-1.5">Location (City, State)</label>
-                        <input type="text" id="location" name="listing[location]" value="<%= listingToEdit.location %>" required maxlength="100" class="w-full pt-4 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300">
+                <!-- Step 2: Capacity & Amenities -->
+                <div class="form-step hidden flex-col gap-10 flex-1 overflow-y-auto pr-2 pb-4">
+                    <!-- Group: Capacity -->
+                    <div class="flex flex-col gap-5">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">Capacity</h3>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                                <div class="relative px-4 py-3 text-center">
+                                    <label for="guests" class="block text-[10px] uppercase font-bold text-gray-500 mb-1">Guests</label>
+                                    <input type="number" id="guests" name="listing[guests]" value="<%= listingToEdit.guests || 1 %>" required min="1" class="w-full outline-none text-gray-900 bg-transparent placeholder-gray-300 font-bold text-xl text-center">
+                                </div>
+                            </div>
+                            <div class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                                <div class="relative px-4 py-3 text-center">
+                                    <label for="bedrooms" class="block text-[10px] uppercase font-bold text-gray-500 mb-1">Bedrooms</label>
+                                    <input type="number" id="bedrooms" name="listing[bedrooms]" value="<%= listingToEdit.bedrooms || 1 %>" required min="1" class="w-full outline-none text-gray-900 bg-transparent placeholder-gray-300 font-bold text-xl text-center">
+                                </div>
+                            </div>
+                            <div class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                                <div class="relative px-4 py-3 text-center">
+                                    <label for="beds" class="block text-[10px] uppercase font-bold text-gray-500 mb-1">Beds</label>
+                                    <input type="number" id="beds" name="listing[beds]" value="<%= listingToEdit.beds || 1 %>" required min="1" class="w-full outline-none text-gray-900 bg-transparent placeholder-gray-300 font-bold text-xl text-center">
+                                </div>
+                            </div>
+                            <div class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                                <div class="relative px-4 py-3 text-center">
+                                    <label for="baths" class="block text-[10px] uppercase font-bold text-gray-500 mb-1">Baths</label>
+                                    <input type="number" id="baths" name="listing[baths]" value="<%= listingToEdit.baths || 1 %>" required min="1" class="w-full outline-none text-gray-900 bg-transparent placeholder-gray-300 font-bold text-xl text-center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Group: Amenities -->
+                    <div class="flex flex-col gap-5">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">Amenities</h3>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <% const amenitiesList = ['Wifi', 'Kitchen', 'Free Parking', 'Pool', 'Air Conditioning', 'TV', 'Heating', 'Washer']; %>
+                            <% const currentAmenities = listingToEdit.amenities || []; %>
+                            <% amenitiesList.forEach(amenity => { %>
+                            <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-gray-400 transition group has-[:checked]:border-black has-[:checked]:bg-gray-50 shadow-sm">
+                                <input type="checkbox" name="listing[amenities][]" value="<%= amenity %>" <%= currentAmenities.includes(amenity) ? 'checked' : '' %> class="w-5 h-5 cursor-pointer accent-black rounded border-gray-300 focus:ring-black transition">
+                                <span class="text-sm font-medium text-gray-700 group-hover:text-black group-has-[:checked]:text-black transition"><%= amenity %></span>
+                            </label>
+                            <% }) %>
+                        </div>
                     </div>
                 </div>
 
-                <div class="border-t border-gray-200 mt-2 pt-6">
-                    <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-lg transition text-lg">
-                        Save Changes
+                <!-- Step 3: Pricing -->
+                <div class="form-step hidden flex-col gap-10 flex-1 overflow-y-auto pr-2 pb-4">
+                    <div class="flex flex-col gap-5">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">Pricing</h3>
+                        
+                        <div class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                            <div class="relative px-4 py-2">
+                                <label for="price" class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Price (per night)</label>
+                                <div class="flex items-center">
+                                    <span class="pt-5 pb-1 text-gray-900 font-medium mr-1">&#8377;</span>
+                                    <input type="number" id="price" name="listing[price]" value="<%= listingToEdit.price %>" required min="0" class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 font-medium">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Navigation -->
+                <div class="pt-6 border-t border-gray-100 mt-auto flex justify-between items-center gap-4">
+                    <button type="button" id="prevBtn" class="px-6 py-3.5 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition hidden">
+                        Back
+                    </button>
+                    <div class="flex-1"></div>
+                    <button type="button" id="nextBtn" class="px-8 py-3.5 rounded-xl font-bold text-white bg-gray-900 hover:bg-black shadow-lg transition">
+                        Next
+                    </button>
+                    <button type="submit" id="submitBtn" class="px-8 py-3.5 rounded-xl font-bold text-white bg-gray-900 hover:bg-black shadow-[0_8px_20px_-6px_rgba(0,0,0,0.4)] hover:shadow-[0_12px_24px_-6px_rgba(0,0,0,0.6)] hover:-translate-y-0.5 transition hidden flex justify-center items-center gap-2">
+                        Save Changes <i class="fa-solid fa-check"></i>
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const steps = document.querySelectorAll('.form-step');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const stepIndicators = document.querySelectorAll('.step-indicator');
+        const stepTitle = document.getElementById('stepTitle');
+        const titles = ["Step 1: The Basics", "Step 2: Capacity & Amenities", "Step 3: Pricing"];
+        let currentStep = 0;
+
+        function showStep(index) {
+            steps.forEach((step, i) => {
+                if (i === index) {
+                    step.classList.remove('hidden');
+                    step.classList.add('flex');
+                } else {
+                    step.classList.add('hidden');
+                    step.classList.remove('flex');
+                }
+            });
+            
+            stepTitle.textContent = titles[index];
+            
+            // Handle buttons
+            if (index === 0) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+            
+            if (index === steps.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+
+            // Handle sidebar indicators
+            stepIndicators.forEach((indicator, i) => {
+                const icon = indicator.querySelector('.step-icon');
+                if (i === index) {
+                    indicator.classList.remove('opacity-50');
+                    indicator.classList.add('opacity-100');
+                    icon.classList.remove('bg-white/20', 'text-white');
+                    icon.classList.add('bg-white', 'text-black');
+                    icon.innerHTML = `<i class="fa-solid fa-${i + 1} font-bold"></i>`;
+                } else if (i < index) {
+                    indicator.classList.remove('opacity-100');
+                    indicator.classList.add('opacity-50');
+                    icon.classList.remove('bg-white', 'text-black');
+                    icon.classList.add('bg-white/20', 'text-white');
+                    icon.innerHTML = '<i class="fa-solid fa-check font-bold"></i>';
+                } else {
+                    indicator.classList.remove('opacity-100');
+                    indicator.classList.add('opacity-50');
+                    icon.classList.remove('bg-white', 'text-black');
+                    icon.classList.add('bg-white/20', 'text-white');
+                    icon.innerHTML = `<i class="fa-solid fa-${i + 1} font-bold"></i>`;
+                }
+            });
+        }
+
+        function validateStep() {
+            const inputs = steps[currentStep].querySelectorAll('input[required], textarea[required]');
+            let isValid = true;
+            for (let input of inputs) {
+                if (!input.checkValidity()) {
+                    input.reportValidity();
+                    isValid = false;
+                    break; // Stop at first invalid input to show tooltip
+                }
+            }
+            return isValid;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (validateStep()) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentStep--;
+            showStep(currentStep);
+        });
+
+        showStep(currentStep);
+    });
+</script>
