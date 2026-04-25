@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Listing</title>
+</head>
+
+<body>
+    <h1>edit New Listing</h1>
+    <form action="/listings/<%= listingToEdit._id %>?_method=PUT" method="POST">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="listing[title]" value="<%= listingToEdit.title %>" required
+                maxlength="50">
+        </div>
+
+        <div>
+            <label for="desc">Description:</label>
+            <textarea id="desc" name="listing[desc]" value="" required maxlength="500"
+                rows="4"><%= listingToEdit.desc %></textarea>
+        </div>
+
+        <div>
+            <label for="image">Image URL:</label>
+            <input type="url" id="image" name="listing[image][url]" value="<%= listingToEdit.image.url %>"
+                placeholder="Enter image URL (optional)">
+        </div>
+
+        <div>
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="listing[price]" value="<%= listingToEdit.price %>" required min="0">
+        </div>
+
+        <div>
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="listing[location]" value="<%= listingToEdit.location %>" required
+                maxlength="100">
+        </div>
+
+        <div>
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="listing[country]" value="<%= listingToEdit.country %>" required
+                maxlength="50">
+        </div>
+
+        <button type="submit">Edit Listing</button>
+    </form>
+</body>
+
+</html>
