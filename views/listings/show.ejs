@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Listing</title>
+</head>
+
+<body>
+    <h3> Hello </h3>
+    <Ul>
+        <li>
+            <%= listing.title %>
+        </li>
+        <li>
+            <%= listing.desc %>
+        </li>
+        <li>
+            &#8377; <%= listing.price.toLocaleString("en-IN") %>
+        </li>
+        <li>
+            <%= listing.location %>
+        </li>
+        <li>
+            <%= listing.createdAt.toDateString() %>
+        </li>
+        <li>
+            <%= listing.updatedAt.toDateString() %>
+        </li>
+    </Ul>
+</body>
+
+</html>

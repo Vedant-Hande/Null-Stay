@@ -38,3 +38,19 @@ app.get("/listings", async (req, res) => {
   res.render("listings/listings", { allListing });
 });
 
+// Show route
+app.get("/listings/:id", async (req, res) => {
+  try {
+    let { id } = req.params;
+    const listing = await listings.findById(id); 
+    
+    if (!listing) {
+      return res.status(404).send("Listing not found");
+    }
+
+    console.log(listing);
+    res.render("listings/show.ejs", { listing }); // Render your view
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+});

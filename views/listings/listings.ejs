@@ -12,13 +12,15 @@
     <ul>
         <% for(let listings of allListing) { %>
             <li>
-                <%= listings.title %>
+                <a href="/listings/<%= listings._id %>">
+                    <%= listings.title %>
+                </a>
             </li>
             <% } %>
     </ul>
     <% if(allListing.length===0) { %>
         <p>No listings found</p>
         <% } %>
-</body> 
+</body>
 
 </html>
