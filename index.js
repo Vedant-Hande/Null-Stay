@@ -5,6 +5,7 @@ import express from "express";
 import connectDB from "./config/database.js";
 import listings from "./models/listing.js";
 import methodOverride from "method-override"; // Standard ES6 import
+import ejsMate from "ejs-mate";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,6 +29,8 @@ connectDB();
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+app.engine("ejs", ejsMate);
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));

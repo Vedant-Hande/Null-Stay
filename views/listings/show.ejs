@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show Listing</title>
-</head>
-
-<body>
+<% layout("/layouts/boilerplate") %>
     <h3> Hello </h3>
     <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn">Edit Listing</a>
     <form action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST">
@@ -33,6 +24,3 @@
             <%= listing.updatedAt.toDateString() %>
         </li>
     </Ul>
-</body>
-
-</html>
