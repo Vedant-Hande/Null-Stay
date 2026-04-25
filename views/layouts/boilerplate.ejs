@@ -152,21 +152,58 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-50 border-t border-gray-200 mt-auto">
-        <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-                <div class="flex flex-row items-center gap-3">
+    <footer class="bg-gray-50 border-t border-gray-200 mt-auto text-gray-700">
+        <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+            
+            <!-- Main Footer Links -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-y-10 py-12 border-b border-gray-200">
+                <!-- Support Column -->
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-semibold text-gray-900">Support</h3>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Help Centre</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">AirCover</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Anti-discrimination</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Disability support</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Cancellation options</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Report neighbourhood concern</a>
+                </div>
+
+                <!-- Hosting Column -->
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-semibold text-gray-900">Hosting</h3>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">NullStay your home</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">AirCover for Hosts</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Hosting resources</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Community forum</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Hosting responsibly</a>
+                </div>
+
+                <!-- NullStay Column -->
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-semibold text-gray-900">NullStay</h3>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Newsroom</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">New features</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Careers</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Investors</a>
+                    <a href="#" class="hover:underline hover:text-gray-900 text-sm font-light">Gift cards</a>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500 py-6">
+                <div class="flex flex-row items-center gap-3 flex-wrap justify-center">
                     <span>© <%= new Date().getFullYear() %> NullStay, Inc.</span>
                     <span class="hidden md:inline">·</span>
-                    <a href="#" class="hover:underline hidden md:inline">Terms</a>
+                    <a href="#" class="hover:underline">Terms</a>
                     <span class="hidden md:inline">·</span>
-                    <a href="#" class="hover:underline hidden md:inline">Sitemap</a>
+                    <a href="#" class="hover:underline">Sitemap</a>
                     <span class="hidden md:inline">·</span>
-                    <a href="#" class="hover:underline hidden md:inline">Privacy</a>
+                    <a href="#" class="hover:underline">Privacy</a>
+                    <span class="hidden md:inline">·</span>
+                    <a href="#" class="hover:underline">Your Privacy Choices</a>
                 </div>
                 <div class="flex flex-row items-center gap-4 font-medium text-gray-900">
-                    <a href="#" class="hover:underline flex items-center gap-1"><i class="fa-solid fa-globe"></i>
-                        English (IN)</a>
+                    <a href="#" class="hover:underline flex items-center gap-1"><i class="fa-solid fa-globe"></i> English (IN)</a>
                     <a href="#" class="hover:underline">&#8377; INR</a>
                     <a href="#" class="hover:underline"><i class="fa-brands fa-square-facebook text-xl"></i></a>
                     <a href="#" class="hover:underline"><i class="fa-brands fa-square-twitter text-xl"></i></a>
