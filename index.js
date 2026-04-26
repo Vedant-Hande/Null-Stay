@@ -9,6 +9,7 @@ import ejsMate from "ejs-mate";
 import wrapAsync from "./utils/wrapAsync.js";
 import ExpressError from "./utils/ExpressError.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+import { validateListing } from "./middleware/validationMiddleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -76,10 +77,13 @@ app.get("/hosting", (req, res) => {
   res.render("info/hosting.ejs");
 });
 
-app.get("/listings", wrapAsync(async (req, res, next) => {
-  const allListing = await listings.find({});
-  res.render("listings/listings", { allListing });
-}));
+app.get(
+  "/listings",
+  wrapAsync(async (req, res, next) => {
+    const allListing = await listings.find({});
+    res.render("listings/listings", { allListing });
+  }),
+);
 
 // new listing route
 app.get("/listings/new", (req, res) => {
@@ -87,57 +91,74 @@ app.get("/listings/new", (req, res) => {
 });
 
 // Create listing route
-app.post("/listings", wrapAsync(async (req, res, next) => {
-  const newListing = new listings(req.body.listing);
-  await newListing.save();
-  console.log("New listing created:", newListing);
-  res.redirect("/listings");
-}));
+app.post(
+  "/listings",
+  validateListing,
+  wrapAsync(async (req, res, next) => {
+    const newListing = new listings(req.body.listing);
+    await newListing.save();
+    console.log("New listing created:", newListing);
+    res.redirect("/listings");
+  }),
+);
 
 // edit Listing route
-app.get("/listings/:id/edit", wrapAsync(async (req, res, next) => {
-  let { id } = req.params;
-  const listingToEdit = await listings.findById(id);
-  if (!listingToEdit) {
-    throw new ExpressError(404, "Listing not found");
-  }
-  res.render("listings/editListing.ejs", { listingToEdit });
-}));
+app.get(
+  "/listings/:id/edit",
+  wrapAsync(async (req, res, next) => {
+    let { id } = req.params;
+    const listingToEdit = await listings.findById(id);
+    if (!listingToEdit) {
+      throw new ExpressError(404, "Listing not found");
+    }
+    res.render("listings/editListing.ejs", { listingToEdit });
+  }),
+);
 
 // update listing route
-app.put("/listings/:id", wrapAsync(async (req, res, next) => {
-  let { id } = req.params;
-  const updatedListing = await listings.findByIdAndUpdate(
-    id,
-    { ...req.body.listing },
-    { new: true, runValidators: true },
-  );
-  console.log(updatedListing);
-  if (!updatedListing) {
-    throw new ExpressError(404, "Listing not found");
-  }
-  res.redirect(`/listings/${id}`);
-}));
+app.put(
+  "/listings/:id",
+  validateListing,
+  wrapAsync(async (req, res, next) => {
+    let { id } = req.params;
+    const updatedListing = await listings.findByIdAndUpdate(
+      id,
+      { ...req.body.listing },
+      { new: true, runValidators: true },
+    );
+    console.log(updatedListing);
+    if (!updatedListing) {
+      throw new ExpressError(404, "Listing not found");
+    }
+    res.redirect(`/listings/${id}`);
+  }),
+);
 
 // delete listing route
-app.delete("/listings/:id/delete", wrapAsync(async (req, res, next) => {
-  let { id } = req.params;
-  const deletedListing = await listings.findByIdAndDelete(id);
-  if (!deletedListing) {
-    throw new ExpressError(404, "Listing not found");
-  }
-  res.redirect("/listings");
-}));
+app.delete(
+  "/listings/:id/delete",
+  wrapAsync(async (req, res, next) => {
+    let { id } = req.params;
+    const deletedListing = await listings.findByIdAndDelete(id);
+    if (!deletedListing) {
+      throw new ExpressError(404, "Listing not found");
+    }
+    res.redirect("/listings");
+  }),
+);
 
 // Show route
-app.get("/listings/:id", wrapAsync(async (req, res, next) => {
-  let { id } = req.params;
-  const listing = await listings.findById(id);
-  if (!listing) {
-    throw new ExpressError(404, "Listing not found");
-  }
-  res.render("listings/show.ejs", { listing }); // Render your view
-}));
+app.get(
+  "/listings/:id",
+  wrapAsync(async (req, res, next) => {
+    let { id } = req.params;
+    const listing = await listings.findById(id);
+    if (!listing) {
+      throw new ExpressError(404, "Listing not found");
+    }
+    res.render("listings/show.ejs", { listing }); // Render your view
+  }),
+);
 
 // 404 Catch-All Route (Must be after all other routes)
 app.use(notFound);
