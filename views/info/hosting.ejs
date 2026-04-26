@@ -1,0 +1,68 @@
+<% layout('layouts/boilerplate') -%>
+
+<!-- Hosting Landing Page -->
+<div class="-mt-8">
+    <!-- Hero Section -->
+    <div class="relative h-[85vh] w-full overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+            class="absolute inset-0 w-full h-full object-cover" alt="Luxury Home">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-[2px]"></div>
+        
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+            <h1 class="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter drop-shadow-2xl">
+                NullStay it.
+            </h1>
+            <p class="text-xl md:text-2xl text-white/90 mb-10 max-w-2xl font-light drop-shadow-lg">
+                You could earn a lot by sharing your home with travelers from around the world.
+            </p>
+            <a href="/listings/new" class="bg-airbnb hover:bg-rose-600 text-white text-xl font-bold py-5 px-12 rounded-2xl shadow-2xl transition transform hover:-translate-y-1">
+                Start Hosting Now
+            </a>
+        </div>
+    </div>
+
+    <!-- Benefits Section -->
+    <div class="py-24 max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+        <div class="text-center mb-20">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Why host on NullStay?</h2>
+            <p class="text-xl text-gray-500 font-light">Join a global community of unique homeowners.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto mb-8">
+                    <i class="fa-solid fa-shield-heart text-3xl text-airbnb"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Total protection</h3>
+                <p class="text-gray-500 leading-relaxed font-light">With AirCover for Hosts, you're protected against damage and liability every time you host.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-8">
+                    <i class="fa-solid fa-wand-magic-sparkles text-3xl text-blue-500"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Simple setup</h3>
+                <p class="text-gray-500 leading-relaxed font-light">Our 3-step listing process makes it incredibly easy to get your property live in minutes.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-8">
+                    <i class="fa-solid fa-coins text-3xl text-green-500"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Extra income</h3>
+                <p class="text-gray-500 leading-relaxed font-light">Turn your extra space into an earning opportunity to fund your own next adventure.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-gray-50 py-24 px-6 text-center">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 tracking-tight">Ready to open your doors?</h2>
+            <p class="text-xl text-gray-500 mb-12 font-light leading-relaxed">
+                Join thousands of hosts and start your journey today. We'll support you every step of the way.
+            </p>
+            <a href="/listings/new" class="inline-block bg-gray-900 hover:bg-black text-white font-bold py-5 px-14 rounded-2xl shadow-xl transition transform hover:-translate-y-1">
+                Create Listing
+            </a>
+        </div>
+    </div>
+</div>

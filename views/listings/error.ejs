@@ -1,0 +1,38 @@
+<% layout('layouts/boilerplate') -%>
+
+<div class="min-h-[80vh] flex flex-col items-center justify-center px-6 py-12 bg-white relative overflow-hidden">
+    
+    <!-- Full Screen Background Text -->
+    <div class="absolute inset-0 flex items-center justify-center text-[25rem] md:text-[45rem] font-black text-gray-100 select-none pointer-events-none z-0 tracking-tighter leading-none">
+        <%= statusCode %>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="text-center max-w-3xl w-full animate-fade-in z-10">
+        
+        <!-- Clean Luxury Heading -->
+        <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 mb-12 tracking-tighter leading-tight">
+            We can't find that page.
+        </h1>
+        
+        <!-- Simplified Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <a href="/" class="w-full sm:w-auto inline-flex items-center justify-center px-12 py-5 bg-airbnb hover:bg-rose-600 text-white font-bold rounded-2xl shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 text-xl">
+                Go to Homepage
+            </a>
+            <a href="/listings" class="w-full sm:w-auto inline-flex items-center justify-center px-12 py-5 border border-gray-200 hover:border-black text-gray-900 font-bold rounded-2xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/40 backdrop-blur-md text-xl">
+                View All Stays
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+</style>
