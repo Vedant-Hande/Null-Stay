@@ -29,7 +29,7 @@ const listingSchema = new schema({
   price: {
     type: Number,
     required: true,
-    min: 0,
+    min: 100,
     index: true, // Index for price filtering
   },
   location: {
