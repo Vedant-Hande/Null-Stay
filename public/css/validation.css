@@ -1,0 +1,42 @@
+/* Invalid States */
+.was-validated input:invalid, 
+.was-validated textarea:invalid,
+input.is-touched:invalid,
+textarea.is-touched:invalid {
+    border-color: #ef4444 !important;
+}
+.was-validated input:invalid ~ .invalid-feedback, 
+.was-validated textarea:invalid ~ .invalid-feedback,
+input.is-touched:invalid ~ .invalid-feedback,
+textarea.is-touched:invalid ~ .invalid-feedback {
+    display: block;
+}
+
+/* Valid States */
+.was-validated input:valid, 
+.was-validated textarea:valid,
+input.is-touched:valid,
+textarea.is-touched:valid {
+    border-color: #22c55e !important;
+}
+.was-validated input:valid ~ .valid-feedback, 
+.was-validated textarea:valid ~ .valid-feedback,
+input.is-touched:valid ~ .valid-feedback,
+textarea.is-touched:valid ~ .valid-feedback {
+    display: block;
+}
+
+.invalid-feedback {
+    display: none;
+    color: #ef4444; /* Tailwind red-500 */
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+.valid-feedback {
+    display: none;
+    color: #22c55e; /* Tailwind green-500 */
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}

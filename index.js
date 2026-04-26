@@ -33,11 +33,11 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true })); // parsing html form data
+app.use(express.json()); // parsing json data
+app.use(express.static(path.join(__dirname, "public"))); // serving static files
 
-app.use(methodOverride("_method"));
+app.use(methodOverride("_method")); // using method override to update and delete
 
 // API Routes
 app.get("/", (req, res) => {
