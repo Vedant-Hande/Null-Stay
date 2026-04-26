@@ -9,137 +9,232 @@
     }
 </style>
 
-<!-- Hero Section: Full viewport height minus navbar -->
-<div class="relative w-full h-[85vh] overflow-hidden bg-neutral-900 group">
-    <!-- Image -->
-    <img src="/images/hero_villa.png" alt="Luxury Villa" class="absolute inset-0 w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[15s] ease-out">
+<!-- Hero Section: Full 100vh -->
+<div class="relative w-full h-screen overflow-hidden bg-black">
+    <!-- Animated Crossfade Backgrounds -->
+    <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Luxury Villa" class="absolute inset-0 w-full h-full object-cover animate-crossfade-1">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Modern Home" class="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-2">
+        <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Estate" class="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-3">
+    </div>
     
     <!-- Sophisticated Vignette & Gradient Overlays -->
-    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-transparent to-black/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/90 z-0"></div>
 
     <!-- Centered Content -->
-    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10 pt-16">
         <!-- Badge -->
-        <div class="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-semibold uppercase tracking-[0.2em] mb-6 animate-fade-in-up">
-            Introducing NullStay Premium
+        <div class="inline-block px-5 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-white/90 text-xs font-semibold uppercase tracking-[0.3em] mb-8 animate-fade-in-up">
+            The Premium Collection
         </div>
         
-        <h1 class="text-white text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter drop-shadow-2xl mb-8 leading-[1.1] max-w-5xl">
-            Find your next <br class="hidden md:block"/> 
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-500">masterpiece</span>
+        <h1 class="text-white text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter drop-shadow-2xl mb-10 leading-[1.1] max-w-5xl animate-fade-in-up" style="animation-delay: 0.2s;">
+            Not just a stay.<br/> 
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500 font-serif italic">A masterpiece.</span>
         </h1>
 
         <!-- Premium Glassmorphism Search / CTA -->
-        <div class="mt-4 p-2 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] flex flex-row items-center justify-between w-full max-w-lg md:max-w-2xl transform transition hover:bg-white/20 hover:scale-[1.02] duration-500">
+        <div class="mt-8 p-2.5 bg-white/10 backdrop-blur-2xl rounded-full border border-white/20 shadow-[0_0_50px_rgba(255,255,255,0.1)] flex flex-row items-center justify-between w-full max-w-xl md:max-w-3xl transform transition-all hover:bg-white/15 hover:shadow-[0_0_80px_rgba(255,255,255,0.2)] hover:scale-[1.02] duration-500 animate-fade-in-up" style="animation-delay: 0.4s;">
             <div class="flex-1 flex flex-row items-center divide-x divide-white/20 text-left">
-                <div class="flex-1 px-6 py-2">
-                    <p class="text-xs text-gray-300 font-semibold uppercase tracking-wider mb-1">Location</p>
-                    <p class="text-white font-medium truncate">Where are you going?</p>
+                <div class="flex-1 px-8 py-3">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Location</p>
+                    <p class="text-white font-medium text-lg truncate">Where to next?</p>
                 </div>
-                <div class="flex-1 px-6 py-2 hidden sm:block">
-                    <p class="text-xs text-gray-300 font-semibold uppercase tracking-wider mb-1">Dates</p>
-                    <p class="text-white font-medium">Any week</p>
+                <div class="flex-1 px-8 py-3 hidden sm:block">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Dates</p>
+                    <p class="text-white font-medium text-lg">Any week</p>
                 </div>
             </div>
-            <a href="/listings" class="bg-airbnb hover:bg-rose-600 text-white rounded-full h-14 w-14 md:h-16 md:w-auto md:px-8 flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-airbnb/30 group-hover:shadow-airbnb/50">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <span class="hidden md:block font-bold">Search</span>
+            <a href="/listings" class="bg-white hover:bg-gray-200 text-black rounded-full h-16 w-16 md:h-16 md:w-auto md:px-10 flex items-center justify-center gap-3 transition-all duration-300 shadow-xl group">
+                <i class="fa-solid fa-magnifying-glass text-lg group-hover:scale-110 transition-transform"></i>
+                <span class="hidden md:block font-bold text-lg">Search</span>
             </a>
         </div>
     </div>
-</div>
-
-<!-- Main Content Container with standard padding -->
-<div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-16 md:py-24">
     
-    <!-- Premium Curated Selection -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-        <div>
-            <h2 class="text-4xl md:text-5xl font-bold text-neutral-900 tracking-tight mb-3">Curated Collections</h2>
-            <p class="text-lg text-neutral-500 font-light">Handpicked properties for extraordinary experiences.</p>
-        </div>
-        <a href="/listings" class="group flex items-center gap-2 text-airbnb font-semibold hover:text-rose-600 transition-colors">
-            Explore all <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
-        </a>
-    </div>
-
-    <!-- Horizontal Scrollable Cards -->
-    <div class="flex overflow-x-auto pb-10 -mx-4 px-4 sm:mx-0 sm:px-0 gap-6 sm:gap-8 snap-x hide-scrollbar">
-        
-        <!-- Collection 1 -->
-        <a href="/listings" class="min-w-[85vw] sm:min-w-[400px] md:min-w-[450px] relative h-[500px] rounded-[2rem] overflow-hidden group snap-center cursor-pointer shadow-xl">
-            <div class="absolute inset-0 bg-neutral-900">
-                <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Coastal Homes" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700">
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 p-8 w-full">
-                <p class="text-white/80 text-sm font-semibold uppercase tracking-widest mb-2">Collection</p>
-                <h3 class="text-white text-3xl font-bold mb-2">Coastal Masterpieces</h3>
-                <p class="text-gray-300 font-light opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">Wake up to the sound of the ocean.</p>
-            </div>
-        </a>
-
-        <!-- Collection 2 -->
-        <a href="/listings" class="min-w-[85vw] sm:min-w-[400px] md:min-w-[450px] relative h-[500px] rounded-[2rem] overflow-hidden group snap-center cursor-pointer shadow-xl">
-            <div class="absolute inset-0 bg-neutral-900">
-                <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Mountain Cabins" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700">
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 p-8 w-full">
-                <p class="text-white/80 text-sm font-semibold uppercase tracking-widest mb-2">Collection</p>
-                <h3 class="text-white text-3xl font-bold mb-2">Secluded Cabins</h3>
-                <p class="text-gray-300 font-light opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">Disconnect in the heart of nature.</p>
-            </div>
-        </a>
-
-        <!-- Collection 3 -->
-        <a href="/listings" class="min-w-[85vw] sm:min-w-[400px] md:min-w-[450px] relative h-[500px] rounded-[2rem] overflow-hidden group snap-center cursor-pointer shadow-xl">
-            <div class="absolute inset-0 bg-neutral-900">
-                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Modern Mansions" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700">
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 p-8 w-full">
-                <p class="text-white/80 text-sm font-semibold uppercase tracking-widest mb-2">Collection</p>
-                <h3 class="text-white text-3xl font-bold mb-2">Modern Mansions</h3>
-                <p class="text-gray-300 font-light opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">Unparalleled luxury and design.</p>
-            </div>
-        </a>
-    </div>
-
-    <!-- Become a Host - Luxury Edition -->
-    <div class="mt-20 relative w-full rounded-[2.5rem] overflow-hidden shadow-2xl group flex items-center justify-between bg-neutral-900 p-10 md:p-20">
-        <!-- Artistic Background Elements -->
-        <div class="absolute -right-20 -top-20 w-[600px] h-[600px] bg-gradient-to-br from-airbnb/20 to-purple-600/20 rounded-full blur-[100px] group-hover:scale-110 transition-transform duration-1000"></div>
-        <div class="absolute -left-20 -bottom-20 w-[400px] h-[400px] bg-gradient-to-tr from-rose-500/20 to-orange-500/20 rounded-full blur-[80px] group-hover:scale-110 transition-transform duration-1000"></div>
-        
-        <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between w-full gap-10">
-            <div class="max-w-xl">
-                <h2 class="text-4xl md:text-6xl font-bold text-white tracking-tight mb-6">Open your door<br/>to the world.</h2>
-                <p class="text-xl text-gray-300 font-light mb-8">Earn extra income and unlock new opportunities by sharing your space.</p>
-            </div>
-            <a href="/listings/new" class="shrink-0 px-10 py-5 bg-white text-neutral-900 font-bold text-lg rounded-full shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] hover:scale-105 transition-all duration-300">
-                Become a Host
-            </a>
-        </div>
+    <!-- Scroll Down Indicator -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+        <i class="fa-solid fa-chevron-down text-white/50 text-2xl"></i>
     </div>
 </div>
 
+<!-- Main Content Container -->
+<div class="bg-neutral-950 text-white pb-32">
+    
+    <!-- "The Art of Travel" Split Section -->
+    <div class="max-w-[2000px] mx-auto px-6 md:px-20 py-32 flex flex-col lg:flex-row items-center gap-20">
+        <div class="lg:w-1/2 flex flex-col justify-center">
+            <h2 class="text-sm font-bold uppercase tracking-[0.3em] text-gray-400 mb-6">Redefining Luxury</h2>
+            <h3 class="text-4xl md:text-6xl font-light leading-tight mb-8">
+                Elevate your journey with hand-selected <span class="font-serif italic font-medium">architectural marvels.</span>
+            </h3>
+            <p class="text-lg text-gray-400 font-light max-w-xl mb-12 leading-relaxed">
+                Every NullStay property is vetted for extraordinary design, premium amenities, and unparalleled locations. Experience travel without compromise.
+            </p>
+            <a href="/listings" class="inline-flex items-center gap-4 text-white font-semibold uppercase tracking-widest text-sm hover:text-gray-300 transition group w-max border-b border-white pb-2">
+                Discover the collection <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+            </a>
+        </div>
+        
+        <!-- Overlapping Image Collage -->
+        <div class="lg:w-1/2 relative h-[600px] w-full">
+            <div class="absolute top-0 right-0 w-3/4 h-[450px] rounded-2xl overflow-hidden shadow-2xl z-10 hover:z-30 transition-all duration-500 hover:scale-105">
+                <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Luxury Cabin" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute bottom-0 left-0 w-2/3 h-[350px] rounded-2xl overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] z-20 hover:z-30 transition-all duration-500 hover:scale-105">
+                <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Coastal Home" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </div>
+
+    <!-- Bento-Box Collections Grid -->
+    <div class="max-w-[2000px] mx-auto px-6 md:px-20 py-16">
+        <div class="flex items-end justify-between mb-16">
+            <h2 class="text-4xl md:text-5xl font-light tracking-tight">Curated <span class="font-serif italic font-medium">Experiences</span></h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 md:gap-6 h-[1200px] md:h-[800px]">
+            
+            <!-- Bento Item 1: Large Featured -->
+            <a href="/listings" class="md:col-span-2 md:row-span-2 rounded-3xl overflow-hidden relative group cursor-pointer block h-full">
+                <div class="absolute inset-0 bg-black z-0">
+                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Penthouses" class="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition duration-700 ease-out">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"></div>
+                <div class="absolute bottom-0 left-0 p-10 z-20 w-full transform translate-y-4 group-hover:translate-y-0 transition duration-500">
+                    <p class="text-white/60 text-xs font-bold uppercase tracking-[0.2em] mb-3">Featured</p>
+                    <h3 class="text-4xl font-bold mb-3">Skyline Penthouses</h3>
+                    <p class="text-gray-300 font-light opacity-0 group-hover:opacity-100 transition duration-500 delay-100">Live above the clouds in the world's greatest cities.</p>
+                </div>
+            </a>
+
+            <!-- Bento Item 2: Top Right -->
+            <a href="/listings" class="md:col-span-2 md:row-span-1 rounded-3xl overflow-hidden relative group cursor-pointer block h-full">
+                <div class="absolute inset-0 bg-black z-0">
+                    <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Mansions" class="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition duration-700 ease-out">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10"></div>
+                <div class="absolute bottom-0 left-0 p-8 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition duration-500">
+                    <h3 class="text-2xl font-bold mb-1">Modern Mansions</h3>
+                    <p class="text-gray-300 text-sm font-light opacity-0 group-hover:opacity-100 transition duration-500">Unparalleled luxury and design.</p>
+                </div>
+            </a>
+
+            <!-- Bento Item 3: Bottom Middle -->
+            <a href="/listings" class="md:col-span-1 md:row-span-1 rounded-3xl overflow-hidden relative group cursor-pointer block h-full">
+                <div class="absolute inset-0 bg-black z-0">
+                    <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Coastal" class="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition duration-700 ease-out">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10"></div>
+                <div class="absolute bottom-0 left-0 p-8 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition duration-500">
+                    <h3 class="text-2xl font-bold mb-1">Oceanfront</h3>
+                </div>
+            </a>
+
+            <!-- Bento Item 4: Bottom Right -->
+            <a href="/listings" class="md:col-span-1 md:row-span-1 rounded-3xl overflow-hidden relative group cursor-pointer block h-full">
+                <div class="absolute inset-0 bg-black z-0">
+                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Spa" class="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition duration-700 ease-out">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10"></div>
+                <div class="absolute bottom-0 left-0 p-8 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition duration-500">
+                    <h3 class="text-2xl font-bold mb-1">Spa Retreats</h3>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- Infinite Scrolling Marquee -->
+    <div class="py-24 border-y border-white/10 mt-20 overflow-hidden bg-black relative flex items-center">
+        <!-- Fading edges -->
+        <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
+        
+        <div class="flex w-max animate-marquee gap-16 px-8 items-center">
+            <!-- Repeat items to ensure smooth infinite scroll -->
+            <% for(let i=0; i<4; i++) { %>
+            <div class="flex items-center gap-4 min-w-max">
+                <div class="w-12 h-12 rounded-full bg-neutral-800 flex items-center justify-center font-serif text-xl italic">A</div>
+                <div>
+                    <p class="text-xl font-light italic">"The most breathtaking property I've ever rented."</p>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest mt-1">Alice • Milan</p>
+                </div>
+            </div>
+            <div class="w-2 h-2 rounded-full bg-white/20"></div>
+            
+            <div class="flex items-center gap-4 min-w-max">
+                <div class="w-12 h-12 rounded-full bg-neutral-800 flex items-center justify-center font-serif text-xl italic">M</div>
+                <div>
+                    <p class="text-xl font-light italic">"NullStay Premium completely redefined luxury travel for us."</p>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest mt-1">Mark • Tokyo</p>
+                </div>
+            </div>
+            <div class="w-2 h-2 rounded-full bg-white/20"></div>
+            
+            <div class="flex items-center gap-4 min-w-max">
+                <div class="w-12 h-12 rounded-full bg-neutral-800 flex items-center justify-center font-serif text-xl italic">S</div>
+                <div>
+                    <p class="text-xl font-light italic">"Flawless design. Flawless service. We will be back."</p>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest mt-1">Sarah • Paris</p>
+                </div>
+            </div>
+            <div class="w-2 h-2 rounded-full bg-white/20"></div>
+            <% } %>
+        </div>
+    </div>
+
+</div>
+
+<!-- Custom Keyframes -->
 <style>
-    /* Animation for the hero badge */
+    /* Crossfade animation for 3 images (total 21s, 7s per image) */
+    @keyframes crossfade-1 {
+        0% { opacity: 1; transform: scale(1); }
+        25% { opacity: 1; transform: scale(1.05); }
+        33.33% { opacity: 0; transform: scale(1.05); }
+        91.66% { opacity: 0; transform: scale(1); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes crossfade-2 {
+        0% { opacity: 0; transform: scale(1); }
+        25% { opacity: 0; transform: scale(1); }
+        33.33% { opacity: 1; transform: scale(1); }
+        58.33% { opacity: 1; transform: scale(1.05); }
+        66.66% { opacity: 0; transform: scale(1.05); }
+        100% { opacity: 0; transform: scale(1); }
+    }
+    @keyframes crossfade-3 {
+        0% { opacity: 0; transform: scale(1); }
+        58.33% { opacity: 0; transform: scale(1); }
+        66.66% { opacity: 1; transform: scale(1); }
+        91.66% { opacity: 1; transform: scale(1.05); }
+        100% { opacity: 0; transform: scale(1.05); }
+    }
+
+    .animate-crossfade-1 { animation: crossfade-1 21s infinite ease-in-out; }
+    .animate-crossfade-2 { animation: crossfade-2 21s infinite ease-in-out; }
+    .animate-crossfade-3 { animation: crossfade-3 21s infinite ease-in-out; }
+
+    /* Fade in up */
     @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
+        from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
     }
     .animate-fade-in-up {
-        animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+        animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    /* Hide scrollbar for collections */
-    .hide-scrollbar::-webkit-scrollbar {
-        display: none;
+
+    /* Infinite Marquee */
+    @keyframes marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
     }
-    .hide-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+    .animate-marquee {
+        animation: marquee 40s linear infinite;
+    }
+    .animate-marquee:hover {
+        animation-play-state: paused;
     }
 </style>
