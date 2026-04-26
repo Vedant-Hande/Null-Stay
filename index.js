@@ -6,6 +6,10 @@ import connectDB from "./config/database.js";
 import listings from "./models/listing.js";
 import methodOverride from "method-override"; // Standard ES6 import
 import ejsMate from "ejs-mate";
+import wrapAsync from "./utils/wrapAsync.js";
+import ExpressError from "./utils/ExpressError.js";
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+import { validateListing } from "./middleware/validationMiddleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,10 +48,42 @@ app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-app.get("/listings", async (req, res) => {
-  const allListing = await listings.find({});
-  res.render("listings/listings", { allListing });
+// Informational Routes
+app.get("/help", (req, res) => {
+  res.render("info/help.ejs");
 });
+
+app.get("/terms", (req, res) => {
+  res.render("info/static.ejs", { title: "Terms of Service" });
+});
+
+app.get("/privacy", (req, res) => {
+  res.render("info/static.ejs", { title: "Privacy Policy" });
+});
+
+app.get("/sitemap", (req, res) => {
+  res.render("info/static.ejs", { title: "Sitemap" });
+});
+
+app.get("/privacy-choices", (req, res) => {
+  res.render("info/static.ejs", { title: "Your Privacy Choices" });
+});
+
+app.get("/careers", (req, res) => {
+  res.render("info/static.ejs", { title: "Careers" });
+});
+
+app.get("/hosting", (req, res) => {
+  res.render("info/hosting.ejs");
+});
+
+app.get(
+  "/listings",
+  wrapAsync(async (req, res, next) => {
+    const allListing = await listings.find({});
+    res.render("listings/listings", { allListing });
+  }),
+);
 
 // new listing route
 app.get("/listings/new", (req, res) => {
@@ -55,81 +91,77 @@ app.get("/listings/new", (req, res) => {
 });
 
 // Create listing route
-app.post("/listings", async (req, res) => {
-  try {
+app.post(
+  "/listings",
+  validateListing,
+  wrapAsync(async (req, res, next) => {
     const newListing = new listings(req.body.listing);
     await newListing.save();
     console.log("New listing created:", newListing);
     res.redirect("/listings");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("server error");
-  }
-});
+  }),
+);
 
 // edit Listing route
-app.get("/listings/:id/edit", async (req, res) => {
-  try {
+app.get(
+  "/listings/:id/edit",
+  wrapAsync(async (req, res, next) => {
     let { id } = req.params;
     const listingToEdit = await listings.findById(id);
     if (!listingToEdit) {
-      return res.status(404).send("Listings not found");
+      throw new ExpressError(404, "Listing not found");
     }
-
     res.render("listings/editListing.ejs", { listingToEdit });
-  } catch (err) {
-    res.status(500).send("server error");
-  }
-});
+  }),
+);
 
 // update listing route
-app.put("/listings/:id", async (req, res) => {
-  try {
+app.put(
+  "/listings/:id",
+  validateListing,
+  wrapAsync(async (req, res, next) => {
     let { id } = req.params;
     const updatedListing = await listings.findByIdAndUpdate(
       id,
-      {
-        ...req.body.listing,
-      },
+      { ...req.body.listing },
       { new: true, runValidators: true },
     );
     console.log(updatedListing);
     if (!updatedListing) {
-      return res.status(404).send("Listing not found");
+      throw new ExpressError(404, "Listing not found");
     }
     res.redirect(`/listings/${id}`);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("server error");
-  }
-});
+  }),
+);
 
 // delete listing route
-app.delete("/listings/:id/delete", async (req, res) => {
-  try {
+app.delete(
+  "/listings/:id/delete",
+  wrapAsync(async (req, res, next) => {
     let { id } = req.params;
     const deletedListing = await listings.findByIdAndDelete(id);
     if (!deletedListing) {
-      return res.status(404).send("Listing not found");
+      throw new ExpressError(404, "Listing not found");
     }
     res.redirect("/listings");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("server error");
-  }
-});
+  }),
+);
 
 // Show route
-app.get("/listings/:id", async (req, res) => {
-  try {
+app.get(
+  "/listings/:id",
+  wrapAsync(async (req, res, next) => {
     let { id } = req.params;
     const listing = await listings.findById(id);
-
     if (!listing) {
-      return res.status(404).send("Listing not found");
+      throw new ExpressError(404, "Listing not found");
     }
     res.render("listings/show.ejs", { listing }); // Render your view
-  } catch (err) {
-    res.status(500).send("Server Error");
-  }
-});
+  }),
+);
+
+// 404 Catch-All Route (Must be after all other routes)
+app.use(notFound);
+
+// Error Handling Middleware (Must be the very last middleware)
+app.use(errorHandler);
