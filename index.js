@@ -41,7 +41,7 @@ app.use(methodOverride("_method"));
 
 // API Routes
 app.get("/", (req, res) => {
-  res.send("Hello");
+  res.render("home.ejs");
 });
 
 app.get("/listings", async (req, res) => {
