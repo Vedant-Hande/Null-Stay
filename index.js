@@ -11,6 +11,7 @@ import ExpressError from "./utils/ExpressError.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { validateListing } from "./middleware/validationMiddleware.js";
 
+// es6 imports
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
