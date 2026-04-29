@@ -161,6 +161,9 @@ app.get(
   }),
 );
 
+// Silently handle browser's automatic favicon requests to prevent false 404 errors
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
 // 404 Catch-All Route (Must be after all other routes)
 app.use(notFound);
 
