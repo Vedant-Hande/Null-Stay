@@ -197,6 +197,24 @@ app.post(
   }),
 );
 
+// Delete review route
+app.delete(
+  "/listings/:id/reviews/:reviewId",
+  wrapAsync(async (req, res, next) => {
+    let { id, reviewId } = req.params;
+    const listing = await listings.findById(id);
+    if (!listing) {
+      throw new ExpressError(404, "Listing not found");
+    }
+
+    listing.reviews = listing.reviews.filter((r) => r.toString() !== reviewId);
+    await listing.save();
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/listings/${id}`);
+  }),
+);
+
 // Silently handle browser's automatic favicon requests to prevent false 404 errors
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
