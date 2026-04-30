@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const schema = mongoose.Schema;
-// import Review from "../models/review.js";
+import Review from "../models/review.js";
 
 const listingSchema = new schema({
   title: {
@@ -77,6 +77,7 @@ const listingSchema = new schema({
     type: Date,
     default: Date.now,
   },
+  reviews: [{ type: Review.schema, ref: "Review" }],
 });
 
 const Listing = mongoose.model("Listing", listingSchema);
