@@ -118,36 +118,37 @@
                             <!-- Review Form -->
                             <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-10">
                                 <h3 class="text-lg font-semibold mb-4">Leave a Review</h3>
-                                <form action="#" method="POST" class="flex flex-col gap-4">
+                                <form action="/listings/<%= listing._id %>/reviews" method="POST"
+                                    class="flex flex-col gap-4">
                                     <!-- CSS Interactive Star Rating -->
                                     <div class="flex flex-col gap-2">
                                         <span class="text-sm font-semibold text-gray-700">Overall Rating</span>
                                         <div class="flex flex-row-reverse justify-end gap-1 group">
-                                            <input type="radio" id="star5" name="rating" value="5"
+                                            <input type="radio" id="star5" name="reviews[rating]" value="5"
                                                 class="peer hidden" />
                                             <label for="star5"
                                                 class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
                                                     class="fa-solid fa-star"></i></label>
 
-                                            <input type="radio" id="star4" name="rating" value="4"
+                                            <input type="radio" id="star4" name="reviews[rating]" value="4"
                                                 class="peer hidden" />
                                             <label for="star4"
                                                 class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
                                                     class="fa-solid fa-star"></i></label>
 
-                                            <input type="radio" id="star3" name="rating" value="3"
+                                            <input type="radio" id="star3" name="reviews[rating]" value="3"
                                                 class="peer hidden" />
                                             <label for="star3"
                                                 class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
                                                     class="fa-solid fa-star"></i></label>
 
-                                            <input type="radio" id="star2" name="rating" value="2"
+                                            <input type="radio" id="star2" name="reviews[rating]" value="2"
                                                 class="peer hidden" />
                                             <label for="star2"
                                                 class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
                                                     class="fa-solid fa-star"></i></label>
 
-                                            <input type="radio" id="star1" name="rating" value="1"
+                                            <input type="radio" id="star1" name="reviews[rating]" value="1"
                                                 class="peer hidden" />
                                             <label for="star1"
                                                 class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
@@ -165,14 +166,14 @@
 
                                     <!-- Comment Box -->
                                     <div>
-                                        <textarea name="comment" rows="3" placeholder="Share your experience..."
-                                            required
+                                        <textarea name="reviews[comment]" rows="3"
+                                            placeholder="Share your experience..." required
                                             class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition resize-none"></textarea>
                                     </div>
 
                                     <div>
-                                        <button type="button"
-                                            class="px-6 py-3 bg-black hover:bg-gray-800 text-white font-semibold rounded-lg transition">
+                                        <button type="submit" class="px-6 py-3 bg-black
+                                            hover:bg-gray-800 text-white font-semibold rounded-lg transition">
                                             Submit Review
                                         </button>
                                     </div>

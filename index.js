@@ -10,6 +10,7 @@ import wrapAsync from "./utils/wrapAsync.js";
 import ExpressError from "./utils/ExpressError.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { validateListing } from "./middleware/validationMiddleware.js";
+import Review from "./models/review.js";
 
 // es6 imports
 const __filename = fileURLToPath(import.meta.url);
@@ -158,6 +159,31 @@ app.get(
       throw new ExpressError(404, "Listing not found");
     }
     res.render("listings/show.ejs", { listing }); // Render your view
+  }),
+);
+
+app.post(
+  "/listings/:id/reviews",
+  wrapAsync(async (req, res, next) => {
+    let { id } = req.params;
+    let listing = await listings.findById(id);
+    if (!listing) {
+      throw new ExpressError(404, "Listing not found");
+    }
+    const reviewData = req.body.reviews;
+    if (!reviewData || !reviewData.comment || !reviewData.rating) {
+      throw new ExpressError(400, "Review must include a rating and comment");
+    }
+
+    const newReview = new Review(reviewData);
+    await newReview.save(reviewData); // Save the review to the database
+    listing.reviews.push(reviewData);
+    await listing.save();
+
+    console.log("Received review data:", reviewData);
+    console.log("Listing found for review:", listing);
+
+    res.redirect(`/listings/${id}`);
   }),
 );
 
