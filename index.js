@@ -157,7 +157,7 @@ app.get(
   "/listings/:id",
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
-    const listing = await listings.findById(id);
+    const listing = await listings.findById(id).populate("reviews");
     if (!listing) {
       throw new ExpressError(404, "Listing not found");
     }
@@ -188,13 +188,10 @@ app.post(
       throw new ExpressError(400, "Review must include a rating and comment");
     }
 
-    const newReview = new Review(reviewData);
-    await newReview.save(reviewData); // Save the review to the database
-    listing.reviews.push(reviewData);
+    const newReview = new Review(reviewData); // Create a new review document
+    await newReview.save(); // Save the review to the database
+    listing.reviews.push(newReview._id); // Add the review reference to the listing
     await listing.save();
-
-    console.log("Received review data:", reviewData);
-    console.log("Listing found for review:", listing);
 
     res.redirect(`/listings/${id}`);
   }),

@@ -177,7 +177,7 @@
                                     </div>
 
                                     <div>
-                                        <button type="submit" class="px-6 py-3 bg-black
+                                        <button type="submit" class="px-6 py-3 bg-airbnb
                                             hover:bg-gray-800 text-white font-semibold rounded-lg transition">
                                             Submit Review
                                         </button>
@@ -187,98 +187,41 @@
 
                             <!-- Review Gallery Grid -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
-
-                                <!-- Dummy Review 1 -->
-                                <div class="flex flex-col gap-3">
-                                    <div class="flex items-center gap-4">
-                                        <div
-                                            class="w-12 h-12 rounded-full bg-gray-800 text-white flex items-center justify-center text-lg font-bold">
+                                <% if (listing.reviews && listing.reviews.length> 0) { %>
+                                    <% listing.reviews.forEach(review=> { %>
+                                        <div class="flex flex-col gap-3">
+                                            <div class="flex items-center gap-4">
+                                                <div
+                                                    class="w-12 h-12 rounded-full bg-gray-800 text-white flex items-center justify-center text-lg font-bold">
+                                                    <!-- You can add user initials or avatar here if you have user data -->
+                                                    <i class="fa-solid fa-user"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-semibold text-gray-900">Anonymous User</h4>
+                                                    <div class="text-sm text-gray-500">
+                                                        <%= new Date(review.createdAt).toLocaleDateString('en-US', {
+                                                            year: 'numeric' , month: 'long' }) %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex text-yellow-400 text-xs">
+                                                <% for (let i=0; i < review.rating; i++) { %>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <% } %>
+                                                        <% for (let i=review.rating; i < 5; i++) { %>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <% } %>
+                                            </div>
+                                            <p class="text-gray-700 leading-relaxed font-light">
+                                                "<%= review.comment %>"
+                                            </p>
                                         </div>
-                                        <div>
-                                            <h4 class="font-semibold text-gray-900">Alice</h4>
-                                            <div class="text-sm text-gray-500">October 2026</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex text-yellow-400 text-xs">
-                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                            class="fa-solid fa-star"></i>
-                                    </div>
-                                    <p class="text-gray-700 leading-relaxed font-light">
-                                        "Absolutely incredible stay! The property was exactly as pictured, spotlessly
-                                        clean, and the host was extremely responsive. Would highly recommend to anyone
-                                        visiting the area."
-                                    </p>
-                                </div>
-
-                                <!-- Dummy Review 2 -->
-                                <div class="flex flex-col gap-3">
-                                    <div class="flex items-center gap-4">
-                                        <div
-                                            class="w-12 h-12 rounded-full bg-rose-600 text-white flex items-center justify-center text-lg font-bold">
-                                            M</div>
-                                        <div>
-                                            <h4 class="font-semibold text-gray-900">Mark</h4>
-                                            <div class="text-sm text-gray-500">September 2026</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex text-yellow-400 text-xs">
-                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                            class="fa-solid fa-star"></i>
-                                    </div>
-                                    <p class="text-gray-700 leading-relaxed font-light">
-                                        "The location is unbeatable. We could walk to all the major attractions. The
-                                        kitchen was well stocked which made cooking meals a breeze. We'll definitely be
-                                        back!"
-                                    </p>
-                                </div>
-
-                                <!-- Dummy Review 3 -->
-                                <div class="flex flex-col gap-3">
-                                    <div class="flex items-center gap-4">
-                                        <div
-                                            class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
-                                            S</div>
-                                        <div>
-                                            <h4 class="font-semibold text-gray-900">Sarah</h4>
-                                            <div class="text-sm text-gray-500">August 2026</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex text-yellow-400 text-xs">
-                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                            class="fa-solid fa-star-half-stroke"></i>
-                                    </div>
-                                    <p class="text-gray-700 leading-relaxed font-light">
-                                        "Beautiful place with great amenities. The Wi-Fi was very fast so I could work
-                                        comfortably. Only taking off half a star because parking was a little tricky to
-                                        find."
-                                    </p>
-                                </div>
-
-                                <!-- Dummy Review 4 -->
-                                <div class="flex flex-col gap-3">
-                                    <div class="flex items-center gap-4">
-                                        <div
-                                            class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center text-lg font-bold">
-                                            D</div>
-                                        <div>
-                                            <h4 class="font-semibold text-gray-900">David</h4>
-                                            <div class="text-sm text-gray-500">July 2026</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex text-yellow-400 text-xs">
-                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                            class="fa-solid fa-star"></i>
-                                    </div>
-                                    <p class="text-gray-700 leading-relaxed font-light">
-                                        "Loved the smart lock check-in process. The space is decorated so well it felt
-                                        like a luxury hotel. Highly recommend!"
-                                    </p>
-                                </div>
-
+                                        <% }); %>
+                                            <% } else { %>
+                                                <div class="col-span-full text-center text-gray-500 py-8">
+                                                    No reviews yet. Be the first to leave one!
+                                                </div>
+                                                <% } %>
                             </div>
 
                             <div class="mt-8">
@@ -336,7 +279,8 @@
                         class="w-full bg-airbnb text-white rounded-lg py-3.5 font-semibold text-lg hover:bg-rose-600 transition mb-4">
                         Reserve
                     </button>
-                    <div class="text-center text-sm text-gray-500 font-light mb-4">You won't be charged yet</div>
+                    <div class="text-center text-sm text-gray-500 font-light mb-4">You won't be charged yet
+                    </div>
 
                     <div class="flex flex-col gap-3 pb-4 border-b border-gray-200">
                         <div class="flex justify-between text-gray-700">

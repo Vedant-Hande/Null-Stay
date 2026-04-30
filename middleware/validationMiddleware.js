@@ -1,5 +1,6 @@
 import { listingSchema } from "../schemas/listing.js";
 import ExpressError from "../utils/ExpressError.js";
+import { reviewSchema } from "../schemas/review.js";
 
 export const validateListing = (req, res, next) => {
   const { error } = listingSchema.validate(req.body);
