@@ -158,7 +158,15 @@ app.get(
     if (!listing) {
       throw new ExpressError(404, "Listing not found");
     }
-    res.render("listings/show.ejs", { listing }); // Render your view
+
+    const avgRating =
+      listing.reviews.length > 0
+        ? (
+            listing.reviews.reduce((sum, r) => sum + r.rating, 0) /
+            listing.reviews.length
+          ).toFixed(2)
+        : null;
+    res.render("listings/show.ejs", { listing, avgRating }); // Render your view
   }),
 );
 

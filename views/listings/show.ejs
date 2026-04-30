@@ -8,9 +8,12 @@
             </h1>
             <div class="flex flex-row items-center justify-between flex-wrap gap-4">
                 <div class="flex flex-row items-center gap-2 sm:gap-4 text-sm font-medium text-gray-800 flex-wrap">
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-star"></i> 4.95</span>
-                    <span class="underline cursor-pointer">128 reviews</span>
-                    <span class="text-gray-400 hidden sm:inline">·</span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-star"></i>
+                        <%= avgRating || "N/A" %>
+                    </span>
+                    <span class="underline cursor-pointer">
+                        <%= listing.reviews.length %> reviews
+                    </span> <span class="text-gray-400 hidden sm:inline">·</span>
                     <span class="flex items-center gap-1 hidden sm:flex"><i class="fa-solid fa-medal"></i>
                         Superhost</span>
                     <span class="text-gray-400 hidden sm:inline">·</span>
@@ -112,7 +115,9 @@
                         <div class="border-t border-gray-200 pt-8 pb-6 mt-2">
                             <div class="flex items-center gap-2 text-2xl font-semibold mb-8">
                                 <i class="fa-solid fa-star"></i>
-                                <span>4.95 · 128 reviews</span>
+                                <span>
+                                    <%= avgRating || "N/A" %> · <%= listing.reviews.length %> reviews
+                                </span>
                             </div>
 
                             <!-- Review Form -->
@@ -188,7 +193,7 @@
                                     <div class="flex items-center gap-4">
                                         <div
                                             class="w-12 h-12 rounded-full bg-gray-800 text-white flex items-center justify-center text-lg font-bold">
-                                            A</div>
+                                            </div>
                                         <div>
                                             <h4 class="font-semibold text-gray-900">Alice</h4>
                                             <div class="text-sm text-gray-500">October 2026</div>
@@ -279,7 +284,7 @@
                             <div class="mt-8">
                                 <button type="button" onclick="showAllReviews()"
                                     class="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
-                                    Show all 128 reviews
+                                    Show all <%= listing.reviews.length %> reviews
                                 </button>
                             </div>
                         </div> <!-- Actions (Edit/Delete) -->
