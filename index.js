@@ -9,7 +9,10 @@ import ejsMate from "ejs-mate";
 import wrapAsync from "./utils/wrapAsync.js";
 import ExpressError from "./utils/ExpressError.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
-import { validateListing } from "./middleware/validationMiddleware.js";
+import {
+  validateListing,
+  validateReview,
+} from "./middleware/validationMiddleware.js";
 import Review from "./models/review.js";
 
 // es6 imports
@@ -170,8 +173,10 @@ app.get(
   }),
 );
 
+// Create review route
 app.post(
   "/listings/:id/reviews",
+  validateReview,
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
     let listing = await listings.findById(id);
