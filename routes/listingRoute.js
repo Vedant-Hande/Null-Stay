@@ -3,6 +3,7 @@ import wrapAsync from "../utils/wrapAsync.js";
 import { validateListing } from "../middleware/validationMiddleware.js";
 import listings from "../models/listing.js";
 import ExpressError from "../utils/ExpressError.js";
+import Review from "../models/review.js";
 
 const router = express.Router();
 
