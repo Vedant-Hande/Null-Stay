@@ -1,114 +1,240 @@
 <% layout('layouts/boilerplate') -%>
 
-<div class="max-w-5xl mx-auto py-12 px-4">
-    <div class="text-center mb-16">
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">Your Travel Lineage</h1>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explore the legacy of your journeys. See where you've been and discover where your wanderlust might take you next.</p>
-    </div>
+<!-- Leaflet CSS & JS for Map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- html2canvas for Exporting -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-    <div class="relative">
-        <!-- Vertical Line (The Trunk) -->
-        <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-[75%] bg-gray-200 z-0"></div>
+<!-- External Journey CSS -->
+<link rel="stylesheet" href="/css/journey.css">
 
-        <!-- Node 1 (Past Trip) -->
-        <div class="relative z-10 flex items-center justify-between w-full mb-16">
-            <div class="w-5/12 text-right pr-4 md:pr-8">
-                <div class="inline-block bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 w-full max-w-sm ml-auto cursor-pointer group">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    </div>
-                    <div class="p-5 text-left">
-                        <p class="text-xs text-airbnb font-bold uppercase tracking-wider mb-1">Dec 2024</p>
-                        <h3 class="text-xl font-bold text-gray-900 mb-1">Skyline Penthouse</h3>
-                        <p class="text-gray-500 text-sm">New York, USA</p>
-                    </div>
-                </div>
-            </div>
-            <div class="w-2/12 flex justify-center">
-                <div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-airbnb border-4 border-white shadow-md z-10"></div>
-            </div>
-            <div class="w-5/12 pl-4 md:pl-8"></div>
-        </div>
-
-        <!-- Node 2 (Past Trip) -->
-        <div class="relative z-10 flex items-center justify-between w-full mb-16 flex-row-reverse">
-            <div class="w-5/12 pl-4 md:pl-8 text-left">
-                <div class="inline-block bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 w-full max-w-sm cursor-pointer group">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    </div>
-                    <div class="p-5 text-left">
-                        <p class="text-xs text-airbnb font-bold uppercase tracking-wider mb-1">Feb 2025</p>
-                        <h3 class="text-xl font-bold text-gray-900 mb-1">Oceanfront Villa</h3>
-                        <p class="text-gray-500 text-sm">Malibu, California</p>
-                    </div>
-                </div>
-            </div>
-            <div class="w-2/12 flex justify-center">
-                <div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-airbnb border-4 border-white shadow-md z-10"></div>
-            </div>
-            <div class="w-5/12 pr-4 md:pr-8"></div>
-        </div>
-
-        <!-- Node 3 (Past Trip) -->
-        <div class="relative z-10 flex items-center justify-between w-full mb-12">
-            <div class="w-5/12 text-right pr-4 md:pr-8">
-                <div class="inline-block bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 w-full max-w-sm ml-auto cursor-pointer group">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    </div>
-                    <div class="p-5 text-left">
-                        <p class="text-xs text-airbnb font-bold uppercase tracking-wider mb-1">April 2026</p>
-                        <h3 class="text-xl font-bold text-gray-900 mb-1">Alpine Cabin</h3>
-                        <p class="text-gray-500 text-sm">Swiss Alps</p>
-                    </div>
-                </div>
-            </div>
-            <div class="w-2/12 flex justify-center">
-                <div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-airbnb border-4 border-white shadow-md z-10"></div>
-            </div>
-            <div class="w-5/12 pl-4 md:pl-8"></div>
-        </div>
-
-        <div class="text-center mt-16 mb-12 relative z-10">
-            <div class="flex items-center justify-center gap-4 mb-8">
-                <div class="h-px bg-gray-300 flex-grow max-w-[100px]"></div>
-                <span class="bg-gradient-to-r from-rose-100 to-rose-50 text-airbnb font-semibold py-2 px-6 rounded-full border border-rose-200 shadow-sm inline-flex items-center gap-2">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Suggested Next Chapters
-                </span>
-                <div class="h-px bg-gray-300 flex-grow max-w-[100px]"></div>
-            </div>
-        </div>
-
-        <!-- Suggested Destinations Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 max-w-4xl mx-auto">
+<!-- Main Page Background -->
+<div class="min-h-screen bg-white py-12 px-4 relative overflow-hidden" id="exportContainer">
+    <div class="max-w-[1400px] mx-auto relative z-10">
+        
+        <!-- Header & Dashboard -->
+        <div class="mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-8 tracking-tight text-center md:text-left">Your Travel Lineage</h1>
             
-            <!-- Suggestion 1 -->
-            <div class="bg-white rounded-2xl shadow-xl border border-rose-100 overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group cursor-pointer flex flex-col">
-                <div class="relative h-56 overflow-hidden">
-                    <div class="absolute top-4 left-4 z-20 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/20 font-medium tracking-wide">Contrast Trip</div>
-                    <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 opacity-95">
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-6 bg-slate-50/80 backdrop-blur-md p-4 rounded-3xl border border-gray-100 shadow-sm">
+                <!-- Travel DNA Stats -->
+                <div class="flex gap-4 md:gap-8 items-center">
+                    <div class="text-center px-2 md:px-4 border-r border-gray-200">
+                        <p class="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-widest mb-1">Continents</p>
+                        <p class="text-2xl md:text-3xl font-bold text-gray-900">3</p>
+                    </div>
+                    <div class="text-center px-2 md:px-4 border-r border-gray-200">
+                        <p class="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-widest mb-1">Nights Away</p>
+                        <p class="text-2xl md:text-3xl font-bold text-gray-900">45</p>
+                    </div>
+                    <div class="text-center px-2 md:px-4 border-r border-gray-200">
+                        <p class="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-widest mb-1">Favorite Vibe</p>
+                        <p class="text-lg md:text-xl font-bold text-blue-600 flex items-center justify-center gap-2"><i class="fa-solid fa-water"></i> Coastal</p>
+                    </div>
+                    <div class="text-center px-2 md:px-4">
+                        <p class="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-widest mb-1">Badges</p>
+                        <p class="text-2xl md:text-3xl font-bold text-airbnb">5 <i class="fa-solid fa-medal text-lg ml-1"></i></p>
+                    </div>
                 </div>
-                <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Tropical Estate</h3>
-                    <p class="text-gray-600 mb-6 flex-grow">Escape the cold. You loved the ocean in Malibu, how about an upgraded tropical retreat in Bali?</p>
-                    <button class="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition duration-300">Explore Retreat</button>
+
+                <!-- Controls (Map/Tree Toggle & Share) -->
+                <div class="flex gap-3 w-full lg:w-auto justify-center" data-html2canvas-ignore="true">
+                    <button id="toggleMapBtn" class="bg-white border border-gray-200 text-gray-700 hover:text-airbnb hover:border-airbnb px-5 py-3 rounded-full font-semibold transition shadow-sm flex items-center gap-2">
+                        <i class="fa-solid fa-globe"></i> <span>Globe View</span>
+                    </button>
+                    <button id="shareBtn" class="bg-gray-900 hover:bg-black text-white px-5 py-3 rounded-full font-semibold transition shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-up-from-bracket"></i> Share Legacy
+                    </button>
                 </div>
             </div>
+        </div>
 
-            <!-- Suggestion 2 -->
-            <div class="bg-white rounded-2xl shadow-xl border border-blue-100 overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group cursor-pointer flex flex-col">
-                <div class="relative h-56 overflow-hidden">
-                    <div class="absolute top-4 left-4 z-20 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/20 font-medium tracking-wide">Proximity Trip</div>
-                    <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 opacity-95">
-                </div>
-                <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Parisian Loft</h3>
-                    <p class="text-gray-600 mb-6 flex-grow">Keep exploring Europe. After the Swiss Alps, experience the elegance of central Paris.</p>
-                    <button class="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition duration-300">Explore Loft</button>
+        <!-- Interactive Map Container -->
+        <div id="mapContainer" class="hidden w-full h-[700px] rounded-[2rem] overflow-hidden shadow-2xl border border-gray-200 relative z-10 mb-12 opacity-0 transition-opacity duration-500">
+            <div id="map" class="w-full h-full z-0"></div>
+            <!-- Map Overlay UI -->
+            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-gray-100 z-10 font-medium text-gray-800 flex items-center gap-3">
+                <span class="w-3 h-3 rounded-full bg-airbnb animate-pulse"></span> Showing your global footprint
+            </div>
+        </div>
+
+        <!-- Scrollable Tree Container -->
+        <div id="treeContainer" class="tree-container overflow-x-auto pb-20 pt-4 w-full flex justify-center transition-opacity duration-500">
+            
+            <div class="ancestry-tree inline-block min-w-max px-8">
+                <ul id="mainTreeUl">
+                    <!-- LEVEL 1: The Origin -->
+                    <li>
+                        <div class="node-card w-56 md:w-64 cursor-pointer relative z-10 bg-white p-2 rounded-xl transition-all duration-300" onclick="openScrapbook('Skyline Penthouse', 'New York, USA', 'Dec 2024', 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                            <div class="block">
+                                <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3 border border-gray-100">
+                                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-900 text-[10px] font-bold px-2 py-1 rounded z-30 shadow-sm uppercase tracking-wider">The Origin</div>
+                                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="object-cover h-full w-full hover:scale-105 transition duration-500">
+                                    <div class="absolute top-3 right-3 text-white z-20"><i class="fa-solid fa-camera text-xl drop-shadow-md transition opacity-80 hover:opacity-100"></i></div>
+                                    <!-- Collaborative Avatars -->
+                                    <div class="absolute bottom-3 right-3 flex -space-x-2 z-30">
+                                        <img class="w-7 h-7 rounded-full border-2 border-white shadow-sm" src="https://i.pravatar.cc/100?img=33" alt="Friend">
+                                    </div>
+                                </div>
+                                <div class="flex flex-col text-left px-1">
+                                    <div class="flex flex-row justify-between items-start">
+                                        <div class="font-semibold text-base text-gray-900 truncate pr-2">New York, USA</div>
+                                        <div class="flex flex-row items-center gap-1 font-light text-sm text-gray-900"><i class="fa-solid fa-star text-xs"></i><span>5.0</span></div>
+                                    </div>
+                                    <div class="font-light text-neutral-500 text-sm truncate">Skyline Penthouse</div>
+                                    <div class="font-light text-neutral-500 text-sm">Dec 2024</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LEVEL 2 -->
+                        <ul>
+                            <!-- Left Branch -->
+                            <li>
+                                <div class="node-card w-56 md:w-64 cursor-pointer relative z-10 bg-white p-2 rounded-xl transition-all duration-300" onclick="openScrapbook('Oceanfront Villa', 'Malibu, USA', 'Feb 2025', 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                    <div class="block">
+                                        <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3 border border-gray-100">
+                                            <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="object-cover h-full w-full hover:scale-105 transition duration-500">
+                                            <div class="absolute top-3 right-3 text-white z-20"><i class="fa-solid fa-camera text-xl drop-shadow-md transition opacity-80 hover:opacity-100"></i></div>
+                                            <!-- Collaborative Avatars -->
+                                            <div class="absolute bottom-3 right-3 flex -space-x-2 z-30">
+                                                <img class="w-7 h-7 rounded-full border-2 border-white shadow-sm" src="https://i.pravatar.cc/100?img=12" alt="Friend">
+                                                <img class="w-7 h-7 rounded-full border-2 border-white shadow-sm" src="https://i.pravatar.cc/100?img=33" alt="Friend">
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col text-left px-1">
+                                            <div class="flex flex-row justify-between items-start">
+                                                <div class="font-semibold text-base text-gray-900 truncate pr-2">Malibu, USA</div>
+                                                <div class="flex flex-row items-center gap-1 font-light text-sm text-gray-900"><i class="fa-solid fa-star text-xs"></i><span>4.8</span></div>
+                                            </div>
+                                            <div class="font-light text-neutral-500 text-sm truncate">Oceanfront Villa</div>
+                                            <div class="font-light text-neutral-500 text-sm">Feb 2025</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- LEVEL 3 - Left Branch Children -->
+                                <ul id="leftBranchEnd">
+                                    <li>
+                                        <div class="node-card w-56 md:w-64 cursor-pointer relative z-10 bg-white p-2 rounded-xl transition-all duration-300" onclick="openScrapbook('Tropical Estate', 'Bali, Indonesia', 'Aug 2025', 'https://images.unsplash.com/photo-1540541338287-41700207dee6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                            <div class="block">
+                                                <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3 border border-gray-100">
+                                                    <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="object-cover h-full w-full hover:scale-105 transition duration-500">
+                                                    <div class="absolute top-3 right-3 text-white z-20"><i class="fa-solid fa-camera text-xl drop-shadow-md transition opacity-80 hover:opacity-100"></i></div>
+                                                </div>
+                                                <div class="flex flex-col text-left px-1">
+                                                    <div class="flex flex-row justify-between items-start">
+                                                        <div class="font-semibold text-base text-gray-900 truncate pr-2">Bali, Indonesia</div>
+                                                        <div class="flex flex-row items-center gap-1 font-light text-sm text-gray-900"><i class="fa-solid fa-star text-xs"></i><span>4.9</span></div>
+                                                    </div>
+                                                    <div class="font-light text-neutral-500 text-sm truncate">Tropical Estate</div>
+                                                    <div class="font-light text-neutral-500 text-sm">Aug 2025</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- AI SUGGESTIONS LEVEL -->
+                                        <ul class="suggestions-row mt-6 relative" id="aiSuggestionsList">
+                                            <li>
+                                                <div class="w-56 md:w-64 cursor-pointer relative z-10 bg-white p-2 rounded-xl transition-all duration-300 hover:-translate-y-2 group">
+                                                    <div class="block">
+                                                        <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3 border-2 border-rose-300 shadow-sm">
+                                                            <div class="absolute top-2 left-2 bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded z-30 shadow-sm uppercase tracking-wider flex items-center gap-1"><i class="fa-solid fa-sparkles"></i> AI Match</div>
+                                                            <img src="https://images.unsplash.com/photo-1439066615861-d1af74d74000?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="object-cover h-full w-full group-hover:scale-105 transition duration-500">
+                                                        </div>
+                                                        <div class="flex flex-col text-left px-1">
+                                                            <div class="flex flex-row justify-between items-start">
+                                                                <div class="font-semibold text-base text-gray-900 truncate pr-2">Fiji</div>
+                                                            </div>
+                                                            <div class="font-light text-neutral-500 text-sm truncate">Private Island Resort</div>
+                                                            <div class="font-bold text-rose-500 text-xs mt-1">Suggested next trip</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Right Branch -->
+                            <li>
+                                <div class="node-card w-56 md:w-64 cursor-pointer relative z-10 bg-white p-2 rounded-xl transition-all duration-300" onclick="openScrapbook('Alpine Cabin', 'Swiss Alps', 'Jan 2026', 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                    <div class="block">
+                                        <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3 border border-gray-100">
+                                            <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="object-cover h-full w-full hover:scale-105 transition duration-500">
+                                            <div class="absolute top-3 right-3 text-white z-20"><i class="fa-solid fa-camera text-xl drop-shadow-md transition opacity-80 hover:opacity-100"></i></div>
+                                            <!-- Collaborative Avatars -->
+                                            <div class="absolute bottom-3 right-3 flex -space-x-2 z-30">
+                                                <img class="w-7 h-7 rounded-full border-2 border-white shadow-sm" src="https://i.pravatar.cc/100?img=68" alt="Friend">
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col text-left px-1">
+                                            <div class="flex flex-row justify-between items-start">
+                                                <div class="font-semibold text-base text-gray-900 truncate pr-2">Swiss Alps</div>
+                                                <div class="flex flex-row items-center gap-1 font-light text-sm text-gray-900"><i class="fa-solid fa-star text-xs"></i><span>5.0</span></div>
+                                            </div>
+                                            <div class="font-light text-neutral-500 text-sm truncate">Alpine Cabin</div>
+                                            <div class="font-light text-neutral-500 text-sm">Jan 2026</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- AI Drafting Interaction Button -->
+                <div class="flex justify-center mt-12 w-full relative z-20" data-html2canvas-ignore="true">
+                    <button id="draftBranchBtn" class="bg-white border border-gray-200 text-gray-700 hover:text-airbnb hover:border-airbnb hover:shadow-lg px-8 py-4 rounded-full font-bold transition shadow-md flex items-center gap-3">
+                        <i class="fa-solid fa-plus bg-rose-50 text-airbnb p-2 rounded-full text-sm"></i> Draft Future Branch
+                    </button>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
+
+<!-- Scrapbook Modal -->
+<div id="scrapbookModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] hidden items-center justify-center opacity-0 transition-opacity duration-300 p-4">
+    <div class="bg-white rounded-3xl w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col md:flex-row transform scale-95 transition-transform duration-300" id="modalContent">
+        <!-- Close button -->
+        <button id="closeModalBtn" class="absolute top-4 right-4 bg-black/20 hover:bg-black/50 text-white w-8 h-8 rounded-full z-50 backdrop-blur-md transition flex items-center justify-center">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        
+        <!-- Modal Image -->
+        <div class="w-full md:w-1/2 h-64 md:h-[500px] relative">
+            <img id="modalImg" src="" class="w-full h-full object-cover">
+            <div class="absolute bottom-4 left-4 text-white text-xs bg-black/50 px-3 py-1 rounded-full backdrop-blur-md"><i class="fa-solid fa-camera mr-1"></i> Your Memories</div>
+        </div>
+        
+        <!-- Modal Content -->
+        <div class="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-between overflow-y-auto">
+            <div>
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider" id="modalDate"></span>
+                    <span class="flex items-center text-sm font-bold bg-rose-50 text-airbnb px-2 py-1 rounded-full"><i class="fa-solid fa-star text-airbnb mr-1 text-[10px]"></i> 5.0</span>
+                </div>
+                <h2 id="modalTitle" class="text-3xl font-bold text-gray-900 mb-1 tracking-tight"></h2>
+                <p id="modalLocation" class="text-gray-500 font-medium mb-8"><i class="fa-solid fa-location-dot mr-1 text-airbnb"></i> </p>
+                
+                <h3 class="font-bold text-sm text-gray-900 mb-3 border-b border-gray-100 pb-2">Your Review</h3>
+                <p class="text-gray-600 text-[15px] italic mb-8 leading-relaxed">"Absolutely breathtaking views and incredible amenities. The host was extremely accommodating. Easily one of the best stays of my life, would 100% book again!"</p>
+
+                <h3 class="font-bold text-sm text-gray-900 mb-3 border-b border-gray-100 pb-2">Travel Buddies</h3>
+                <div class="flex gap-2">
+                    <img class="w-12 h-12 rounded-full border-2 border-white shadow-md object-cover" src="https://i.pravatar.cc/100?img=33">
+                    <img class="w-12 h-12 rounded-full border-2 border-white shadow-md object-cover" src="https://i.pravatar.cc/100?img=12">
+                    <div class="w-12 h-12 rounded-full border border-gray-200 bg-gray-50 flex items-center justify-center text-gray-400 shadow-sm"><i class="fa-solid fa-user-plus"></i></div>
+                </div>
+            </div>
+            
+            <button class="w-full bg-gray-900 hover:bg-black text-white py-3.5 rounded-xl font-bold mt-8 transition shadow-md hover:shadow-lg">Book Again</button>
+        </div>
+    </div>
+</div>
+
+<!-- External Journey JS -->
+<script src="/js/journey.js"></script>
