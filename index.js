@@ -48,6 +48,11 @@ app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
+// Journey / Travel Lineage Demo Route
+app.get("/journey", (req, res) => {
+  res.render("users/journey.ejs");
+});
+
 // Routes
 app.use("/listings", listingRoute);
 app.use("/", reviewRoute);
