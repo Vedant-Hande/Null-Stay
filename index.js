@@ -9,11 +9,9 @@ import ejsMate from "ejs-mate";
 import wrapAsync from "./utils/wrapAsync.js";
 import ExpressError from "./utils/ExpressError.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
-import {
-  validateListing,
-  validateReview,
-} from "./middleware/validationMiddleware.js";
+import { validateReview } from "./middleware/validationMiddleware.js";
 import Review from "./models/review.js";
+import listingRoute from "./routes/listingRoute.js";
 
 // es6 imports
 const __filename = fileURLToPath(import.meta.url);
@@ -82,96 +80,7 @@ app.get("/hosting", (req, res) => {
   res.render("info/hosting.ejs");
 });
 
-app.get(
-  "/listings",
-  wrapAsync(async (req, res, next) => {
-    const allListing = await listings.find({});
-    res.render("listings/listings", { allListing });
-  }),
-);
-
-// new listing route
-app.get("/listings/new", (req, res) => {
-  res.render("listings/newListing.ejs");
-});
-
-// Create listing route
-app.post(
-  "/listings",
-  validateListing,
-  wrapAsync(async (req, res, next) => {
-    const newListing = new listings(req.body.listing);
-    await newListing.save();
-    console.log("New listing created:", newListing);
-    res.redirect("/listings");
-  }),
-);
-
-// edit Listing route
-app.get(
-  "/listings/:id/edit",
-  wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    const listingToEdit = await listings.findById(id);
-    if (!listingToEdit) {
-      throw new ExpressError(404, "Listing not found");
-    }
-    res.render("listings/editListing.ejs", { listingToEdit });
-  }),
-);
-
-// update listing route
-app.put(
-  "/listings/:id",
-  validateListing,
-  wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    const updatedListing = await listings.findByIdAndUpdate(
-      id,
-      { ...req.body.listing },
-      { new: true, runValidators: true },
-    );
-    console.log(updatedListing);
-    if (!updatedListing) {
-      throw new ExpressError(404, "Listing not found");
-    }
-    res.redirect(`/listings/${id}`);
-  }),
-);
-
-// delete listing route
-app.delete(
-  "/listings/:id/delete",
-  wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    const deletedListing = await listings.findByIdAndDelete(id);
-    if (!deletedListing) {
-      throw new ExpressError(404, "Listing not found");
-    }
-    res.redirect("/listings");
-  }),
-);
-
-// Show route
-app.get(
-  "/listings/:id",
-  wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    const listing = await listings.findById(id).populate("reviews");
-    if (!listing) {
-      throw new ExpressError(404, "Listing not found");
-    }
-
-    const avgRating =
-      listing.reviews.length > 0
-        ? (
-            listing.reviews.reduce((sum, r) => sum + r.rating, 0) /
-            listing.reviews.length
-          ).toFixed(2)
-        : null;
-    res.render("listings/show.ejs", { listing, avgRating }); // Render your view
-  }),
-);
+app.use("/listings", listingRoute);
 
 // Create review route
 app.post(
