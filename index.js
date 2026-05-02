@@ -3,17 +3,12 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./config/database.js";
-import listings from "./models/listing.js";
-import methodOverride from "method-override"; // Standard ES6 import
+import methodOverride from "method-override";
 import ejsMate from "ejs-mate";
-import wrapAsync from "./utils/wrapAsync.js";
-import ExpressError from "./utils/ExpressError.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
-import {
-  validateListing,
-  validateReview,
-} from "./middleware/validationMiddleware.js";
-import Review from "./models/review.js";
+import listingRoute from "./routes/listingRoute.js";
+import reviewRoute from "./routes/reviewRoute.js";
+import infoRoute from "./routes/infoRoute.js";
 
 // es6 imports
 const __filename = fileURLToPath(import.meta.url);
@@ -48,174 +43,17 @@ app.use(express.static(path.join(__dirname, "public"))); // serving static files
 
 app.use(methodOverride("_method")); // using method override to update and delete
 
-// API Routes
+// Root Route
 app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-// Informational Routes
-app.get("/help", (req, res) => {
-  res.render("info/help.ejs");
-});
+// Routes
+app.use("/listings", listingRoute);
+app.use("/", reviewRoute);
+app.use("/", infoRoute);
 
-app.get("/terms", (req, res) => {
-  res.render("info/static.ejs", { title: "Terms of Service" });
-});
-
-app.get("/privacy", (req, res) => {
-  res.render("info/static.ejs", { title: "Privacy Policy" });
-});
-
-app.get("/sitemap", (req, res) => {
-  res.render("info/static.ejs", { title: "Sitemap" });
-});
-
-app.get("/privacy-choices", (req, res) => {
-  res.render("info/static.ejs", { title: "Your Privacy Choices" });
-});
-
-app.get("/careers", (req, res) => {
-  res.render("info/static.ejs", { title: "Careers" });
-});
-
-app.get("/hosting", (req, res) => {
-  res.render("info/hosting.ejs");
-});
-
-app.get(
-  "/listings",
-  wrapAsync(async (req, res, next) => {
-    const allListing = await listings.find({});
-    res.render("listings/listings", { allListing });
-  }),
-);
-
-// new listing route
-app.get("/listings/new", (req, res) => {
-  res.render("listings/newListing.ejs");
-});
-
-// Create listing route
-app.post(
-  "/listings",
-  validateListing,
-  wrapAsync(async (req, res, next) => {
-    const newListing = new listings(req.body.listing);
-    await newListing.save();
-    console.log("New listing created:", newListing);
-    res.redirect("/listings");
-  }),
-);
-
-// edit Listing route
-app.get(
-  "/listings/:id/edit",
-  wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    const listingToEdit = await listings.findById(id);
-    if (!listingToEdit) {
-      throw new ExpressError(404, "Listing not found");
-    }
-    res.render("listings/editListing.ejs", { listingToEdit });
-  }),
-);
-
-// update listing route
-app.put(
-  "/listings/:id",
-  validateListing,
-  wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    const updatedListing = await listings.findByIdAndUpdate(
-      id,
-      { ...req.body.listing },
-      { new: true, runValidators: true },
-    );
-    console.log(updatedListing);
-    if (!updatedListing) {
-      throw new ExpressError(404, "Listing not found");
-    }
-    res.redirect(`/listings/${id}`);
-  }),
-);
-
-// delete listing route
-app.delete(
-  "/listings/:id/delete",
-  wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    const deletedListing = await listings.findByIdAndDelete(id);
-    if (!deletedListing) {
-      throw new ExpressError(404, "Listing not found");
-    }
-    res.redirect("/listings");
-  }),
-);
-
-// Show route
-app.get(
-  "/listings/:id",
-  wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    const listing = await listings.findById(id).populate("reviews");
-    if (!listing) {
-      throw new ExpressError(404, "Listing not found");
-    }
-
-    const avgRating =
-      listing.reviews.length > 0
-        ? (
-            listing.reviews.reduce((sum, r) => sum + r.rating, 0) /
-            listing.reviews.length
-          ).toFixed(2)
-        : null;
-    res.render("listings/show.ejs", { listing, avgRating }); // Render your view
-  }),
-);
-
-// Create review route
-app.post(
-  "/listings/:id/reviews",
-  validateReview,
-  wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    let listing = await listings.findById(id);
-    if (!listing) {
-      throw new ExpressError(404, "Listing not found");
-    }
-    const reviewData = req.body.reviews;
-    if (!reviewData || !reviewData.comment || !reviewData.rating) {
-      throw new ExpressError(400, "Review must include a rating and comment");
-    }
-
-    const newReview = new Review(reviewData); // Create a new review document
-    await newReview.save(); // Save the review to the database
-    listing.reviews.push(newReview._id); // Add the review reference to the listing
-    await listing.save();
-
-    res.redirect(`/listings/${id}`);
-  }),
-);
-
-// Delete review route
-app.delete(
-  "/listings/:id/reviews/:reviewId",
-  wrapAsync(async (req, res, next) => {
-    let { id, reviewId } = req.params;
-    const listing = await listings.findById(id);
-    if (!listing) {
-      throw new ExpressError(404, "Listing not found");
-    }
-
-    listing.reviews = listing.reviews.filter((r) => r.toString() !== reviewId);
-    await listing.save();
-    await Review.findByIdAndDelete(reviewId);
-
-    res.redirect(`/listings/${id}`);
-  }),
-);
-
-// Silently handle browser's automatic favicon requests to prevent false 404 errors
+// Silently handle browser's automatic favicon requests
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 // 404 Catch-All Route (Must be after all other routes)
