@@ -26,6 +26,27 @@
                 <p class="text-gray-500">Welcome back! Please enter your details.</p>
             </div>
 
+            <!-- Auth Buttons -->
+            <div class="flex flex-col gap-3 mb-6">
+                <a href="/auth/google" class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-3.5 px-4 rounded-xl transition duration-300 shadow-sm flex items-center justify-center gap-3">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
+                    <span>Continue with Google</span>
+                </a>
+                
+                <a href="/auth/instagram" class="w-full bg-gradient-to-r from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:opacity-90 text-white font-semibold py-3.5 px-4 rounded-xl transition duration-300 shadow-sm flex items-center justify-center gap-3">
+                    <i class="fa-brands fa-instagram text-xl"></i>
+                    <span>Continue with Instagram</span>
+                </a>
+            </div>
+
+            <!-- Divider -->
+            <div class="relative flex items-center justify-center mb-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-200"></div>
+                </div>
+                <div class="relative bg-white px-4 text-sm text-gray-500 font-medium">Or log in with email</div>
+            </div>
+
             <form action="/login" method="POST" class="space-y-6 needs-validation" novalidate>
                 
                 <!-- Username Field -->
