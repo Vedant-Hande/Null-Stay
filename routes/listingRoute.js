@@ -5,6 +5,7 @@ import listings from "../models/listing.js";
 import ExpressError from "../utils/ExpressError.js";
 import Review from "../models/review.js";
 import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
+import { isLoggedIn } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -17,13 +18,14 @@ router.get(
 );
 
 // new listing route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
   res.render("listings/newListing.ejs");
 });
 
 // Create listing route
 router.post(
   "/",
+  isLoggedIn,
   validateListing,
   wrapAsync(async (req, res, next) => {
     const newListing = new listings(req.body.listing);
@@ -36,6 +38,7 @@ router.post(
 // edit Listing route
 router.get(
   "/:id/edit",
+  isLoggedIn,
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
     const listingToEdit = await listings.findById(id);
@@ -50,6 +53,7 @@ router.get(
 // update listing route
 router.put(
   "/:id",
+  isLoggedIn,
   validateListing,
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
@@ -70,6 +74,7 @@ router.put(
 // delete listing route
 router.delete(
   "/:id/delete",
+  isLoggedIn,
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
     const deletedListing = await listings.findByIdAndDelete(id);
