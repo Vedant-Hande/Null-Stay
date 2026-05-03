@@ -83,7 +83,7 @@
       <div class="col-span-4 flex flex-col gap-8">
         <div class="flex flex-row items-center justify-between border-b border-gray-200 pb-6">
           <div>
-            <h2 class="text-xl font-semibold">Entire home hosted by Void</h2>
+            <h2 class="text-xl font-semibold">Entire home hosted by <%= listing.owner && listing.owner.username ? listing.owner.username : 'Void' %></h2>
             <div
               class="flex flex-row items-center gap-2 sm:gap-4 font-light text-gray-500 mt-1 flex-wrap text-sm sm:text-base">
               <span>
@@ -104,8 +104,8 @@
             </div>
           </div>
           <div
-            class="h-14 w-14 rounded-full bg-gray-500 overflow-hidden flex items-center justify-center text-white shrink-0">
-            <i class="fa-solid fa-user text-2xl"></i>
+            class="h-14 w-14 rounded-full bg-airbnb overflow-hidden flex items-center justify-center text-white text-xl font-bold shrink-0 uppercase">
+            <%= (listing.owner && listing.owner.username) ? listing.owner.username.charAt(0) : 'V' %>
           </div>
         </div>
 

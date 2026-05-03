@@ -4,7 +4,7 @@ import { validateReview } from "../middleware/validationMiddleware.js";
 import listings from "../models/listing.js";
 import Review from "../models/review.js";
 import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
-import { isLoggedIn } from "../middleware/authMiddleware.js";
+import { isLoggedIn, isReviewOwner } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -40,6 +40,8 @@ router.post(
 // Delete review route
 router.delete(
   "/listings/:id/reviews/:reviewId",
+  isLoggedIn,
+  isReviewOwner,
   wrapAsync(async (req, res, next) => {
     let { id, reviewId } = req.params;
     const listing = await listings.findById(id);

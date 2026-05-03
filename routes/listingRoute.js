@@ -2,10 +2,8 @@ import express from "express";
 import wrapAsync from "../utils/wrapAsync.js";
 import { validateListing } from "../middleware/validationMiddleware.js";
 import listings from "../models/listing.js";
-import ExpressError from "../utils/ExpressError.js";
-import Review from "../models/review.js";
 import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
-import { isLoggedIn } from "../middleware/authMiddleware.js";
+import { isLoggedIn, isOwner } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -30,7 +28,6 @@ router.post(
   wrapAsync(async (req, res, next) => {
     const newListing = new listings(req.body.listing);
     newListing.owner = req.user._id;
-    console.log(req.user);
     await newListing.save();
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.CREATE_SUCCESS);
     res.redirect("/listings");
@@ -41,18 +38,10 @@ router.post(
 router.get(
   "/:id/edit",
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
     const listingToEdit = await listings.findById(id);
-    if (!listingToEdit) {
-      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
-      return res.redirect("/listings");
-    }
-
-    if (listingToEdit.owner !== req.user._id) {
-      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
-      return res.redirect("/listings");
-    }
     res.render("listings/editListing.ejs", { listingToEdit });
   }),
 );
@@ -61,18 +50,15 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
+  isOwner,
   validateListing,
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
-    const updatedListing = await listings.findByIdAndUpdate(
+    await listings.findByIdAndUpdate(
       id,
       { ...req.body.listing },
       { new: true, runValidators: true },
     );
-    if (!updatedListing) {
-      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
-      return res.redirect("/listings");
-    }
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.UPDATE_SUCCESS);
     res.redirect(`/listings/${id}`);
   }),
@@ -82,22 +68,12 @@ router.put(
 router.delete(
   "/:id/delete",
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
-    const listingId = await listings.findById(id);
-    if (!listingId) {
-      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
-      return res.redirect("/listings");
-    }
-
-    if (listingId.owner !== req.user._id.toString()) {
-      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
-      return res.redirect("/listings");
-    } else {
-      await listings.findByIdAndDelete(id);
-      req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.DELETE_SUCCESS);
-      res.redirect("/listings");
-    }
+    await listings.findByIdAndDelete(id);
+    req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.DELETE_SUCCESS);
+    res.redirect("/listings");
   }),
 );
 
