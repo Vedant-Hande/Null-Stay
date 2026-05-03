@@ -83,7 +83,9 @@
       <div class="col-span-4 flex flex-col gap-8">
         <div class="flex flex-row items-center justify-between border-b border-gray-200 pb-6">
           <div>
-            <h2 class="text-xl font-semibold">Entire home hosted by <%= listing.owner && listing.owner.username ? listing.owner.username : 'Void' %></h2>
+            <h2 class="text-xl font-semibold">Entire home hosted by <%= listing.owner && listing.owner.username ?
+                listing.owner.username : 'Void' %>
+            </h2>
             <div
               class="flex flex-row items-center gap-2 sm:gap-4 font-light text-gray-500 mt-1 flex-wrap text-sm sm:text-base">
               <span>
@@ -169,7 +171,7 @@
                         <%= star %>
                       </span>
                       <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
-                        <div class="h-full bg-gray-800 rounded-full" style="width: <%= pct %> %"></div>
+                        <div class="h-full bg-gray-800 rounded-full" style="width: <%= pct %>%"></div>
                       </div>
                     </div>
                     <% }) %>

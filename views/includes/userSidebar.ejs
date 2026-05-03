@@ -1,0 +1,21 @@
+<div class="md:col-span-4 lg:col-span-3 flex flex-col gap-2">
+  <div class="glass-card rounded-2xl p-4 flex flex-col gap-1 shadow-sm select-none">
+    <a href="/user/account" class="flex items-center gap-3.5 px-4 py-3 <%= typeof activeTab !== 'undefined' && activeTab === 'personal' ? 'bg-rose-50/60 border border-rose-100/60 font-bold text-airbnb' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-semibold' %> rounded-xl transition duration-200">
+      <i class="fa-regular fa-user text-base"></i>
+      <span class="text-sm">Personal info</span>
+    </a>
+    <a href="/user/analytics" class="flex items-center gap-3.5 px-4 py-3 <%= typeof activeTab !== 'undefined' && activeTab === 'analytics' ? 'bg-rose-50/60 border border-rose-100/60 font-bold text-airbnb' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-semibold' %> rounded-xl transition duration-200">
+      <i class="fa-solid fa-chart-line text-base"></i>
+      <span class="text-sm">Analytics</span>
+    </a>
+    <a href="/listings/new" class="flex items-center gap-3.5 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-semibold rounded-xl transition duration-200">
+      <i class="fa-solid fa-plus text-base"></i>
+      <span class="text-sm">Add New Listing</span>
+    </a>
+    <div class="border-t border-gray-100 my-2"></div>
+    <a href="/logout" class="flex items-center gap-3.5 px-4 py-3 text-rose-600 hover:bg-rose-50 font-semibold rounded-xl transition duration-200">
+      <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+      <span class="text-sm">Log out</span>
+    </a>
+  </div>
+</div>

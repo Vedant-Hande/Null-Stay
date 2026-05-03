@@ -10,6 +10,7 @@ import listingRoute from "./routes/listingRoute.js";
 import reviewRoute from "./routes/reviewRoute.js";
 import infoRoute from "./routes/infoRoute.js";
 import session from "express-session";
+import store from "./config/session.js";
 import flash from "connect-flash";
 import passport from "passport";
 import LocalStrategy from "passport-local";
@@ -45,6 +46,7 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
 const sessionOptions = {
+  store,
   secret: process.env.SESSION_SECRET || "default_session_secret",
   resave: false,
   saveUninitialized: true,
@@ -52,7 +54,7 @@ const sessionOptions = {
     secure: false, // Set to false for HTTP localhost testing
     httpOnly: true, // prevents client-side javascript from accessing the cookie
     sameSite: "lax", // prevents cross-site request forgery
-    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    maxAge: 1000 * 60 * 60 * 24 * 3, // 3 days
   },
 };
 
@@ -79,6 +81,7 @@ app.use((req, res, next) => {
   res.locals.error = req.flash(FLASH_KEYS.ERROR);
   res.locals.calculateAvgRating = calculateAvgRating;
   res.locals.currentUser = req.user || null;
+  res.locals.isListingsPage = req.originalUrl === "/listings" || req.originalUrl === "/listings/" || req.originalUrl === "/";
   next();
 });
 

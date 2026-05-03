@@ -92,7 +92,11 @@
 
                     <div
                         class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
-                        <a href="/listings/new">NullStay your home</a>
+                        <a href="/listings">Properties</a>
+                    </div>
+                    <div
+                        class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+                        <a href="/listings/new">+ Add your property</a>
                     </div>
                     <% if (!currentUser) { %>
                         <div
@@ -145,6 +149,8 @@
                                                 listings</a>
                                             <a href="#"
                                                 class="px-4 py-3 hover:bg-gray-50 text-sm transition">Account</a>
+                                            <a href="/user/analytics"
+                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Analytics</a>
                                             <div class="border-t border-gray-200 my-1"></div>
                                             <a href="/logout" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log
                                                 out</a>
@@ -157,6 +163,7 @@
         </div>
 
         <!-- Categories Bar -->
+        <% if (typeof isListingsPage !== "undefined" && isListingsPage) { %>
         <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-2">
             <div class="flex flex-row items-center justify-between overflow-x-auto gap-8 pt-1 hide-scrollbar">
                 <div
@@ -201,6 +208,7 @@
                 }
             </style>
         </div>
+        <% } %>
     </nav>
 
     <!-- Main Content -->
@@ -275,6 +283,32 @@
 
     <script src="/js/script.js"></script>
     <script src="/js/newListing.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && !dropdown.textContent.includes('Sign up')) {
+                const links = dropdown.querySelectorAll('a');
+                let accountLink = null;
+                let logoutLink = null;
+                links.forEach(link => {
+                    const text = link.textContent.trim().toLowerCase();
+                    if (text === 'account') accountLink = link;
+                    if (text.startsWith('log') && text.endsWith('out')) logoutLink = link;
+                });
+                if (accountLink && logoutLink) {
+                    accountLink.setAttribute('href', '/user/account');
+                    accountLink.className = "px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition block";
+                    logoutLink.className = "px-4 py-3 hover:bg-gray-50 text-sm transition block";
+                    dropdown.innerHTML = '';
+                    dropdown.appendChild(accountLink);
+                    const divider = document.createElement('div');
+                    divider.className = "border-t border-gray-200 my-1";
+                    dropdown.appendChild(divider);
+                    dropdown.appendChild(logoutLink);
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
