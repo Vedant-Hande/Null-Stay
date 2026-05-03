@@ -85,99 +85,72 @@
                     </div>
                 </div>
 
-                <!-- Expanded Search Bar (Airbnb Style) -->
-                <div id="expandedSearch"
-                    class="hidden absolute top-[70px] left-1/2 -translate-x-1/2 w-full max-w-[850px] z-[70] px-4 md:px-0 transition-all duration-300 origin-top scale-95 opacity-0">
-                    <div
-                        class="bg-gray-100 rounded-full border border-gray-200 shadow-2xl flex items-center p-1 overflow-hidden">
-                        <!-- Location Section -->
-                        <div
-                            class="flex-1 px-8 py-3 hover:bg-white hover:shadow-md rounded-full cursor-pointer transition group">
-                            <label
-                                class="block text-[10px] font-bold text-gray-800 uppercase tracking-wider">Where</label>
-                            <input type="text" placeholder="Search destinations"
-                                class="bg-transparent text-sm text-gray-900 w-full outline-none placeholder-gray-500">
-                        </div>
 
-                        <div class="h-8 w-[1px] bg-gray-300"></div>
-
-                        <!-- Dates Section -->
-                        <div
-                            class="flex-1 px-8 py-3 hover:bg-white hover:shadow-md rounded-full cursor-pointer transition">
-                            <label class="block text-[10px] font-bold text-gray-800 uppercase tracking-wider">Check
-                                in</label>
-                            <span class="text-sm text-gray-400 font-normal">Add dates</span>
-                        </div>
-
-                        <div class="h-8 w-[1px] bg-gray-300"></div>
-
-                        <div
-                            class="flex-1 px-8 py-3 hover:bg-white hover:shadow-md rounded-full cursor-pointer transition">
-                            <label class="block text-[10px] font-bold text-gray-800 uppercase tracking-wider">Check
-                                out</label>
-                            <span class="text-sm text-gray-400 font-normal">Add dates</span>
-                        </div>
-
-                        <div class="h-8 w-[1px] bg-gray-300"></div>
-
-                        <!-- Guests Section -->
-                        <div
-                            class="flex-1 px-8 py-3 hover:bg-white hover:shadow-md rounded-full cursor-pointer transition flex items-center justify-between">
-                            <div>
-                                <label
-                                    class="block text-[10px] font-bold text-gray-800 uppercase tracking-wider">Who</label>
-                                <span class="text-sm text-gray-400 font-normal">Add guests</span>
-                            </div>
-                            <button
-                                class="bg-airbnb hover:bg-rose-600 text-white rounded-full p-4 transition shadow-lg">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Right Menu -->
                 <div class="hidden md:flex flex-row items-center gap-3">
+
                     <div
                         class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
-                        <a href="/listings/new">Airbnb your home</a>
+                        <a href="/listings/new">NullStay your home</a>
                     </div>
-                    
-                    <div class="relative">
-                        <div id="userMenuBtn"
-                            class="p-2 px-4 border border-gray-300 rounded-full flex flex-row items-center gap-3 hover:shadow-md transition cursor-pointer bg-white">
-                            <i class="fa-solid fa-bars text-sm"></i>
-                            <% if (currentUser && currentUser.username) { %>
-                                <div class="bg-airbnb rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center text-xs font-bold uppercase">
-                                    <%= currentUser.username.charAt(0) %>
-                                </div>
-                            <% } else { %>
-                                <div class="bg-gray-500 rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center">
-                                    <i class="fa-solid fa-user text-xs"></i>
-                                </div>
-                            <% } %>
+                    <% if (!currentUser) { %>
+                        <div
+                            class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+                            <a href="/login">Log in</a>
                         </div>
+                        <% } %>
 
-                        <!-- Dropdown Menu -->
-                        <div id="userDropdown" class="absolute right-0 top-14 w-60 bg-white rounded-xl shadow-[0_8px_28px_rgba(0,0,0,0.15)] border border-gray-100 flex flex-col z-50 py-2 transition-all duration-200 transform origin-top-right opacity-0 scale-95 pointer-events-none">
-                            <% if (!currentUser) { %>
-                                <a href="/signup" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Sign up</a>
-                                <a href="/login" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log in</a>
-                                <div class="border-t border-gray-200 my-1"></div>
-                                <a href="#" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Help Center</a>
-                            <% } else { %>
-                                <a href="#" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Messages</a>
-                                <a href="#" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Notifications</a>
-                                <a href="#" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Trips</a>
-                                <a href="#" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Wishlists</a>
-                                <div class="border-t border-gray-200 my-1"></div>
-                                <a href="/listings/new" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Manage listings</a>
-                                <a href="#" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Account</a>
-                                <div class="border-t border-gray-200 my-1"></div>
-                                <a href="/logout" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log out</a>
-                            <% } %>
-                        </div>
-                    </div>
+                            <div class="relative">
+                                <div id="userMenuBtn"
+                                    class="p-2 px-4 border border-gray-300 rounded-full flex flex-row items-center gap-3 hover:shadow-md transition cursor-pointer bg-white">
+                                    <i class="fa-solid fa-bars text-sm"></i>
+                                    <% if (currentUser && currentUser.username) { %>
+                                        <div
+                                            class="bg-airbnb rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center text-xs font-bold uppercase">
+                                            <%= currentUser.username.charAt(0) %>
+                                        </div>
+                                        <% } else { %>
+                                            <div
+                                                class="bg-gray-500 rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center">
+                                                <i class="fa-solid fa-user text-xs"></i>
+                                            </div>
+                                            <% } %>
+                                </div>
+
+                                <!-- Dropdown Menu -->
+                                <div id="userDropdown"
+                                    class="absolute right-0 top-14 w-60 bg-white rounded-xl shadow-[0_8px_28px_rgba(0,0,0,0.15)] border border-gray-100 flex flex-col z-50 py-2 transition-all duration-200 transform origin-top-right opacity-0 scale-95 pointer-events-none">
+                                    <% if (!currentUser) { %>
+                                        <a href="/signup"
+                                            class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Sign
+                                            up</a>
+                                        <a href="/login" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log
+                                            in</a>
+                                        <div class="border-t border-gray-200 my-1"></div>
+                                        <a href="#" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Help
+                                            Center</a>
+                                        <% } else { %>
+                                            <a href="#"
+                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Messages</a>
+                                            <a href="#"
+                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Notifications</a>
+                                            <a href="#"
+                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Trips</a>
+                                            <a href="#"
+                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Wishlists</a>
+                                            <div class="border-t border-gray-200 my-1"></div>
+                                            <a href="/listings/new"
+                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Manage
+                                                listings</a>
+                                            <a href="#"
+                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Account</a>
+                                            <div class="border-t border-gray-200 my-1"></div>
+                                            <a href="/logout" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log
+                                                out</a>
+                                            <% } %>
+                                </div>
+                            </div>
                 </div>
 
             </div>
