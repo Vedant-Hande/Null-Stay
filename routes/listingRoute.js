@@ -48,6 +48,11 @@ router.get(
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
       return res.redirect("/listings");
     }
+
+    if (listingToEdit.owner !== req.user._id) {
+      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
+      return res.redirect("/listings");
+    }
     res.render("listings/editListing.ejs", { listingToEdit });
   }),
 );
@@ -79,13 +84,20 @@ router.delete(
   isLoggedIn,
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
-    const deletedListing = await listings.findByIdAndDelete(id);
-    if (!deletedListing) {
+    const listingId = await listings.findById(id);
+    if (!listingId) {
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
       return res.redirect("/listings");
     }
-    req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.DELETE_SUCCESS);
-    res.redirect("/listings");
+
+    if (listingId.owner !== req.user._id.toString()) {
+      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
+      return res.redirect("/listings");
+    } else {
+      await listings.findByIdAndDelete(id);
+      req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.DELETE_SUCCESS);
+      res.redirect("/listings");
+    }
   }),
 );
 
@@ -103,7 +115,10 @@ router.get(
         },
       })
       .populate("owner");
-    console.log("POPULATED LISTING REVIEWS:", JSON.stringify(listing.reviews, null, 2));
+    console.log(
+      "POPULATED LISTING REVIEWS:",
+      JSON.stringify(listing.reviews, null, 2),
+    );
     if (!listing) {
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
       return res.redirect("/listings");
