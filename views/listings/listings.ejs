@@ -19,14 +19,17 @@
 
           <!-- Text Info -->
           <div class="flex flex-col">
-            <div class="flex flex-row justify-between items-start">
-              <div class="font-semibold text-base text-gray-900 truncate pr-2">
+            <div class="flex flex-row justify-between items-start gap-2">
+              <div class="font-semibold text-base text-gray-900 truncate pr-2 flex-1 min-w-0">
                 <%= listing.location %>, <%= listing.country %>
               </div>
-              <div class="flex flex-row items-center gap-1 font-light text-sm text-gray-900">
-                <i class="fa-solid fa-star text-xs"></i>
-                <span>4.9</span>
-              </div>
+              <% const avg = calculateAvgRating(listing.reviews); %>
+              <% if (avg) { %>
+                <div class="flex flex-row items-center gap-1 font-light text-sm text-gray-900 shrink-0 whitespace-nowrap">
+                  <i class="fa-solid fa-star text-xs"></i>
+                  <span><%= avg %></span>
+                </div>
+              <% } %>
             </div>
             <div class="font-light text-neutral-500 text-sm truncate">
               <%= listing.title %>

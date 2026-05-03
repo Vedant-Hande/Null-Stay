@@ -49,6 +49,8 @@
     </script>
 </head>
 
+
+
 <body class="min-h-screen flex flex-col bg-white custom-scroll relative">
     <!-- Search Backdrop Overlay -->
     <div id="searchBackdrop" class="fixed inset-0 bg-black/40 z-[60] hidden transition-opacity duration-300 opacity-0">
@@ -60,7 +62,7 @@
 
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="/" class="flex items-center text-airbnb text-2xl font-bold">
+                    <a href="/listings" class="flex items-center text-airbnb text-2xl font-bold">
                         <i class="fa-brands fa-airbnb text-3xl me-2"></i>
                         <span class="hidden lg:block">NullStay</span>
                     </a>
@@ -202,7 +204,9 @@
 
     <!-- Main Content -->
     <main class="flex-grow max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-8 w-full">
-        <%- body %>
+        <%- include("../includes/flash.ejs") %>
+
+            <%- body %>
     </main>
 
     <!-- Footer -->

@@ -4,13 +4,14 @@ import { validateListing } from "../middleware/validationMiddleware.js";
 import listings from "../models/listing.js";
 import ExpressError from "../utils/ExpressError.js";
 import Review from "../models/review.js";
+import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
 
 const router = express.Router();
 
 router.get(
   "/",
   wrapAsync(async (req, res, next) => {
-    const allListing = await listings.find({});
+    const allListing = await listings.find({}).populate("reviews");
     res.render("listings/listings", { allListing });
   }),
 );
@@ -27,7 +28,7 @@ router.post(
   wrapAsync(async (req, res, next) => {
     const newListing = new listings(req.body.listing);
     await newListing.save();
-    console.log("New listing created:", newListing);
+    req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.CREATE_SUCCESS);
     res.redirect("/listings");
   }),
 );
@@ -39,7 +40,8 @@ router.get(
     let { id } = req.params;
     const listingToEdit = await listings.findById(id);
     if (!listingToEdit) {
-      throw new ExpressError(404, "Listing not found");
+      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
+      return res.redirect("/listings");
     }
     res.render("listings/editListing.ejs", { listingToEdit });
   }),
@@ -56,10 +58,11 @@ router.put(
       { ...req.body.listing },
       { new: true, runValidators: true },
     );
-    console.log(updatedListing);
     if (!updatedListing) {
-      throw new ExpressError(404, "Listing not found");
+      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
+      return res.redirect("/listings");
     }
+    req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.UPDATE_SUCCESS);
     res.redirect(`/listings/${id}`);
   }),
 );
@@ -71,8 +74,10 @@ router.delete(
     let { id } = req.params;
     const deletedListing = await listings.findByIdAndDelete(id);
     if (!deletedListing) {
-      throw new ExpressError(404, "Listing not found");
+      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
+      return res.redirect("/listings");
     }
+    req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.DELETE_SUCCESS);
     res.redirect("/listings");
   }),
 );
@@ -84,7 +89,8 @@ router.get(
     let { id } = req.params;
     const listing = await listings.findById(id).populate("reviews");
     if (!listing) {
-      throw new ExpressError(404, "Listing not found");
+      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
+      return res.redirect("/listings");
     }
 
     const avgRating =

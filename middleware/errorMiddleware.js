@@ -1,4 +1,5 @@
 import ExpressError from "../utils/ExpressError.js";
+import { FLASH_KEYS } from "../utils/constants.js";
 
 // 404 handler with a more descriptive message
 export const notFound = (req, res, next) => {
@@ -19,7 +20,9 @@ export const errorHandler = (err, req, res, next) => {
   // Mongoose Validation Error
   if (err.name === "ValidationError") {
     statusCode = 400;
-    message = Object.values(err.errors).map((val) => val.message).join(", ");
+    message = Object.values(err.errors)
+      .map((val) => val.message)
+      .join(", ");
   }
   // Express JSON body parsing Syntax Error
   if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
@@ -34,7 +37,11 @@ export const errorHandler = (err, req, res, next) => {
 
   // --- 401 UNAUTHORIZED ---
   // JWT Errors
-  if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError" || err.name === "NotBeforeError") {
+  if (
+    err.name === "JsonWebTokenError" ||
+    err.name === "TokenExpiredError" ||
+    err.name === "NotBeforeError"
+  ) {
     statusCode = 401;
     message = "Authentication failed or token expired. Please log in again.";
   }
@@ -84,7 +91,8 @@ export const errorHandler = (err, req, res, next) => {
       err.message.includes("while compiling ejs"))
   ) {
     statusCode = 500;
-    message = "Sorry, there was an error loading the interface. Our engineers have been notified.";
+    message =
+      "Sorry, there was an error loading the interface. Our engineers have been notified.";
   }
   // Handle HTTP headers already sent errors
   if (err.code === "ERR_HTTP_HEADERS_SENT") {
@@ -94,9 +102,13 @@ export const errorHandler = (err, req, res, next) => {
 
   // --- 503 SERVICE UNAVAILABLE ---
   // Database Connection Errors
-  if (err.name === "MongoNetworkError" || err.name === "MongooseServerSelectionError") {
+  if (
+    err.name === "MongoNetworkError" ||
+    err.name === "MongooseServerSelectionError"
+  ) {
     statusCode = 503;
-    message = "Database connection is currently unavailable. Please try again in a moment.";
+    message =
+      "Database connection is currently unavailable. Please try again in a moment.";
   }
 
   // Fallback for general code bugs (TypeErrors, ReferenceErrors not caught above)
@@ -109,6 +121,8 @@ export const errorHandler = (err, req, res, next) => {
   res.status(statusCode).render("listings/error.ejs", {
     statusCode,
     message,
-    stack: process.env.NODE_ENV === "production" ? null : err.stack, // Optional: show stack in dev mode only, but for this app we'll keep it null for the UI if desired. For now, setting to null as per previous design.
+    stack: process.env.NODE_ENV === "production" ? null : err.stack,
+    success: req.flash(FLASH_KEYS.SUCCESS) || "",
+    error: req.flash(FLASH_KEYS.ERROR) || "",
   });
 };
