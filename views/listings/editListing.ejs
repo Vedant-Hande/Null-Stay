@@ -246,11 +246,11 @@
                                     <div class="flex items-center">
                                         <span class="pt-5 pb-1 text-gray-900 font-medium mr-1">&#8377;</span>
                                         <input type="number" id="price" name="listing[price]"
-                                            value="<%= listingToEdit.price %>" required min="0"
+                                            value="<%= listingToEdit.price %>" required min="100"
                                             class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 font-medium">
+                                        <div class="invalid-feedback ml-2">Price should be at least ₹100.</div>
+                                        <div class="valid-feedback ml-2">Looks good!</div>
                                     </div>
-                                    <div class="invalid-feedback">Price is required.</div>
-                                    <div class="valid-feedback">Looks good!</div>
                                 </div>
                             </div>
                         </div>
@@ -276,3 +276,5 @@
             </div>
         </div>
     </div>
+
+    <script src="/js/newListing.js"></script>

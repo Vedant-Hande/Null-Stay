@@ -1,0 +1,27 @@
+<% if (typeof success !== 'undefined' && success && success.length) { %>
+    <div class="bg-emerald-50 border border-emerald-100 backdrop-blur-md rounded-2xl p-4 mb-6 flex items-center justify-between shadow-sm hover:shadow-md transition-all duration-300 group alert-message" role="alert">
+        <span class="text-emerald-700 text-sm font-medium"><%= success %></span>
+        <button type="button" class="text-emerald-400 hover:text-emerald-600 hover:scale-110 transition-all text-xl px-2" onclick="this.closest('[role=\'alert\']').remove()">&times;</button>
+    </div>
+<% } %>
+
+<% if (typeof error !== 'undefined' && error && error.length) { %>
+    <div class="bg-rose-50 border border-rose-100 backdrop-blur-md rounded-2xl p-4 mb-6 flex items-center justify-between shadow-sm hover:shadow-md transition-all duration-300 group alert-message" role="alert">
+        <span class="text-rose-700 text-sm font-medium"><%= error %></span>
+        <button type="button" class="text-rose-400 hover:text-rose-600 hover:scale-110 transition-all text-xl px-2" onclick="this.closest('[role=\'alert\']').remove()">&times;</button>
+    </div>
+<% } %>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const alerts = document.querySelectorAll('.alert-message');
+        alerts.forEach((alert) => {
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                alert.style.transform = 'translateY(-10px)';
+                alert.style.transition = 'opacity 500ms ease-out, transform 500ms ease-out';
+                setTimeout(() => alert.remove(), 500);
+            }, 3000); // Wait 3 seconds, then start fade out animation
+        });
+    });
+</script>
