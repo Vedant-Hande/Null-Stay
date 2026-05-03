@@ -10,8 +10,14 @@ async function initDB() {
   await Listing.deleteMany({});
   console.log("Existing DB data cleared.");
 
-  // 3. Insert the new sample data
-  await Listing.insertMany(sampleData);
+  // 3. Add owner ID to each sample data listing
+  const updatedSampleData = sampleData.map((obj) => ({
+    ...obj,
+    owner: "69f7203cc1d74f9aa260b16a",
+  }));
+
+  // 4. Insert the new sample data
+  await Listing.insertMany(updatedSampleData);
   console.log("Sample data initialized in DB successfully!!");
 
   // 4. (Optional but recommended) Exit the process once done
