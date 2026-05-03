@@ -3,6 +3,7 @@ import User from "../models/user.js";
 import passport from "passport";
 import wrapAsync from "../utils/wrapAsync.js";
 import { FLASH_KEYS } from "../utils/constants.js";
+import { saveRedirectUrl } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.post(
   "/signup",
   wrapAsync(async (req, res, next) => {
     try {
-      let { username, email, password } = req.body;
+      const { username, email, password } = req.body;
       const newUser = new User({ email, username });
       const registeredUser = await User.register(newUser, password);
 
@@ -38,13 +39,14 @@ router.get("/login", (req, res) => {
 
 router.post(
   "/login",
+  saveRedirectUrl,
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
   }),
   async (req, res) => {
     req.flash(FLASH_KEYS.SUCCESS, "Welcome back to NullStay!");
-    let redirectUrl = res.locals.redirectUrl || "/listings";
+    const redirectUrl = res.locals.redirectUrl || "/listings";
     res.redirect(redirectUrl);
   },
 );

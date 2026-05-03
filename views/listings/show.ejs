@@ -32,14 +32,47 @@
       </div>
     </div>
 
-    <!-- Photo Gallery -->
-    <div class="w-full h-[40vh] md:h-[60vh] overflow-hidden rounded-xl mb-8 relative">
-      <img
-        src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>"
-        alt="<%= listing.title %>" class="object-cover w-full h-full hover:scale-105 transition duration-500">
+    <!-- Photo Gallery Grid (Airbnb Style) -->
+    <div
+      class="grid grid-cols-1 md:grid-cols-4 grid-rows-1 md:grid-rows-2 gap-2 h-[32vh] sm:h-[40vh] md:h-[450px] overflow-hidden rounded-xl mb-8 relative">
+      <!-- Main Large Image -->
+      <div class="col-span-1 md:col-span-2 md:row-span-2 overflow-hidden h-full">
+        <img
+          src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>"
+          alt="<%= listing.title %>"
+          class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
+      </div>
+
+      <!-- Grid Image 1 -->
+      <div class="col-span-1 row-span-1 overflow-hidden h-full hidden md:block">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80"
+          alt="Interior" class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
+      </div>
+
+      <!-- Grid Image 2 -->
+      <div class="col-span-1 row-span-1 overflow-hidden h-full hidden md:block">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80"
+          alt="Bedroom" class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
+      </div>
+
+      <!-- Grid Image 3 -->
+      <div class="col-span-1 row-span-1 overflow-hidden h-full hidden md:block">
+        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=600&q=80"
+          alt="Living room"
+          class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
+      </div>
+
+      <!-- Grid Image 4 -->
+      <div class="col-span-1 row-span-1 overflow-hidden h-full hidden md:block">
+        <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=600&q=80"
+          alt="Bathroom" class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
+      </div>
+
+      <!-- Show all photos button -->
       <div onclick="showPhotosModal()"
-        class="absolute bottom-4 right-4 bg-white border border-black px-4 py-1.5 rounded-lg text-sm font-medium shadow flex items-center gap-2 cursor-pointer hover:bg-gray-100 transition">
-        <i class="fa-solid fa-grip"></i> <span class="hidden sm:inline">Show all photos</span>
+        class="absolute bottom-4 right-4 md:bottom-6 md:right-6 bg-white border border-neutral-900 px-4 py-2 rounded-lg text-sm font-semibold shadow flex items-center gap-2 cursor-pointer hover:bg-neutral-100 transition z-10">
+        <i class="fa-solid fa-grip"></i>
+        <span>Show all photos</span>
       </div>
     </div>
 
@@ -50,7 +83,7 @@
       <div class="col-span-4 flex flex-col gap-8">
         <div class="flex flex-row items-center justify-between border-b border-gray-200 pb-6">
           <div>
-            <h2 class="text-xl font-semibold">Entire home hosted by Void</h2>
+            <h2 class="text-xl font-semibold">Entire home hosted by <%= listing.owner && listing.owner.username ? listing.owner.username : 'Void' %></h2>
             <div
               class="flex flex-row items-center gap-2 sm:gap-4 font-light text-gray-500 mt-1 flex-wrap text-sm sm:text-base">
               <span>
@@ -71,8 +104,8 @@
             </div>
           </div>
           <div
-            class="h-14 w-14 rounded-full bg-gray-500 overflow-hidden flex items-center justify-center text-white shrink-0">
-            <i class="fa-solid fa-user text-2xl"></i>
+            class="h-14 w-14 rounded-full bg-airbnb overflow-hidden flex items-center justify-center text-white text-xl font-bold shrink-0 uppercase">
+            <%= (listing.owner && listing.owner.username) ? listing.owner.username.charAt(0) : 'V' %>
           </div>
         </div>
 
@@ -111,117 +144,189 @@
 
             <!-- Reviews Section -->
             <div class="border-t border-gray-200 pt-8 pb-6 mt-2">
-              <div class="flex items-center gap-2 text-2xl font-semibold mb-8">
+              <div class="flex items-center gap-2 text-2xl font-semibold mb-1">
                 <i class="fa-solid fa-star"></i>
                 <span>
-                  <%= calculateAvgRating(listing.reviews) || "N/A" %> · <%= listing.reviews.length %> reviews
+                  <%= calculateAvgRating(listing.reviews) || "0.0" %> · <%= listing.reviews.length %> reviews
                 </span>
               </div>
+              <a href="#" class="text-xs text-gray-500 underline mb-8 block">How reviews work</a>
 
-              <!-- Review Form -->
-              <div id="leave-review" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-10 scroll-mt-24">
-                <h3 class="text-lg font-semibold mb-4">Leave a Review</h3>
-                <form action="/listings/<%= listing._id %>/reviews" method="POST" class="flex flex-col gap-4">
-                  <!-- CSS Interactive Star Rating -->
-                  <div class="flex flex-col gap-1">
-                    <div class="flex flex-row-reverse justify-end gap-1 group">
-                      <input type="radio" id="star5" name="reviews[rating]" value="5" class="peer hidden" />
-                      <label for="star5"
-                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
-                          class="fa-solid fa-star"></i></label>
-
-                      <input type="radio" id="star4" name="reviews[rating]" value="4" class="peer hidden" />
-                      <label for="star4"
-                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
-                          class="fa-solid fa-star"></i></label>
-
-                      <input type="radio" id="star3" name="reviews[rating]" value="3" class="peer hidden" />
-                      <label for="star3"
-                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
-                          class="fa-solid fa-star"></i></label>
-
-                      <input type="radio" id="star2" name="reviews[rating]" value="2" class="peer hidden" />
-                      <label for="star2"
-                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
-                          class="fa-solid fa-star"></i></label>
-
-                      <input type="radio" id="star1" name="reviews[rating]" value="1" class="peer hidden" />
-                      <label for="star1"
-                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
-                          class="fa-solid fa-star"></i></label>
+              <!-- Overall Rating Section -->
+              <div class="max-w-[280px] border-b border-gray-200 pb-8 mb-8">
+                <div class="text-sm font-semibold text-gray-800 mb-3">Overall rating</div>
+                <div class="flex flex-col gap-1.5">
+                  <% [5, 4, 3, 2, 1].forEach(star=> {
+                    let count = 0;
+                    if (listing.reviews) {
+                    count = listing.reviews.filter(r => r.rating === star).length;
+                    }
+                    let pct = listing.reviews && listing.reviews.length > 0 ? Math.round((count /
+                    listing.reviews.length) * 100) : 0;
+                    %>
+                    <div class="flex items-center gap-2 text-xs text-gray-600">
+                      <span class="w-2 font-medium">
+                        <%= star %>
+                      </span>
+                      <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-gray-800 rounded-full" style="width: <%= pct %> %"></div>
+                      </div>
                     </div>
-                    <style>
-                      /* Hack to make previous stars light up on hover/check using flex-row-reverse */
-                      input:checked~label {
-                        color: #facc15;
-                      }
-
-                      /* yellow-400 */
-                    </style>
-                  </div>
-
-                  <!-- Comment Box -->
-                  <div>
-                    <textarea name="reviews[comment]" rows="3" placeholder="Share your experience..." required
-                      novalidate
-                      class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition resize-none needs-validation"></textarea>
-
-                  </div>
-
-                  <div>
-                    <button type="submit" class="px-6 py-3 bg-airbnb
-                                            hover:bg-gray-800 text-white font-semibold rounded-lg transition">
-                      Submit Review
-                    </button>
-                  </div>
-                </form>
+                    <% }) %>
+                </div>
               </div>
 
-              <!-- Review Gallery Grid -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+              <!-- Filter Tags Chips -->
+              <div class="flex flex-row gap-2 overflow-x-auto pb-4 mb-8 hide-scrollbar">
+                <div
+                  class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 hover:bg-gray-50 transition cursor-pointer shrink-0 text-sm">
+                  <span>🧼</span> <span class="font-medium text-gray-800">Cleanliness</span> <span
+                    class="text-gray-500 text-xs">13</span>
+                </div>
+                <div
+                  class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 hover:bg-gray-50 transition cursor-pointer shrink-0 text-sm">
+                  <span>📆</span> <span class="font-medium text-gray-800">Condition</span> <span
+                    class="text-gray-500 text-xs">5</span>
+                </div>
+                <div
+                  class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 hover:bg-gray-50 transition cursor-pointer shrink-0 text-sm">
+                  <span>✅</span> <span class="font-medium text-gray-800">Accuracy</span> <span
+                    class="text-gray-500 text-xs">8</span>
+                </div>
+                <div
+                  class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 hover:bg-gray-50 transition cursor-pointer shrink-0 text-sm">
+                  <span>📍</span> <span class="font-medium text-gray-800">Location</span> <span
+                    class="text-gray-500 text-xs">9</span>
+                </div>
+                <div
+                  class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 hover:bg-gray-50 transition cursor-pointer shrink-0 text-sm">
+                  <span>🛋️</span> <span class="font-medium text-gray-800">Comfort</span> <span
+                    class="text-gray-500 text-xs">5</span>
+                </div>
+                <div
+                  class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 hover:bg-gray-50 transition cursor-pointer shrink-0 text-sm">
+                  <span>🗺️</span> <span class="font-medium text-gray-800">Nearby</span> <span
+                    class="text-gray-500 text-xs">5</span>
+                </div>
+                <div
+                  class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 hover:bg-gray-50 transition cursor-pointer shrink-0 text-sm">
+                  <span>⌨️</span> <span class="font-medium text-gray-800">Check-in</span> <span
+                    class="text-gray-500 text-xs">3</span>
+                </div>
+                <div
+                  class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 hover:bg-gray-50 transition cursor-pointer shrink-0 text-sm">
+                  <span>🚆</span> <span class="font-medium text-gray-800">Getting around</span> <span
+                    class="text-gray-500 text-xs">3</span>
+                </div>
+              </div>
+
+              <!-- 2-column Review Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 mb-8">
                 <% if (listing.reviews && listing.reviews.length> 0) { %>
-                  <% listing.reviews.slice(0, 2).forEach(review=> { %>
+                  <% listing.reviews.slice(0, 4).forEach(review=> { %>
                     <div class="flex flex-col gap-3">
-                      <div class="flex items-center justify-between gap-4">
+                      <div class="flex items-center justify-between">
                         <div class="flex items-center gap-4">
                           <div
-                            class="w-12 h-12 rounded-full bg-gray-800 text-white flex items-center justify-center text-lg font-bold">
-                            <i class="fa-solid fa-user"></i>
+                            class="w-12 h-12 rounded-full bg-neutral-900 text-white flex items-center justify-center font-bold text-lg">
+                            <%= review.owner && review.owner.username ? review.owner.username.charAt(0).toUpperCase()
+                              : 'G' %>
                           </div>
                           <div>
-                            <h4 class="font-semibold text-gray-900">Anonymous User</h4>
-                            <div class="text-sm text-gray-500">
-                              <%= new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric' ,
-                                month: 'long' }) %>
+                            <h4 class="font-semibold text-gray-900 leading-tight">
+                              <%= review.owner && review.owner.username ? review.owner.username : 'Guest' %>
+                            </h4>
+                            <div class="text-xs text-gray-500 mt-0.5">
+                              <%= Math.floor(Math.random() * 4) + 1 %> years on Null Stay
                             </div>
                           </div>
                         </div>
                         <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
-                          method="POST" class="mt-0">
-                          <button type="submit" aria-label="Delete review"
-                            class="text-red-500 hover:text-black transition">
-                            <i class="fa-solid fa-trash-can"></i>
+                          method="POST">
+                          <button type="submit" class="text-gray-400 hover:text-red-500 transition">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
                           </button>
                         </form>
                       </div>
-                      <div class="flex text-yellow-400 text-xs">
-                        <% for (let i=0; i < review.rating; i++) { %>
-                          <i class="fa-solid fa-star"></i>
-                          <% } %>
-                            <% for (let i=review.rating; i < 5; i++) { %>
-                              <i class="fa-regular fa-star"></i>
-                              <% } %>
+
+                      <div class="flex items-center gap-2">
+                        <div class="flex text-yellow-500 text-xs gap-0.5">
+                          <% for (let i=0; i < review.rating; i++) { %>
+                            <i class="fa-solid fa-star"></i>
+                            <% } %>
+                              <% for (let i=review.rating; i < 5; i++) { %>
+                                <i class="fa-regular fa-star"></i>
+                                <% } %>
+                        </div>
+                        <span class="text-gray-400 text-xs">&middot;</span>
+                        <span class="text-xs font-medium text-gray-800">
+                          <%= new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric' , month: 'long'
+                            }) %>
+                        </span>
                       </div>
-                      <p class="text-gray-700 leading-relaxed font-light">
-                        "<%= review.comment %>"
+
+                      <p class="text-gray-700 leading-relaxed font-light text-sm line-clamp-3">
+                        <%= review.comment %>
                       </p>
+                      <% if (review.comment && review.comment.length> 150) { %>
+                        <span class="text-sm font-semibold underline cursor-pointer text-gray-900">Show more</span>
+                        <% } %>
                     </div>
                     <% }); %>
                       <% } else { %>
                         <div class="col-span-full text-center text-gray-500 py-8">
                           No reviews yet. Be the first to leave one!
                         </div>
-                      <% } %>
+                        <% } %>
+              </div>
+
+              <!-- Leave a review Form -->
+              <div id="leave-review" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-8 scroll-mt-24">
+                <h3 class="text-lg font-semibold mb-4">Leave a Review</h3>
+                <form action="/listings/<%= listing._id %>/reviews" method="POST" class="flex flex-col gap-4">
+                  <div class="flex flex-col gap-1">
+                    <div class="flex flex-row-reverse justify-end gap-1 group">
+                      <input type="radio" id="star5" name="reviews[rating]" value="5" class="peer hidden" />
+                      <label for="star5"
+                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                          class="fa-solid fa-star"></i></label>
+                      <input type="radio" id="star4" name="reviews[rating]" value="4" class="peer hidden" />
+                      <label for="star4"
+                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                          class="fa-solid fa-star"></i></label>
+                      <input type="radio" id="star3" name="reviews[rating]" value="3" class="peer hidden" />
+                      <label for="star3"
+                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                          class="fa-solid fa-star"></i></label>
+                      <input type="radio" id="star2" name="reviews[rating]" value="2" class="peer hidden" />
+                      <label for="star2"
+                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                          class="fa-solid fa-star"></i></label>
+                      <input type="radio" id="star1" name="reviews[rating]" value="1" class="peer hidden" />
+                      <label for="star1"
+                        class="cursor-pointer text-gray-300 peer-hover:text-yellow-400 hover:text-yellow-400 transition text-2xl"><i
+                          class="fa-solid fa-star"></i></label>
+                    </div>
+                    <style>
+                      input:checked~label {
+                        color: #facc15;
+                      }
+                    </style>
+                  </div>
+
+                  <div>
+                    <textarea name="reviews[comment]" rows="3" placeholder="Share your experience..." required
+                      novalidate
+                      class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition resize-none needs-validation"></textarea>
+                  </div>
+
+                  <div>
+                    <button type="submit"
+                      class="px-6 py-3 bg-airbnb hover:bg-gray-800 text-white font-semibold rounded-lg transition">
+                      Submit Review
+                    </button>
+                  </div>
+                </form>
               </div>
 
               <% if (listing.reviews && listing.reviews.length> 0) { %>
@@ -231,19 +336,23 @@
                     Show all <%= listing.reviews.length %> reviews
                   </button>
                 </div>
-              <% } %>
-            </div> <!-- Actions (Edit/Delete) -->
-            <div class="py-4 flex gap-4 flex-wrap">
-              <a href="/listings/<%= listing._id %>/edit"
-                class="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
-                Edit Listing
-              </a>
-              <form action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST" class="inline">
-                <button class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition">
-                  Delete Listing
-                </button>
-              </form>
+                <% } %>
             </div>
+
+            <!-- Actions (Edit/Delete) -->
+            <% if (currentUser && currentUser._id.equals(listing.owner)) { %>
+              <div class="py-4 flex gap-4 flex-wrap">
+                <a href="/listings/<%= listing._id %>/edit"
+                  class="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
+                  Edit Listing
+                </a>
+                <form action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST" class="inline">
+                  <button class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition">
+                    Delete Listing
+                  </button>
+                </form>
+              </div>
+              <% } %>
       </div>
 
       <!-- Right Column (Booking Card) -->
