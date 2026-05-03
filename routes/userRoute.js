@@ -3,6 +3,7 @@ import User from "../models/user.js";
 import passport from "passport";
 import wrapAsync from "../utils/wrapAsync.js";
 import { FLASH_KEYS } from "../utils/constants.js";
+import { saveRedirectUrl } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -38,6 +39,7 @@ router.get("/login", (req, res) => {
 
 router.post(
   "/login",
+  saveRedirectUrl,
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
