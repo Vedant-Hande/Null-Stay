@@ -15,7 +15,7 @@ router.post(
   "/signup",
   wrapAsync(async (req, res, next) => {
     try {
-      let { username, email, password } = req.body;
+      const { username, email, password } = req.body;
       const newUser = new User({ email, username });
       const registeredUser = await User.register(newUser, password);
 
@@ -46,7 +46,7 @@ router.post(
   }),
   async (req, res) => {
     req.flash(FLASH_KEYS.SUCCESS, "Welcome back to NullStay!");
-    let redirectUrl = res.locals.redirectUrl || "/listings";
+    const redirectUrl = res.locals.redirectUrl || "/listings";
     res.redirect(redirectUrl);
   },
 );

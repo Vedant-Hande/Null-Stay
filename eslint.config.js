@@ -17,10 +17,14 @@ export default [
         require: "readonly",
         module: "readonly",
         exports: "readonly",
+        document: "readonly",
+        window: "readonly",
+        setTimeout: "readonly",
+        addEventListener: "readonly",
       },
     },
     rules: {
-      "no-console": "warn",
+      // "no-console": "warn",
       // Warning: Encourages removing debug logs (console.log) before deploying to production.
       "prefer-const": "error",
       // Best Practice: Ensures variables that are never reassigned are declared as 'const', improving code readability and preventing accidental reassignments.

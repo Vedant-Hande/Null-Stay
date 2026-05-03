@@ -40,7 +40,7 @@ router.get(
   isLoggedIn,
   isOwner,
   wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
+    const { id } = req.params;
     const listingToEdit = await listings.findById(id);
     res.render("listings/editListing.ejs", { listingToEdit });
   }),
@@ -53,7 +53,7 @@ router.put(
   isOwner,
   validateListing,
   wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
+    const { id } = req.params;
     await listings.findByIdAndUpdate(
       id,
       { ...req.body.listing },
@@ -70,7 +70,7 @@ router.delete(
   isLoggedIn,
   isOwner,
   wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
+    const { id } = req.params;
     await listings.findByIdAndDelete(id);
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.DELETE_SUCCESS);
     res.redirect("/listings");
@@ -81,7 +81,7 @@ router.delete(
 router.get(
   "/:id",
   wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
+    const { id } = req.params;
     const listing = await listings
       .findById(id)
       .populate({

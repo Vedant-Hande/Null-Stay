@@ -20,7 +20,7 @@ export const saveRedirectUrl = (req, res, next) => {
 };
 
 export const isOwner = async (req, res, next) => {
-  let { id } = req.params;
+  const { id } = req.params;
   const listing = await listings.findById(id);
   if (!listing) {
     req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
@@ -35,7 +35,7 @@ export const isOwner = async (req, res, next) => {
 };
 
 export const isReviewOwner = async (req, res, next) => {
-  let { id, reviewId } = req.params;
+  const { id, reviewId } = req.params;
   const review = await Review.findById(reviewId);
   if (!review) {
     req.flash(FLASH_KEYS.ERROR, "Review not found");

@@ -14,8 +14,8 @@ router.post(
   isLoggedIn,
   validateReview,
   wrapAsync(async (req, res, next) => {
-    let { id } = req.params;
-    let listing = await listings.findById(id);
+    const { id } = req.params;
+    const listing = await listings.findById(id);
     if (!listing) {
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
       return res.redirect("/listings");
@@ -43,7 +43,7 @@ router.delete(
   isLoggedIn,
   isReviewOwner,
   wrapAsync(async (req, res, next) => {
-    let { id, reviewId } = req.params;
+    const { id, reviewId } = req.params;
     const listing = await listings.findById(id);
     if (!listing) {
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
