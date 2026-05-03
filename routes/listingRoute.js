@@ -30,6 +30,7 @@ router.post(
   wrapAsync(async (req, res, next) => {
     const newListing = new listings(req.body.listing);
     newListing.owner = req.user._id;
+    console.log(req.user);
     await newListing.save();
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.CREATE_SUCCESS);
     res.redirect("/listings");
@@ -93,7 +94,16 @@ router.get(
   "/:id",
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
-    const listing = await listings.findById(id).populate("reviews").populate("owner");
+    const listing = await listings
+      .findById(id)
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "owner",
+        },
+      })
+      .populate("owner");
+    console.log("POPULATED LISTING REVIEWS:", JSON.stringify(listing.reviews, null, 2));
     if (!listing) {
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
       return res.redirect("/listings");

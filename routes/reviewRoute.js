@@ -4,12 +4,14 @@ import { validateReview } from "../middleware/validationMiddleware.js";
 import listings from "../models/listing.js";
 import Review from "../models/review.js";
 import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
+import { isLoggedIn } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // Create review route
 router.post(
   "/listings/:id/reviews",
+  isLoggedIn,
   validateReview,
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
@@ -25,6 +27,7 @@ router.post(
     }
 
     const newReview = new Review(reviewData); // Create a new review document
+    newReview.owner = req.user._id;
     await newReview.save(); // Save the review to the database
     listing.reviews.push(newReview._id); // Add the review reference to the listing
     await listing.save();

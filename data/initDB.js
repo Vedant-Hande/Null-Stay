@@ -1,4 +1,5 @@
-import Listing from "../models/listing.js"; // Standard convention is to capitalize model imports
+import Listing from "../models/listing.js";
+import Review from "../models/review.js";
 import sampleData from "./sampleData.js";
 import connectDB from "../config/database.js";
 
@@ -20,7 +21,11 @@ async function initDB() {
   await Listing.insertMany(updatedSampleData);
   console.log("Sample data initialized in DB successfully!!");
 
-  // 4. (Optional but recommended) Exit the process once done
+  // 5. Update any existing reviews to the default owner
+  const res = await Review.updateMany({}, { owner: "69f7203cc1d74f9aa260b16a" });
+  console.log(`Successfully updated ${res.modifiedCount} reviews to owner 69f7203cc1d74f9aa260b16a`);
+
+  // 6. (Optional but recommended) Exit the process once done
   process.exit();
 }
 

@@ -1,5 +1,5 @@
-import Listing from "./models/listing.js";
-import connectDB from "./config/database.js";
+import Listing from "../models/listing.js";
+import connectDB from "../config/database.js";
 
 async function updateAllOwners() {
   await connectDB();

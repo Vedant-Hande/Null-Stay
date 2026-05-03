@@ -169,7 +169,7 @@
                         <%= star %>
                       </span>
                       <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
-                        <div class="h-full bg-gray-800 rounded-full" style="width: <%= pct %>%"></div>
+                        <div class="h-full bg-gray-800 rounded-full" style="width: <%= pct %> %"></div>
                       </div>
                     </div>
                     <% }) %>
@@ -229,12 +229,12 @@
                         <div class="flex items-center gap-4">
                           <div
                             class="w-12 h-12 rounded-full bg-neutral-900 text-white flex items-center justify-center font-bold text-lg">
-                            <%= review.author && review.author.username ? review.author.username.charAt(0).toUpperCase()
+                            <%= review.owner && review.owner.username ? review.owner.username.charAt(0).toUpperCase()
                               : 'G' %>
                           </div>
                           <div>
                             <h4 class="font-semibold text-gray-900 leading-tight">
-                              <%= review.author && review.author.username ? review.author.username : 'Guest' %>
+                              <%= review.owner && review.owner.username ? review.owner.username : 'Guest' %>
                             </h4>
                             <div class="text-xs text-gray-500 mt-0.5">
                               <%= Math.floor(Math.random() * 4) + 1 %> years on Null Stay
@@ -329,7 +329,7 @@
                 </form>
               </div>
 
-              <% if (listing.reviews && listing.reviews.length> 4) { %>
+              <% if (listing.reviews && listing.reviews.length> 0) { %>
                 <div class="mt-8">
                   <button type="button" onclick="showAllReviews()"
                     class="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
