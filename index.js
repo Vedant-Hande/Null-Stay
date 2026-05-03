@@ -11,8 +11,12 @@ import reviewRoute from "./routes/reviewRoute.js";
 import infoRoute from "./routes/infoRoute.js";
 import session from "express-session";
 import flash from "connect-flash";
+import passport from "passport";
+import LocalStrategy from "passport-local";
 import { FLASH_KEYS } from "./utils/constants.js";
 import calculateAvgRating from "./utils/calculateAvgRating.js";
+import User from "./models/user.js";
+import userRoute from "./routes/userRoute.js";
 
 // es6 imports
 const __filename = fileURLToPath(import.meta.url);
@@ -62,11 +66,19 @@ app.use(methodOverride("_method")); // using method override to update and delet
 app.use(session(sessionOptions));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 // Pass flash messages to all EJS templates (Must be before all routes)
 app.use((req, res, next) => {
   res.locals.success = req.flash(FLASH_KEYS.SUCCESS);
   res.locals.error = req.flash(FLASH_KEYS.ERROR);
   res.locals.calculateAvgRating = calculateAvgRating;
+  res.locals.currentUser = req.user || null;
   next();
 });
 
@@ -79,6 +91,7 @@ app.get("/", (req, res) => {
 app.use("/listings", listingRoute);
 app.use("/", reviewRoute);
 app.use("/", infoRoute);
+app.use("/", userRoute);
 
 // Silently handle browser's automatic favicon requests
 app.get("/favicon.ico", (req, res) => res.status(204).end());
