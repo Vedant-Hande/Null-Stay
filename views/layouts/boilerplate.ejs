@@ -142,24 +142,40 @@
                         class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
                         <a href="/listings/new">Airbnb your home</a>
                     </div>
-                    <% if (!currentUser) { %>
-                        <div class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
-                            <a href="/signup">Sign up</a>
+                    
+                    <div class="relative">
+                        <div id="userMenuBtn"
+                            class="p-2 px-4 border border-gray-300 rounded-full flex flex-row items-center gap-3 hover:shadow-md transition cursor-pointer bg-white">
+                            <i class="fa-solid fa-bars text-sm"></i>
+                            <% if (currentUser && currentUser.username) { %>
+                                <div class="bg-airbnb rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center text-xs font-bold uppercase">
+                                    <%= currentUser.username.charAt(0) %>
+                                </div>
+                            <% } else { %>
+                                <div class="bg-gray-500 rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </div>
+                            <% } %>
                         </div>
-                        <div class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
-                            <a href="/login">Log in</a>
-                        </div>
-                    <% } else { %>
-                        <div class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
-                            <a href="/logout">Log out</a>
-                        </div>
-                    <% } %>
-                    <div
-                        class="p-2 px-4 border border-gray-300 rounded-full flex flex-row items-center gap-3 hover:shadow-md transition cursor-pointer">
-                        <i class="fa-solid fa-bars text-sm"></i>
-                        <div
-                            class="bg-gray-500 rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center">
-                            <i class="fa-solid fa-user text-xs"></i>
+
+                        <!-- Dropdown Menu -->
+                        <div id="userDropdown" class="absolute right-0 top-14 w-60 bg-white rounded-xl shadow-[0_8px_28px_rgba(0,0,0,0.15)] border border-gray-100 flex flex-col z-50 py-2 transition-all duration-200 transform origin-top-right opacity-0 scale-95 pointer-events-none">
+                            <% if (!currentUser) { %>
+                                <a href="/signup" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Sign up</a>
+                                <a href="/login" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log in</a>
+                                <div class="border-t border-gray-200 my-1"></div>
+                                <a href="#" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Help Center</a>
+                            <% } else { %>
+                                <a href="#" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Messages</a>
+                                <a href="#" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Notifications</a>
+                                <a href="#" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Trips</a>
+                                <a href="#" class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Wishlists</a>
+                                <div class="border-t border-gray-200 my-1"></div>
+                                <a href="/listings/new" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Manage listings</a>
+                                <a href="#" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Account</a>
+                                <div class="border-t border-gray-200 my-1"></div>
+                                <a href="/logout" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log out</a>
+                            <% } %>
                         </div>
                     </div>
                 </div>
