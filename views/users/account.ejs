@@ -1,20 +1,8 @@
 <% layout("/layouts/boilerplate") %>
-
-<!-- Include Inter Font for premium modern typography -->
+<!-- Include Inter Google Font & custom styles -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/userDashboard.css">
 
-<style>
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: #fafafa;
-  }
-  .glass-card {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(229, 231, 235, 0.6);
-  }
-</style>
 
 <div class="max-w-[1240px] mx-auto pb-16 pt-8 px-4 md:px-0 select-none">
   <!-- Top Header section with clean minimalist format -->
@@ -52,19 +40,17 @@
           </a>
         </div>
 
-        <!-- Personal Info Form/Display Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 select-none">
+        <!-- Personal Info Form -->
+        <form action="/user/account?_method=PUT" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6 select-none">
           <div>
-            <label class="text-xs font-bold uppercase tracking-wider text-gray-400 select-none block mb-1">Username</label>
-            <div class="text-sm text-gray-800 bg-gray-50 border border-gray-100 px-4 py-3 rounded-xl font-medium shadow-sm select-all">
-              <%= user.username %>
-            </div>
+            <label for="username" class="text-xs font-bold uppercase tracking-wider text-gray-400 select-none block mb-1">Username</label>
+            <input type="text" id="username" name="username" value="<%= user.username %>" required
+              class="w-full text-sm text-gray-800 bg-white border border-gray-200 focus:outline-none focus:border-airbnb focus:ring-2 focus:ring-rose-50 px-4 py-3 rounded-xl font-medium shadow-sm transition">
           </div>
           <div>
-            <label class="text-xs font-bold uppercase tracking-wider text-gray-400 select-none block mb-1">Email address</label>
-            <div class="text-sm text-gray-800 bg-gray-50 border border-gray-100 px-4 py-3 rounded-xl font-medium shadow-sm select-all">
-              <%= user.email %>
-            </div>
+            <label for="email" class="text-xs font-bold uppercase tracking-wider text-gray-400 select-none block mb-1">Email address</label>
+            <input type="email" id="email" name="email" value="<%= user.email %>" required
+              class="w-full text-sm text-gray-800 bg-white border border-gray-200 focus:outline-none focus:border-airbnb focus:ring-2 focus:ring-rose-50 px-4 py-3 rounded-xl font-medium shadow-sm transition">
           </div>
           <div>
             <label class="text-xs font-bold uppercase tracking-wider text-gray-400 select-none block mb-1">Date Created</label>
@@ -78,7 +64,12 @@
               Standard Member
             </div>
           </div>
-        </div>
+          <div class="md:col-span-2 pt-2 flex justify-end">
+            <button type="submit" class="bg-airbnb hover:bg-rose-600 text-white font-bold tracking-wide text-xs px-6 py-3 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+              Save Changes
+            </button>
+          </div>
+        </form>
 
         <!-- Account Activity Stats / Summaries -->
         <div class="pt-6 border-t border-gray-100 flex flex-col gap-4 select-none">
@@ -129,10 +120,18 @@
                       <p class="text-xs text-gray-400 mt-0.5 font-medium"><%= listing.location %>, <%= listing.country %></p>
                     </div>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <a href="/listings/<%= listing._id %>" class="text-xs font-bold text-airbnb hover:underline px-3 py-1.5 rounded-lg bg-white border border-gray-100 hover:border-rose-100 transition duration-200">
+                  <div class="flex items-center gap-2 select-none">
+                    <a href="/listings/<%= listing._id %>" class="text-xs font-bold text-gray-700 hover:text-airbnb px-3 py-1.5 rounded-lg bg-white border border-gray-100 hover:border-rose-100 transition duration-200">
                       View
                     </a>
+                    <a href="/listings/<%= listing._id %>/edit" class="text-xs font-bold text-gray-700 hover:text-airbnb px-3 py-1.5 rounded-lg bg-white border border-gray-100 hover:border-rose-100 transition duration-200">
+                      Edit
+                    </a>
+                    <form id="deleteForm-<%= listing._id %>" action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST">
+                      <button type="button" onclick="openDeleteModal(event, document.getElementById('deleteForm-<%= listing._id %>'))" class="text-xs font-bold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-lg bg-white border border-gray-100 hover:border-rose-100 transition duration-200">
+                        Delete
+                      </button>
+                    </form>
                   </div>
                 </div>
               <% }) %>

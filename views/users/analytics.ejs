@@ -1,20 +1,8 @@
 <% layout("/layouts/boilerplate") %>
-
-<!-- Add Inter Google Font for ultra-modern typography -->
+<!-- Include Inter Google Font & custom styles -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/userDashboard.css">
 
-<style>
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: #fafafa;
-  }
-  .glass-card {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(229, 231, 235, 0.6);
-  }
-</style>
 
 <div class="max-w-[1240px] mx-auto pb-16 pt-8 px-4 md:px-0 select-none">
   <!-- Top Banner / Page Header matching exactly the NullStay theme with a white background -->
@@ -183,101 +171,14 @@
   %>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const titles = <%- JSON.stringify(chartListingTitles) %>;
-      const ratings = <%- JSON.stringify(chartListingRatings) %>;
-      const reviews = <%- JSON.stringify(chartListingReviewCounts) %>;
-
-      // Chart 1: Ratings
-      new Chart(document.getElementById('ratingsChart'), {
-        type: 'bar',
-        data: {
-          labels: titles,
-          datasets: [{
-            label: 'Average Rating',
-            data: ratings,
-            backgroundColor: 'rgba(255, 56, 92, 0.75)',
-            borderColor: 'rgba(255, 56, 92, 1)',
-            borderWidth: 1.5,
-            borderRadius: 12,
-            maxBarThickness: 34
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 5,
-              grid: {
-                color: 'rgba(0, 0, 0, 0.04)'
-              },
-              ticks: {
-                stepSize: 1,
-                font: { size: 11, weight: '500' }
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              },
-              ticks: {
-                display: false
-              }
-            }
-          },
-          plugins: {
-            legend: { display: false }
-          }
-        }
-      });
-
-      // Chart 2: Reviews Count
-      new Chart(document.getElementById('reviewsChart'), {
-        type: 'bar',
-        data: {
-          labels: titles,
-          datasets: [{
-            label: 'Total Reviews',
-            data: reviews,
-            backgroundColor: 'rgba(37, 99, 235, 0.75)',
-            borderColor: 'rgba(37, 99, 235, 1)',
-            borderWidth: 1.5,
-            borderRadius: 12,
-            maxBarThickness: 34
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(0, 0, 0, 0.04)'
-              },
-              ticks: {
-                precision: 0,
-                font: { size: 11, weight: '500' }
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              },
-              ticks: {
-                display: false
-              }
-            }
-          },
-          plugins: {
-            legend: { display: false }
-          }
-        }
-      });
-    });
+    window.chartData = {
+      titles: <%- JSON.stringify(chartListingTitles) %>,
+      ratings: <%- JSON.stringify(chartListingRatings) %>,
+      reviews: <%- JSON.stringify(chartListingReviewCounts) %>
+    };
   </script>
+  <script src="/js/analyticsChart.js"></script>
+
 
   <!-- Detailed Listing Management Section -->
   <div class="glass-card rounded-3xl shadow-sm overflow-hidden mb-12">

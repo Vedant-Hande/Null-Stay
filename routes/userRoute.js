@@ -104,6 +104,22 @@ router.get(
   }),
 );
 
+router.put(
+  "/user/account",
+  isLoggedIn,
+  wrapAsync(async (req, res, next) => {
+    const { username, email } = req.body;
+    const existing = await User.findOne({ username, _id: { $ne: req.user._id } });
+    if (existing) {
+      req.flash(FLASH_KEYS.ERROR, "That username is already taken.");
+      return res.redirect("/user/account");
+    }
+    await User.findByIdAndUpdate(req.user._id, { username, email });
+    req.flash(FLASH_KEYS.SUCCESS, "Profile updated successfully!");
+    res.redirect("/user/account");
+  }),
+);
+
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) {

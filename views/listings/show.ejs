@@ -342,14 +342,14 @@
             </div>
 
             <!-- Actions (Edit/Delete) -->
-            <% if (currentUser && currentUser._id.equals(listing.owner)) { %>
+            <% if (currentUser && (currentUser._id.equals(listing.owner._id || listing.owner))) { %>
               <div class="py-4 flex gap-4 flex-wrap">
                 <a href="/listings/<%= listing._id %>/edit"
                   class="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
                   Edit Listing
                 </a>
-                <form action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST" class="inline">
-                  <button class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition">
+                <form id="deleteForm-<%= listing._id %>" action="/listings/<%= listing._id %>/delete?_method=DELETE" method="POST" class="inline">
+                  <button type="button" onclick="openDeleteModal(event, document.getElementById('deleteForm-<%= listing._id %>'))" class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition">
                     Delete Listing
                   </button>
                 </form>

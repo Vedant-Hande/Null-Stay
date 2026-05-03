@@ -88,19 +88,19 @@
 
 
                 <!-- Right Menu -->
-                <div class="hidden md:flex flex-row items-center gap-3">
+                <div class="flex flex-row items-center gap-1 md:gap-3">
 
                     <div
-                        class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+                        class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
                         <a href="/listings">Properties</a>
                     </div>
                     <div
-                        class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+                        class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
                         <a href="/listings/new">+ Add your property</a>
                     </div>
                     <% if (!currentUser) { %>
                         <div
-                            class="text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+                            class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
                             <a href="/login">Log in</a>
                         </div>
                         <% } %>
@@ -214,9 +214,67 @@
     <!-- Main Content -->
     <main class="flex-grow max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-8 w-full">
         <%- include("../includes/flash.ejs") %>
-
-            <%- body %>
+        <%- body %>
     </main>
+    <!-- Beautiful Premium Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4 select-none">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-gray-100 transform transition duration-300 scale-95 opacity-0" id="deleteConfirmModalContent">
+            <!-- Icon -->
+            <div class="w-14 h-14 bg-rose-50 border border-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-xl mb-5 shadow-sm">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <!-- Title and Description -->
+            <h3 class="text-xl font-bold text-gray-900 tracking-tight">Delete Listing</h3>
+            <p class="text-xs text-gray-500 font-normal mt-1 leading-relaxed">
+                Are you sure you want to permanently delete this property? This action cannot be undone.
+            </p>
+            <!-- Actions -->
+            <div class="flex items-center gap-3 mt-6">
+                <button type="button" onclick="closeDeleteModal()" class="flex-1 py-3 text-sm font-bold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition duration-200">
+                    Cancel
+                </button>
+                <button type="button" id="confirmDeleteBtn" class="flex-1 py-3 text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md hover:shadow-lg transition duration-200">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let formToSubmit = null;
+        function openDeleteModal(event, form) {
+            if (event) event.preventDefault();
+            formToSubmit = form;
+            const modal = document.getElementById('deleteConfirmModal');
+            const content = document.getElementById('deleteConfirmModalContent');
+            if (modal && content) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteConfirmModal');
+            const content = document.getElementById('deleteConfirmModalContent');
+            if (modal && content) {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    formToSubmit = null;
+                }, 200);
+            }
+        }
+
+        document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
+            if (formToSubmit) {
+                formToSubmit.submit();
+            }
+        });
+    </script>
 
     <!-- Footer -->
     <footer class="bg-gray-50 border-t border-gray-200 mt-auto text-gray-700">

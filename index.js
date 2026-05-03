@@ -81,7 +81,10 @@ app.use((req, res, next) => {
   res.locals.error = req.flash(FLASH_KEYS.ERROR);
   res.locals.calculateAvgRating = calculateAvgRating;
   res.locals.currentUser = req.user || null;
-  res.locals.isListingsPage = req.originalUrl === "/listings" || req.originalUrl === "/listings/" || req.originalUrl === "/";
+  res.locals.isListingsPage =
+    req.originalUrl === "/listings" ||
+    req.originalUrl === "/listings/" ||
+    req.originalUrl === "/";
   next();
 });
 
