@@ -11,7 +11,7 @@ const router = express.Router();
 router.get(
   "/",
   wrapAsync(async (req, res, next) => {
-    const allListing = await listings.find({});
+    const allListing = await listings.find({}).populate("reviews");
     res.render("listings/listings", { allListing });
   }),
 );

@@ -12,6 +12,7 @@ import infoRoute from "./routes/infoRoute.js";
 import session from "express-session";
 import flash from "connect-flash";
 import { FLASH_KEYS } from "./utils/constants.js";
+import calculateAvgRating from "./utils/calculateAvgRating.js";
 
 // es6 imports
 const __filename = fileURLToPath(import.meta.url);
@@ -65,6 +66,7 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.success = req.flash(FLASH_KEYS.SUCCESS);
   res.locals.error = req.flash(FLASH_KEYS.ERROR);
+  res.locals.calculateAvgRating = calculateAvgRating;
   next();
 });
 
@@ -73,7 +75,7 @@ app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-// Routes 
+// Routes
 app.use("/listings", listingRoute);
 app.use("/", reviewRoute);
 app.use("/", infoRoute);
