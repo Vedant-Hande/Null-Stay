@@ -18,29 +18,22 @@
     <!-- Scrollable Photo Grid -->
     <div class="flex-1 overflow-y-auto px-4 md:px-20 lg:px-40 py-8 bg-gray-50 pb-20">
         <div class="flex flex-col gap-4 max-w-4xl mx-auto">
-            <!-- Real uploaded image -->
+            <!-- Cover photo -->
             <div class="w-full h-auto md:h-[60vh] rounded-xl overflow-hidden mb-2 shadow-sm">
-                <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>" alt="Listing Image" class="w-full h-full object-cover">
+                <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>"
+                    alt="<%= listing.title %> cover" class="w-full h-full object-cover">
             </div>
-            
-            <!-- Masonry grid with premium Unsplash placeholders -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="rounded-xl overflow-hidden h-64 md:h-80 shadow-sm border border-gray-200">
-                    <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Living Room" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+
+            <% if (listing.images && listing.images.length) { %>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <% listing.images.forEach((img, index) => { %>
+                        <div class="rounded-xl overflow-hidden h-64 md:h-80 shadow-sm border border-gray-200 <%= index === listing.images.length - 1 && listing.images.length % 2 !== 0 ? 'md:col-span-2 md:h-96' : '' %>">
+                            <img src="<%= img.url %>" alt="<%= listing.title %> photo <%= index + 1 %>"
+                                class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                        </div>
+                    <% }) %>
                 </div>
-                <div class="rounded-xl overflow-hidden h-64 md:h-80 shadow-sm border border-gray-200">
-                    <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Kitchen" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                </div>
-                <div class="rounded-xl overflow-hidden md:col-span-2 h-72 md:h-96 shadow-sm border border-gray-200">
-                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Bedroom" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                </div>
-                <div class="rounded-xl overflow-hidden h-64 md:h-80 shadow-sm border border-gray-200">
-                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bathroom" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                </div>
-                <div class="rounded-xl overflow-hidden h-64 md:h-80 shadow-sm border border-gray-200">
-                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Balcony View" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                </div>
-            </div>
+            <% } %>
         </div>
     </div>
 </div>

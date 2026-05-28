@@ -34,6 +34,11 @@ export const DEFAULTS = {
   IMAGE_URL: "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
 };
 
+export const LISTING_MAX_GALLERY_IMAGES = 5;
+
+/** Per-file upload limit (must match middleware/uploadMiddleware.js) */
+export const MAX_IMAGE_FILE_BYTES = 5 * 1024 * 1024;
+
 export const ERROR_MESSAGES = {
   VALIDATION: {
     EMAIL_REQUIRED: "Email is required",

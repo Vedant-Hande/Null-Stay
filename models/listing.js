@@ -22,6 +22,12 @@ const listingSchema = new schema({
       set: (v) => v === "" ? DEFAULTS.IMAGE_URL : v,
     },
   },
+  images: [
+    {
+      url: { type: String, required: true },
+      filename: { type: String, required: true },
+    },
+  ],
   price: {
     type: Number,
     required: [true, ERROR_MESSAGES.VALIDATION.PRICE_REQUIRED],

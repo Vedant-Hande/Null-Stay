@@ -3,9 +3,10 @@
   const isRequired = typeof required !== "undefined" && required;
   const existingUrl = typeof currentImageUrl !== "undefined" ? currentImageUrl : "";
   const hintText = typeof hint !== "undefined" ? hint : "JPG, PNG or WEBP · Max 5MB";
+  const labelText = typeof label !== "undefined" ? label : "Cover Photo";
 %>
 <div class="image-upload-field" data-initial-url="<%= existingUrl %>">
-    <p class="text-[10px] uppercase font-bold text-gray-500 mb-3 tracking-wide">Property Photo</p>
+    <p class="text-[10px] uppercase font-bold text-gray-500 mb-3 tracking-wide"><%= labelText %></p>
 
     <input type="file" id="<%= fieldId %>" name="image" accept="image/jpeg,image/png,image/webp,image/gif"
         class="image-upload-input sr-only" <%= isRequired ? "required" : "" %>>
@@ -61,6 +62,7 @@
         </div>
     </div>
 
+    <p class="upload-size-error hidden text-xs text-red-600 mt-2 font-medium" role="alert"></p>
     <div class="invalid-feedback">Please upload a property image.</div>
     <% if (!isRequired) { %>
         <p class="mt-2 text-xs text-gray-400">Leave empty to keep your current image.</p>

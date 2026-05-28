@@ -124,15 +124,40 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    const formHasOversizedImages = () => {
+        const fileInputs = form.querySelectorAll(
+            'input[type="file"].image-upload-input, input[type="file"].gallery-upload-input',
+        );
+        for (const input of fileInputs) {
+            for (const file of input.files || []) {
+                if (typeof window.isImageFileTooLarge === "function" && window.isImageFileTooLarge(file)) {
+                    return file;
+                }
+            }
+        }
+        return null;
+    };
+
     const form = document.getElementById("multiStepForm");
     if (form) {
-        // When the user clicks the final "Publish Listing" submit button...
-        form.addEventListener("submit", event => {
-            // Check the entire form one last time. If anything is wrong...
+        form.addEventListener("submit", (event) => {
             if (!form.checkValidity()) {
-                event.preventDefault(); // Stop the form from submitting to the server
-                event.stopPropagation(); // Stop any other scripts from running
-                form.classList.add("was-validated"); // Show the red error messages
+                event.preventDefault();
+                event.stopPropagation();
+                form.classList.add("was-validated");
+                return;
+            }
+
+            const tooLarge = formHasOversizedImages();
+            if (tooLarge) {
+                event.preventDefault();
+                event.stopPropagation();
+                const msg =
+                    typeof window.imageFileSizeError === "function"
+                        ? window.imageFileSizeError(tooLarge)
+                        : "One or more images exceed the 5 MB limit.";
+                alert(msg);
+                form.querySelector(".upload-size-error, .gallery-size-error")?.classList.remove("hidden");
             }
         }, false);
     }

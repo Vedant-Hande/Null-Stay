@@ -5,9 +5,47 @@ import listings from "../models/listing.js";
 import Review from "../models/review.js";
 import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
 import { isLoggedIn, isOwner, isReviewOwner } from "../middleware/authMiddleware.js";
-import { upload } from "../middleware/uploadMiddleware.js";
+import { listingUpload } from "../middleware/uploadMiddleware.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
-import cloudinary from "../config/cloudinary.js";
+import {
+  destroyCloudinaryImage,
+  destroyCloudinaryImages,
+  destroyListingImages,
+  normalizeRemoveIds,
+  uploadFilesToCloudinary,
+} from "../utils/cloudinaryImages.js";
+import { LISTING_MAX_GALLERY_IMAGES } from "../utils/constants.js";
+import ExpressError from "../utils/ExpressError.js";
+
+async function uploadCoverImage(file) {
+  const result = await uploadToCloudinary(file.buffer);
+  return { url: result.secure_url, filename: result.public_id };
+}
+
+async function applyGalleryUpdates(listing, req) {
+  const removeIds = normalizeRemoveIds(req.body.removeSubImages);
+  let gallery = [...(listing.images || [])];
+
+  await destroyCloudinaryImages(removeIds);
+  gallery = gallery.filter((img) => !removeIds.includes(img.filename));
+
+  const subFiles = req.files?.subImages || [];
+  const slotsLeft = LISTING_MAX_GALLERY_IMAGES - gallery.length;
+
+  if (subFiles.length > slotsLeft) {
+    throw new ExpressError(
+      400,
+      `You can only have ${LISTING_MAX_GALLERY_IMAGES} gallery photos in total.`,
+    );
+  }
+
+  if (subFiles.length) {
+    const uploaded = await uploadFilesToCloudinary(subFiles);
+    gallery = [...gallery, ...uploaded];
+  }
+
+  listing.images = gallery;
+}
 
 const router = express.Router();
 
@@ -28,46 +66,27 @@ router.get("/new", isLoggedIn, (req, res) => {
 router.post(
   "/",
   isLoggedIn,
-  upload.single("image"),
+  listingUpload,
   validateListing,
   wrapAsync(async (req, res) => {
-    console.log("=== CREATE LISTING DEBUG ===");
-    console.log("req.body:", req.body);
-    console.log("req.body.listing:", req.body.listing);
-    console.log(
-      "req.file:",
-      req.file
-        ? {
-            fieldname: req.file.fieldname,
-            originalname: req.file.originalname,
-            mimetype: req.file.mimetype,
-            size: req.file.size,
-          }
-        : null,
-    );
+    const mainFile = req.files?.image?.[0];
 
-    if (!req.file) {
-      req.flash(FLASH_KEYS.ERROR, "Please upload a listing image.");
+    if (!mainFile) {
+      req.flash(FLASH_KEYS.ERROR, "Please upload a cover photo.");
       return res.redirect("/listings/new");
     }
 
-    const result = await uploadToCloudinary(req.file.buffer);
-    console.log("Cloudinary result:", {
-      secure_url: result.secure_url,
-      public_id: result.public_id,
-    });
-
+    const result = await uploadToCloudinary(mainFile.buffer);
     const newListing = new listings(req.body.listing);
     newListing.image = { url: result.secure_url, filename: result.public_id };
     newListing.owner = req.user._id;
+    newListing.images = [];
 
-    console.log("About to save:", {
-      title: newListing.title,
-      image: newListing.image,
-      owner: newListing.owner,
-    });
-
+    await applyGalleryUpdates(newListing, req);
+    newListing.markModified("images");
+    newListing.markModified("image");
     await newListing.save();
+
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.CREATE_SUCCESS);
     res.redirect("/listings");
   }),
@@ -90,47 +109,36 @@ router.put(
   "/:id",
   isLoggedIn,
   isOwner,
-  upload.single("image"),
+  listingUpload,
   validateListing,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    console.log("=== UPDATE LISTING DEBUG ===", { id });
-    console.log("req.body.listing:", req.body.listing);
-    console.log(
-      "req.file:",
-      req.file
-        ? {
-            fieldname: req.file.fieldname,
-            originalname: req.file.originalname,
-            mimetype: req.file.mimetype,
-            size: req.file.size,
-          }
-        : null,
-    );
-
     const listing = await listings.findById(id);
     if (!listing) {
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
       return res.redirect("/listings");
     }
 
-    Object.assign(listing, req.body.listing);
+    const listingData = { ...req.body.listing };
+    delete listingData.image;
+    delete listingData.images;
+    Object.assign(listing, listingData);
 
-    if (req.file) {
-      if (listing.image?.filename) {
-        await cloudinary.uploader.destroy(listing.image.filename);
-      }
-      const result = await uploadToCloudinary(req.file.buffer);
-      listing.image = { url: result.secure_url, filename: result.public_id };
-      console.log("Updated image:", listing.image);
-    }
+    const mainFile = req.files?.image?.[0];
 
-    console.log("About to save:", {
-      title: listing.title,
-      image: listing.image,
-    });
+    const coverUpdate = mainFile
+      ? (async () => {
+          await destroyCloudinaryImage(listing.image?.filename);
+          listing.image = await uploadCoverImage(mainFile);
+        })()
+      : Promise.resolve();
 
+    await Promise.all([coverUpdate, applyGalleryUpdates(listing, req)]);
+
+    listing.markModified("images");
+    if (mainFile) listing.markModified("image");
     await listing.save();
+
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.UPDATE_SUCCESS);
     res.redirect(`/listings/${id}`);
   }),
@@ -149,10 +157,7 @@ router.delete(
       return res.redirect("/listings");
     }
 
-    if (listing.image?.filename) {
-      await cloudinary.uploader.destroy(listing.image.filename);
-    }
-
+    await destroyListingImages(listing);
     await listings.findByIdAndDelete(id);
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.DELETE_SUCCESS);
     res.redirect("/listings");
@@ -173,10 +178,6 @@ router.get(
         },
       })
       .populate("owner");
-    console.log(
-      "POPULATED LISTING REVIEWS:",
-      JSON.stringify(listing.reviews, null, 2),
-    );
     if (!listing) {
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
       return res.redirect("/listings");

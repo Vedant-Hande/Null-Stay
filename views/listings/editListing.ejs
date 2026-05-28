@@ -94,10 +94,10 @@
                                 </div>
                             </div>
 
-                            <%- include("../includes/imageUploadField.ejs", {
-                                required: false,
-                                currentImageUrl: listingToEdit.image?.url || ""
-                            }) %>
+                            <%- include("../includes/imageUploadField.ejs", { required: false, label: "Cover Photo" ,
+                                currentImageUrl: listingToEdit.image?.url || "" }) %>
+                                <%- include("../includes/galleryUploadField.ejs", { galleryImages: listingToEdit.images
+                                    || [], maxGallery: 5 }) %>
                         </div>
 
                         <!-- Group: Location -->
@@ -271,5 +271,9 @@
         </div>
     </div>
 
+    <script src="/js/imageFileLimits.js"></script>
+    <script src="/js/compressImage.js"></script>
     <script src="/js/newListing.js"></script>
     <script src="/js/imageUpload.js"></script>
+    <script src="/js/galleryUpload.js"></script>
+    <script src="/js/listingFormLoading.js"></script>

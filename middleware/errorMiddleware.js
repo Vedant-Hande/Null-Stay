@@ -74,6 +74,10 @@ export const errorHandler = (err, req, res, next) => {
     statusCode = 413;
     message = "The file you are trying to upload is too large.";
   }
+  if (err.code === "LIMIT_FILE_COUNT" || err.code === "LIMIT_UNEXPECTED_FILE") {
+    statusCode = 400;
+    message = "Too many files selected. Please upload fewer images.";
+  }
 
   // --- 429 TOO MANY REQUESTS ---
   // Rate Limiting

@@ -12,9 +12,22 @@ function initImageUploadField(field) {
   const previewSize = field.querySelector(".upload-preview-size");
   const changeBtn = field.querySelector(".upload-change-btn");
   const removeBtn = field.querySelector(".upload-remove-btn");
+  const sizeError = field.querySelector(".upload-size-error");
   const initialUrl = field.dataset.initialUrl || "";
 
   if (!input || !dropzone) return;
+
+  const showSizeError = (message) => {
+    if (!sizeError) return;
+    sizeError.textContent = message;
+    sizeError.classList.remove("hidden");
+    dropzone.classList.add("border-red-500", "bg-red-50");
+  };
+
+  const clearSizeError = () => {
+    sizeError?.classList.add("hidden");
+    dropzone.classList.remove("border-red-500", "bg-red-50");
+  };
 
   const showEmpty = () => {
     emptyState?.classList.remove("hidden");
@@ -30,21 +43,58 @@ function initImageUploadField(field) {
     if (previewSize) previewSize.textContent = sizeText;
   };
 
-  const formatSize = (bytes) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  const formatSize =
+    typeof window.formatImageFileSize === "function"
+      ? window.formatImageFileSize
+      : (bytes) => `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+
+  const rejectFile = (file) => {
+    input.value = "";
+    input.classList.add("is-touched");
+    if (initialUrl) {
+      showPreview("Current photo", "Upload a new file to replace", initialUrl);
+    } else {
+      showEmpty();
+    }
+    const msg =
+      typeof window.imageFileSizeError === "function"
+        ? window.imageFileSizeError(file)
+        : `${file.name} is too large. Max size is 5 MB.`;
+    showSizeError(msg);
   };
 
-  const handleFile = (file) => {
+  const setFileOnInput = (file) => {
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+    input.files = dataTransfer.files;
+  };
+
+  const handleFile = async (file) => {
     if (!file || !file.type.startsWith("image/")) return;
+
+    if (typeof window.isImageFileTooLarge === "function" && window.isImageFileTooLarge(file)) {
+      rejectFile(file);
+      return;
+    }
+
+    clearSizeError();
+
+    let processed = file;
+    if (typeof window.compressImage === "function") {
+      try {
+        processed = await window.compressImage(file);
+      } catch {
+        processed = file;
+      }
+    }
+    setFileOnInput(processed);
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      showPreview(file.name, formatSize(file.size), e.target.result);
+      showPreview(processed.name, formatSize(processed.size), e.target.result);
       input.classList.add("is-touched");
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(processed);
   };
 
   const openPicker = () => input.click();
@@ -70,6 +120,7 @@ function initImageUploadField(field) {
     e.stopPropagation();
     input.value = "";
     input.classList.add("is-touched");
+    clearSizeError();
 
     if (initialUrl) {
       showPreview("Current photo", "Upload a new file to replace", initialUrl);
@@ -80,7 +131,7 @@ function initImageUploadField(field) {
 
   input.addEventListener("change", () => {
     const file = input.files?.[0];
-    if (file) handleFile(file);
+    if (file) void handleFile(file);
     else if (initialUrl) {
       showPreview("Current photo", "Upload a new file to replace", initialUrl);
     } else {
@@ -110,8 +161,7 @@ function initImageUploadField(field) {
 
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
-    input.files = dataTransfer.files;
-    handleFile(file);
+    void handleFile(file);
   });
 
   if (initialUrl && previewImg) {

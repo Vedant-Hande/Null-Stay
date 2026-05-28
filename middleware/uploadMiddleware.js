@@ -13,5 +13,11 @@ const fileFilter = (req, file, cb) => {
 export const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB — adjust as needed
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB per file
 });
+
+/** Cover photo + optional gallery (up to 5 additional images) */
+export const listingUpload = upload.fields([
+  { name: "image", maxCount: 1 },
+  { name: "subImages", maxCount: 5 },
+]);

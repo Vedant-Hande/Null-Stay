@@ -32,48 +32,41 @@
       </div>
     </div>
 
+    <%
+      const coverUrl = listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
+      const placeholderGrid = [
+        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80',
+        'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=600&q=80',
+        'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=600&q=80',
+      ];
+      const gallerySlots = (listing.images || []).slice(0, 4);
+      const totalPhotos = 1 + (listing.images?.length || 0);
+    %>
     <!-- Photo Gallery Grid (Airbnb Style) -->
     <div
       class="grid grid-cols-1 md:grid-cols-4 grid-rows-1 md:grid-rows-2 gap-2 h-[32vh] sm:h-[40vh] md:h-[450px] overflow-hidden rounded-xl mb-8 relative">
-      <!-- Main Large Image -->
-      <div class="col-span-1 md:col-span-2 md:row-span-2 overflow-hidden h-full">
-        <img
-          src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>"
-          alt="<%= listing.title %>"
+      <!-- Main cover image -->
+      <div class="col-span-1 md:col-span-2 md:row-span-2 overflow-hidden h-full" onclick="showPhotosModal()">
+        <img src="<%= coverUrl %>" alt="<%= listing.title %>"
           class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
       </div>
 
-      <!-- Grid Image 1 -->
-      <div class="col-span-1 row-span-1 overflow-hidden h-full hidden md:block">
-        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80"
-          alt="Interior" class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
-      </div>
+      <% for (let i = 0; i < 4; i++) { %>
+        <% const slotUrl = gallerySlots[i]?.url || placeholderGrid[i]; %>
+        <div class="col-span-1 row-span-1 overflow-hidden h-full hidden md:block" onclick="showPhotosModal()">
+          <img src="<%= slotUrl %>" alt="<%= listing.title %> photo <%= i + 2 %>"
+            class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
+        </div>
+      <% } %>
 
-      <!-- Grid Image 2 -->
-      <div class="col-span-1 row-span-1 overflow-hidden h-full hidden md:block">
-        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80"
-          alt="Bedroom" class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
-      </div>
-
-      <!-- Grid Image 3 -->
-      <div class="col-span-1 row-span-1 overflow-hidden h-full hidden md:block">
-        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=600&q=80"
-          alt="Living room"
-          class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
-      </div>
-
-      <!-- Grid Image 4 -->
-      <div class="col-span-1 row-span-1 overflow-hidden h-full hidden md:block">
-        <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=600&q=80"
-          alt="Bathroom" class="object-cover w-full h-full hover:scale-[1.03] transition duration-500 cursor-pointer">
-      </div>
-
-      <!-- Show all photos button -->
-      <div onclick="showPhotosModal()"
-        class="absolute bottom-4 right-4 md:bottom-6 md:right-6 bg-white border border-neutral-900 px-4 py-2 rounded-lg text-sm font-semibold shadow flex items-center gap-2 cursor-pointer hover:bg-neutral-100 transition z-10">
-        <i class="fa-solid fa-grip"></i>
-        <span>Show all photos</span>
-      </div>
+      <% if (totalPhotos > 1) { %>
+        <div onclick="showPhotosModal()"
+          class="absolute bottom-4 right-4 md:bottom-6 md:right-6 bg-white border border-neutral-900 px-4 py-2 rounded-lg text-sm font-semibold shadow flex items-center gap-2 cursor-pointer hover:bg-neutral-100 transition z-10">
+          <i class="fa-solid fa-grip"></i>
+          <span>Show all <%= totalPhotos %> photos</span>
+        </div>
+      <% } %>
     </div>
 
     <!-- Content Split -->
