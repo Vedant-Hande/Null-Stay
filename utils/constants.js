@@ -36,6 +36,23 @@ export const DEFAULTS = {
 
 export const LISTING_MAX_GALLERY_IMAGES = 5;
 
+export const DEFAULT_CLEANING_FEE = 1500;
+export const DEFAULT_SERVICE_FEE = 2100;
+
+export const BOOKING_FLASH = {
+  CREATED: "Your reservation is confirmed!",
+  REQUEST_SENT: "Booking request sent! The host will respond soon.",
+  CANCELLED: "Booking cancelled.",
+  ACCEPTED: "Booking accepted.",
+  REJECTED: "Booking declined.",
+  NOT_FOUND: "Booking not found.",
+  DATES_UNAVAILABLE: "Those dates are no longer available.",
+  OWN_LISTING: "You cannot book your own listing.",
+  UNAUTHORIZED: "You are not allowed to manage this booking.",
+  PAYMENT_DECLINED:
+    "Payment declined. Use test card 4242 4242 4242 4242.",
+};
+
 /** Per-file upload limit (must match middleware/uploadMiddleware.js) */
 export const MAX_IMAGE_FILE_BYTES = 5 * 1024 * 1024;
 

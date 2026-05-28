@@ -1,0 +1,4 @@
+<% const bd = typeof bookingDisplay !== 'undefined' ? bookingDisplay : {}; %>
+<% const metaMap = bd.STATUS_META || {}; %>
+<% const meta = metaMap[status] || { label: status, tone: 'cancelled' }; %>
+<span class="booking-status booking-status--<%= meta.tone %>"><%= meta.label %></span>

@@ -1,0 +1,130 @@
+<% const maxGuests = listing.guests || 1; %>
+<% const cleaningFee = typeof fees !== "undefined" ? fees.cleaningFee : 1500; %>
+<% const serviceFee = typeof fees !== "undefined" ? fees.serviceFee : 2100; %>
+<% const pricePerNight = listing.price || 0; %>
+<% const instantBook = listing.instantBook !== false; %>
+
+<link rel="stylesheet" href="/css/booking.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="/css/flatpickr-nullstay.css">
+
+<div id="bookingCard"
+  class="booking-card-widget"
+  data-listing-id="<%= listing._id %>"
+  data-price="<%= pricePerNight %>"
+  data-max-guests="<%= maxGuests %>"
+  data-cleaning-fee="<%= cleaningFee %>"
+  data-service-fee="<%= serviceFee %>"
+  data-instant-book="<%= instantBook ? 'true' : 'false' %>"
+  data-booked-dates-url="/listings/<%= listing._id %>/booked-dates"
+  data-is-owner="<%= typeof isOwner !== 'undefined' && isOwner ? 'true' : 'false' %>"
+  data-is-logged-in="<%= currentUser ? 'true' : 'false' %>">
+
+  <header class="booking-card__header">
+    <div class="booking-card__price">
+      <span class="booking-card__amount">&#8377;<%= pricePerNight.toLocaleString("en-IN") %></span>
+      <span class="booking-card__per-night">night</span>
+    </div>
+    <% if (!(typeof isOwner !== 'undefined' && isOwner)) { %>
+      <span class="booking-card__book-type">
+        <%= instantBook ? 'Book instantly' : 'Host reviews request' %>
+      </span>
+    <% } %>
+  </header>
+
+  <% if (typeof isOwner !== "undefined" && isOwner) { %>
+    <div class="booking-card__owner-note">
+      <i class="fa-solid fa-house-chimney-user"></i>
+      <p>This is your listing. Manage bookings from
+        <a href="/bookings/host">Host reservations</a>.
+      </p>
+    </div>
+  <% } else { %>
+
+  <div class="booking-card__fields" id="bookingFields">
+    <div class="booking-card__row booking-card__row--dates">
+      <button type="button" class="booking-card__cell" id="checkInCell" aria-label="Select check-in date">
+        <span class="booking-card__label">Check-in</span>
+        <span class="booking-card__value booking-card__value--placeholder" id="checkInDisplay">Add date</span>
+        <input type="text" id="bookingCheckIn" class="sr-only" tabindex="-1" readonly />
+      </button>
+      <button type="button" class="booking-card__cell" id="checkOutCell" aria-label="Select check-out date">
+        <span class="booking-card__label">Checkout</span>
+        <span class="booking-card__value booking-card__value--placeholder" id="checkOutDisplay">Add date</span>
+        <input type="text" id="bookingCheckOut" class="sr-only" tabindex="-1" readonly />
+      </button>
+    </div>
+
+    <div class="booking-card__row booking-card__row--guests">
+      <button type="button" class="booking-card__cell booking-card__cell--full" id="guestsToggle" aria-expanded="false" aria-haspopup="listbox">
+        <div>
+          <span class="booking-card__label">Guests</span>
+          <span class="booking-card__value" id="guestsLabel">1 guest</span>
+        </div>
+        <i class="fa-solid fa-chevron-down booking-card__chevron" id="guestsChevron" aria-hidden="true"></i>
+      </button>
+
+      <div id="guestsDropdown" class="booking-card__guest-menu hidden" role="listbox">
+        <div class="booking-card__guest-menu-inner">
+          <div>
+            <p class="booking-card__guest-title">Guests</p>
+            <p class="booking-card__guest-sub">Maximum <%= maxGuests %></p>
+          </div>
+          <div class="booking-card__stepper">
+            <button type="button" id="guestsMinus" class="booking-card__stepper-btn" disabled aria-label="Decrease guests">
+              <i class="fa-solid fa-minus text-xs"></i>
+            </button>
+            <span id="guestsCount" class="booking-card__stepper-count">1</span>
+            <button type="button" id="guestsPlus" class="booking-card__stepper-btn" aria-label="Increase guests">
+              <i class="fa-solid fa-plus text-xs"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bookingCalendarPanel" class="booking-card__calendar hidden" aria-label="Choose dates">
+    <div class="booking-card__calendar-header">
+      <span class="booking-card__calendar-title">Select dates</span>
+      <span class="booking-card__calendar-hint" id="calendarHintText">Add check-in and checkout</span>
+    </div>
+    <div id="bookingCalendarMount"></div>
+  </div>
+
+  <button type="button" id="reserveBtn" class="booking-card__reserve" disabled>
+    <span id="reserveBtnText">Reserve</span>
+  </button>
+
+  <p class="booking-card__disclaimer">You won't be charged until checkout</p>
+
+  <div id="priceBreakdown" class="booking-card__pricing hidden">
+    <div class="booking-card__pricing-lines">
+      <div class="booking-card__line">
+        <span id="nightsLine">—</span>
+        <span id="subtotalAmount">—</span>
+      </div>
+      <div class="booking-card__line">
+        <span>Cleaning fee</span>
+        <span id="cleaningFeeAmount">&#8377;<%= cleaningFee.toLocaleString("en-IN") %></span>
+      </div>
+      <div class="booking-card__line">
+        <span>NullStay service fee</span>
+        <span id="serviceFeeAmount">&#8377;<%= serviceFee.toLocaleString("en-IN") %></span>
+      </div>
+    </div>
+    <div class="booking-card__total">
+      <span>Total before taxes</span>
+      <span id="totalAmount">—</span>
+    </div>
+  </div>
+
+  <p id="bookingHint" class="booking-card__hint">
+    <span id="bookingHintText">Select dates to see pricing</span>
+  </p>
+
+  <% } %>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/js/bookingWidget.js" defer></script>

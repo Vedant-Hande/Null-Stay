@@ -7,6 +7,7 @@
     <title>Null Stay - Vacation Rentals & Homes</title>
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/utilities.css">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Google Fonts -->
@@ -139,7 +140,7 @@
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Messages</a>
                                             <a href="#"
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Notifications</a>
-                                            <a href="#"
+                                            <a href="/bookings/trips"
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Trips</a>
                                             <a href="#"
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Wishlists</a>
@@ -147,7 +148,9 @@
                                             <a href="/listings/new"
                                                 class="px-4 py-3 hover:bg-gray-50 text-sm transition">Manage
                                                 listings</a>
-                                            <a href="#"
+                                            <a href="/bookings/host"
+                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Reservations</a>
+                                            <a href="/user/account"
                                                 class="px-4 py-3 hover:bg-gray-50 text-sm transition">Account</a>
                                             <a href="/user/analytics"
                                                 class="px-4 py-3 hover:bg-gray-50 text-sm transition">Analytics</a>
@@ -216,6 +219,22 @@
         <%- include("../includes/flash.ejs") %>
         <%- body %>
     </main>
+    <!-- Global confirm dialog (replaces browser confirm) -->
+    <div id="nullstayConfirmModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm z-[9998] hidden flex items-center justify-center p-4 select-none">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-gray-100 transform transition duration-300 scale-95 opacity-0" id="nullstayConfirmModalContent">
+            <h3 id="nullstayConfirmTitle" class="text-xl font-semibold text-gray-900 tracking-tight">Are you sure?</h3>
+            <p id="nullstayConfirmMessage" class="text-sm text-gray-500 font-normal mt-2 leading-relaxed"></p>
+            <div class="flex items-center gap-3 mt-6">
+                <button type="button" id="nullstayConfirmCancel" class="flex-1 py-3 text-sm font-bold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition duration-200">
+                    Cancel
+                </button>
+                <button type="button" id="nullstayConfirmOk" class="flex-1 py-3 text-sm font-bold text-white bg-gray-900 hover:bg-black rounded-xl shadow-md transition duration-200">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Beautiful Premium Delete Confirmation Modal -->
     <div id="deleteConfirmModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4 select-none">
         <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-gray-100 transform transition duration-300 scale-95 opacity-0" id="deleteConfirmModalContent">
@@ -339,34 +358,10 @@
         </div>
     </footer>
 
+    <link rel="stylesheet" href="/css/ui-dialog.css">
+    <script src="/js/nullstay-ui.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/newListing.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const dropdown = document.getElementById('userDropdown');
-            if (dropdown && !dropdown.textContent.includes('Sign up')) {
-                const links = dropdown.querySelectorAll('a');
-                let accountLink = null;
-                let logoutLink = null;
-                links.forEach(link => {
-                    const text = link.textContent.trim().toLowerCase();
-                    if (text === 'account') accountLink = link;
-                    if (text.startsWith('log') && text.endsWith('out')) logoutLink = link;
-                });
-                if (accountLink && logoutLink) {
-                    accountLink.setAttribute('href', '/user/account');
-                    accountLink.className = "px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition block";
-                    logoutLink.className = "px-4 py-3 hover:bg-gray-50 text-sm transition block";
-                    dropdown.innerHTML = '';
-                    dropdown.appendChild(accountLink);
-                    const divider = document.createElement('div');
-                    divider.className = "border-t border-gray-200 my-1";
-                    dropdown.appendChild(divider);
-                    dropdown.appendChild(logoutLink);
-                }
-            }
-        });
-    </script>
 </body>
 
 </html>

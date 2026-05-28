@@ -1,0 +1,19 @@
+<%# locals: nightlyRate, nights, subtotal, cleaningFee, serviceFee, total %>
+<div class="flex flex-col gap-3">
+  <div class="booking-receipt-row">
+    <span>₹ <%= nightlyRate.toLocaleString("en-IN") %> × <%= nights %> night<%= nights > 1 ? 's' : '' %></span>
+    <span><%= bookingDisplay.formatInr(subtotal) %></span>
+  </div>
+  <div class="booking-receipt-row">
+    <span>Cleaning fee</span>
+    <span><%= bookingDisplay.formatInr(cleaningFee) %></span>
+  </div>
+  <div class="booking-receipt-row">
+    <span>NullStay service fee</span>
+    <span><%= bookingDisplay.formatInr(serviceFee) %></span>
+  </div>
+  <div class="booking-receipt-row booking-receipt-row--total">
+    <span>Total</span>
+    <span><%= bookingDisplay.formatInr(total) %></span>
+  </div>
+</div>

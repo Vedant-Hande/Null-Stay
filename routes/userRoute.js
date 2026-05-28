@@ -36,6 +36,9 @@ router.post(
 );
 
 router.get("/login", (req, res) => {
+  if (req.query.redirect && typeof req.query.redirect === "string") {
+    req.session.redirectUrl = req.query.redirect;
+  }
   res.render("users/login.ejs");
 });
 
@@ -48,7 +51,8 @@ router.post(
   }),
   async (req, res) => {
     req.flash(FLASH_KEYS.SUCCESS, "Welcome back to NullStay!");
-    const redirectUrl = res.locals.redirectUrl || "/listings";
+    const redirectUrl = res.locals.redirectUrl || req.session.redirectUrl || "/listings";
+    delete req.session.redirectUrl;
     res.redirect(redirectUrl);
   },
 );

@@ -1,0 +1,130 @@
+<% layout("/layouts/boilerplate") %>
+<%- include('../includes/booking/pageShellStart.ejs') %>
+
+<% const checkInFormatted = bookingDisplay.formatBookingDateShort(new Date(checkIn + 'T00:00:00Z')) %>
+<% const checkOutFormatted = bookingDisplay.formatBookingDateShort(new Date(checkOut + 'T00:00:00Z')) %>
+
+<a href="/listings/<%= listing._id %>" class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 mb-8 transition">
+  <i class="fa-solid fa-arrow-left"></i> Back to listing
+</a>
+
+<div class="grid lg:grid-cols-12 gap-10 items-start">
+  <div class="lg:col-span-7">
+    <p class="booking-kicker mb-2">Checkout</p>
+    <h1 class="text-3xl font-semibold tracking-tight text-gray-900 mb-2">Confirm and pay</h1>
+    <p class="text-gray-600 mb-8 max-w-lg">
+      <% if (instantBook) { %>
+        Complete payment to instantly confirm your stay. Use test card <strong class="text-gray-800">4242 4242 4242 4242</strong>.
+      <% } else { %>
+        Payment is collected now and held until the host approves. If declined, you'll be refunded automatically.
+      <% } %>
+    </p>
+
+    <div class="booking-glass p-6 md:p-8 mb-6">
+      <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-5">Trip details</h2>
+      <div class="grid sm:grid-cols-3 gap-4 text-sm">
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Check-in</p>
+          <p class="font-semibold text-gray-900"><%= checkInFormatted %></p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Check-out</p>
+          <p class="font-semibold text-gray-900"><%= checkOutFormatted %></p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Guests</p>
+          <p class="font-semibold text-gray-900"><%= guests %> guest<%= guests > 1 ? 's' : '' %></p>
+        </div>
+      </div>
+    </div>
+
+    <form id="checkoutForm" action="/bookings" method="POST" class="booking-glass p-6 md:p-8">
+      <input type="hidden" name="listingId" value="<%= listing._id %>" />
+      <input type="hidden" name="checkIn" value="<%= checkIn %>" />
+      <input type="hidden" name="checkOut" value="<%= checkOut %>" />
+      <input type="hidden" name="guests" value="<%= guests %>" />
+
+      <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-5">Payment</h2>
+
+      <div class="booking-pay-card mb-6">
+        <p class="text-xs uppercase tracking-widest text-gray-400 mb-3">NullStay · Demo mode</p>
+        <p class="text-lg font-semibold mb-1">Test card only</p>
+        <p class="text-sm text-gray-300 font-mono">4242 4242 4242 4242 · Any future expiry · Any CVC</p>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label for="cardName" class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-1.5">Name on card</label>
+          <input type="text" id="cardName" name="cardName" required autocomplete="cc-name"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:ring-2 focus:ring-gray-100 outline-none text-sm font-medium"
+            placeholder="Full name" />
+        </div>
+        <div>
+          <label for="cardNumber" class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-1.5">Card number</label>
+          <input type="text" id="cardNumber" name="cardNumber" required inputmode="numeric" autocomplete="cc-number"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:ring-2 focus:ring-gray-100 outline-none text-sm font-medium font-mono"
+            placeholder="4242 4242 4242 4242" />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="cardExpiry" class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-1.5">Expiry</label>
+            <input type="text" id="cardExpiry" name="cardExpiry" required autocomplete="cc-exp"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:ring-2 focus:ring-gray-100 outline-none text-sm font-medium"
+              placeholder="MM/YY" maxlength="5" />
+          </div>
+          <div>
+            <label for="cardCvc" class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-1.5">CVC</label>
+            <input type="text" id="cardCvc" name="cardCvc" required inputmode="numeric" autocomplete="cc-csc"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:ring-2 focus:ring-gray-100 outline-none text-sm font-medium"
+              placeholder="123" maxlength="4" />
+          </div>
+        </div>
+      </div>
+
+      <label class="flex items-start gap-3 mt-6 cursor-pointer group">
+        <input type="checkbox" name="agreeTerms" value="true" required
+          class="mt-1 w-4 h-4 rounded border-gray-300 text-airbnb focus:ring-rose-200" />
+        <span class="text-sm text-gray-600 group-hover:text-gray-900 transition">
+          I agree to the cancellation policy and house rules. I understand this is a demo payment — no real charge is made.
+        </span>
+      </label>
+
+      <button type="submit" id="checkoutSubmit"
+        class="w-full mt-8 bg-airbnb hover:bg-rose-600 text-white font-bold py-4 rounded-xl text-base shadow-[0_8px_24px_-6px_rgba(255,56,92,0.55)] transition flex items-center justify-center gap-2">
+        <span><%= instantBook ? 'Pay and confirm' : 'Pay and request to book' %></span>
+        <i class="fa-solid fa-arrow-right text-sm"></i>
+      </button>
+    </form>
+  </div>
+
+  <div class="lg:col-span-5">
+    <div class="booking-glass overflow-hidden booking-card-sticky">
+      <% if (listing.image?.url) { %>
+        <img src="<%= listing.image.url %>" alt="<%= listing.title %>" class="w-full h-52 object-cover" />
+      <% } %>
+      <div class="p-6">
+        <h3 class="font-bold text-lg text-gray-900 leading-snug"><%= listing.title %></h3>
+        <p class="text-sm text-gray-500 mt-1 mb-5 flex items-center gap-1">
+          <i class="fa-solid fa-location-dot text-xs"></i>
+          <%= listing.location %>, <%= listing.country %>
+        </p>
+
+        <%- include('../includes/booking/priceBreakdown.ejs', {
+          nightlyRate: totals.nightlyRate,
+          nights: totals.nights,
+          subtotal: totals.subtotal,
+          cleaningFee: totals.cleaningFee,
+          serviceFee: totals.serviceFee,
+          total: totals.total
+        }) %>
+
+        <p class="mt-6 pt-4 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+          <%= instantBook ? 'Instant confirmation after payment' : 'Host has 24 hours to respond' %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../includes/booking/pageShellEnd.ejs') %>
+<script src="/js/checkout.js"></script>

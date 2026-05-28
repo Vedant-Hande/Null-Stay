@@ -1,0 +1,284 @@
+/**
+ * NullStay date picker — scoped to #bookingCard only
+ * Overrides default Flatpickr (contrast, range selection, navigation)
+ */
+
+#bookingCard .booking-card__calendar {
+  margin-bottom: 1rem;
+  padding: 1rem 1rem 0.75rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: 1px solid #ebebeb;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+#bookingCard .booking-card__calendar.hidden {
+  display: none;
+}
+
+#bookingCard .booking-card__calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #ebebeb;
+}
+
+#bookingCard .booking-card__calendar-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #222;
+  letter-spacing: 0.01em;
+}
+
+#bookingCard .booking-card__calendar-hint {
+  font-size: 0.75rem;
+  color: #717171;
+  font-weight: 400;
+}
+
+/* ── Calendar shell ── */
+#bookingCard .flatpickr-calendar {
+  position: static !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#bookingCard .flatpickr-calendar.inline {
+  top: 0;
+}
+
+#bookingCard .flatpickr-months {
+  padding: 0 0 0.5rem;
+  align-items: center;
+}
+
+#bookingCard .flatpickr-months .flatpickr-month {
+  height: auto;
+  color: #222;
+}
+
+#bookingCard .flatpickr-current-month {
+  padding: 0;
+  height: auto;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+#bookingCard .flatpickr-current-month .flatpickr-monthDropdown-months,
+#bookingCard .flatpickr-current-month input.cur-year {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+#bookingCard .flatpickr-current-month .flatpickr-monthDropdown-months:hover,
+#bookingCard .flatpickr-current-month input.cur-year:hover {
+  background: #f7f7f7;
+  border-radius: 4px;
+}
+
+/* Prev / next arrows — always visible */
+#bookingCard .flatpickr-months .flatpickr-prev-month,
+#bookingCard .flatpickr-months .flatpickr-next-month {
+  position: relative;
+  top: 0;
+  height: 2rem;
+  width: 2rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+
+#bookingCard .flatpickr-months .flatpickr-prev-month:hover,
+#bookingCard .flatpickr-months .flatpickr-next-month:hover {
+  background: #f3f3f3;
+}
+
+#bookingCard .flatpickr-months .flatpickr-prev-month svg,
+#bookingCard .flatpickr-months .flatpickr-next-month svg {
+  width: 12px;
+  height: 12px;
+  fill: #222;
+}
+
+#bookingCard .flatpickr-months .flatpickr-prev-month.flatpickr-disabled,
+#bookingCard .flatpickr-months .flatpickr-next-month.flatpickr-disabled {
+  opacity: 0.25;
+}
+
+/* Weekday labels */
+#bookingCard .flatpickr-weekdays {
+  height: auto;
+  margin-bottom: 0.25rem;
+}
+
+#bookingCard .flatpickr-weekdaycontainer {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+#bookingCard span.flatpickr-weekday {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #717171;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+/* Day grid */
+#bookingCard .flatpickr-innerContainer {
+  width: 100%;
+}
+
+#bookingCard .flatpickr-rContainer {
+  width: 100%;
+}
+
+#bookingCard .flatpickr-days {
+  width: 100% !important;
+  border: none;
+}
+
+#bookingCard .dayContainer {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+#bookingCard .flatpickr-day {
+  width: 100% !important;
+  max-width: none !important;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  margin: 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #222 !important;
+  background: transparent;
+  flex-basis: auto;
+}
+
+/* Adjacent month days — visible but muted */
+#bookingCard .flatpickr-day.prevMonthDay,
+#bookingCard .flatpickr-day.nextMonthDay {
+  color: #b0b0b0 !important;
+  background: transparent !important;
+}
+
+#bookingCard .flatpickr-day.prevMonthDay,
+#bookingCard .flatpickr-day.nextMonthDay {
+  color: #b0b0b0 !important;
+}
+
+/* Today */
+#bookingCard .flatpickr-day.today {
+  border: 1px solid #222;
+  background: #fff;
+  color: #222 !important;
+  font-weight: 600;
+}
+
+#bookingCard .flatpickr-day.today:hover {
+  background: #f7f7f7 !important;
+  color: #222 !important;
+}
+
+/* Booked / disabled — readable, clearly unavailable */
+#bookingCard .flatpickr-day.flatpickr-disabled,
+#bookingCard .flatpickr-day.flatpickr-disabled:hover,
+#bookingCard .flatpickr-day.flatpickr-disabled:focus {
+  color: #d1d1d1 !important;
+  background: #fafafa !important;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  opacity: 1 !important;
+}
+
+/* Hover on available days */
+#bookingCard .flatpickr-day:not(.flatpickr-disabled):not(.selected):not(.inRange):hover {
+  background: #f3f3f3 !important;
+  border-color: transparent;
+  color: #222 !important;
+}
+
+/* Range selection — Airbnb-style continuous band */
+#bookingCard .flatpickr-day.inRange {
+  background: #f7f7f7 !important;
+  border-color: transparent !important;
+  color: #222 !important;
+  box-shadow: none !important;
+  border-radius: 0;
+}
+
+#bookingCard .flatpickr-day.startRange {
+  background: #222 !important;
+  color: #fff !important;
+  border-color: #222 !important;
+  border-radius: 8px 0 0 8px;
+  box-shadow: none !important;
+}
+
+#bookingCard .flatpickr-day.endRange {
+  background: #222 !important;
+  color: #fff !important;
+  border-color: #222 !important;
+  border-radius: 0 8px 8px 0;
+  box-shadow: none !important;
+}
+
+#bookingCard .flatpickr-day.startRange.endRange {
+  border-radius: 8px;
+}
+
+#bookingCard .flatpickr-day.startRange.inRange,
+#bookingCard .flatpickr-day.endRange.inRange {
+  color: #fff !important;
+}
+
+#bookingCard .flatpickr-day.selected,
+#bookingCard .flatpickr-day.selected:hover {
+  background: #222 !important;
+  border-color: #222 !important;
+  color: #fff !important;
+}
+
+/* Fix flatpickr blue focus ring */
+#bookingCard .flatpickr-day:focus,
+#bookingCard .flatpickr-day:focus-visible {
+  outline: none;
+  background: #f3f3f3;
+}
+
+#bookingCard .flatpickr-day.startRange:focus,
+#bookingCard .flatpickr-day.endRange:focus,
+#bookingCard .flatpickr-day.selected:focus {
+  background: #222 !important;
+  color: #fff !important;
+}

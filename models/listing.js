@@ -34,6 +34,20 @@ const listingSchema = new schema({
     min: [100, ERROR_MESSAGES.VALIDATION.PRICE_MIN],
     index: true, // Index for price filtering
   },
+  cleaningFee: {
+    type: Number,
+    default: null,
+    min: 0,
+  },
+  serviceFee: {
+    type: Number,
+    default: null,
+    min: 0,
+  },
+  instantBook: {
+    type: Boolean,
+    default: true,
+  },
   location: {
     type: String,
     required: [true, ERROR_MESSAGES.VALIDATION.LOCATION_REQUIRED],

@@ -92,7 +92,9 @@ function initGalleryUpload(field) {
       }
 
       if (!hasRoomFor(1)) {
-        alert(`You can upload at most ${maxTotal} additional photos.`);
+        if (window.NullStayUI) {
+          window.NullStayUI.warning(`You can upload at most ${maxTotal} additional photos.`);
+        }
         break;
       }
 

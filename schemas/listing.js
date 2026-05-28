@@ -21,6 +21,16 @@ const listingFields = {
     "number.min": "Price should be at least ₹100",
     "number.base": "Price must be a number",
   }),
+  cleaningFee: Joi.number().min(0).allow("", null).empty("").optional(),
+  serviceFee: Joi.number().min(0).allow("", null).empty("").optional(),
+  instantBook: Joi.any()
+    .custom((value) => {
+      if (Array.isArray(value)) {
+        return value.includes("true") || value.includes(true);
+      }
+      return value === true || value === "true" || value === "on" || value === 1;
+    })
+    .default(true),
   guests: Joi.number().required().min(1).messages({
     "any.required": "Please specify number of guests",
   }),

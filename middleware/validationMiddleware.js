@@ -1,6 +1,7 @@
 import { listingBodySchema } from "../schemas/listing.js";
 import ExpressError from "../utils/ExpressError.js";
 import { reviewSchema } from "../schemas/review.js";
+import { bookingCreateSchema } from "../schemas/booking.js";
 
 export const validateListing = (req, res, next) => {
   const { error, value } = listingBodySchema.validate(req.body.listing, {
@@ -26,4 +27,17 @@ export const validateReview = (req, res, next) => {
   } else {
     next();
   }
+};
+
+export const validateBooking = (req, res, next) => {
+  const { error, value } = bookingCreateSchema.validate(req.body, {
+    abortEarly: false,
+    convert: true,
+  });
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(", ");
+    throw new ExpressError(400, msg);
+  }
+  req.body = { ...req.body, ...value };
+  next();
 };

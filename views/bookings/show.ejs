@@ -1,0 +1,143 @@
+<% layout("/layouts/boilerplate") %>
+<%- include('../includes/booking/pageShellStart.ejs') %>
+
+<% const listing = booking.listing; %>
+<% const isConfirmed = booking.status === 'confirmed'; %>
+<% const isPending = booking.status === 'pending'; %>
+
+<div class="max-w-3xl mx-auto">
+  <% if (isConfirmed) { %>
+    <%- include('../includes/booking/pageHeader.ejs', {
+      tone: 'confirmed',
+      kicker: booking.confirmationCode ? 'Ref ' + booking.confirmationCode : 'Reservation',
+      title: 'Your stay is confirmed',
+      subtitle: 'Save your confirmation code and check trip details below.'
+    }) %>
+  <% } else if (isPending) { %>
+    <%- include('../includes/booking/pageHeader.ejs', {
+      tone: 'pending',
+      kicker: 'Request sent',
+      title: 'Waiting on the host',
+      subtitle: 'You will hear back once they review your dates. Payment is held until then.'
+    }) %>
+  <% } else { %>
+    <%- include('../includes/booking/pageHeader.ejs', {
+      tone: 'neutral',
+      kicker: 'Reservation',
+      title: 'Booking ' + booking.status,
+      subtitle: ''
+    }) %>
+  <% } %>
+
+  <div class="booking-glass overflow-hidden mb-6">
+    <% if (listing.image?.url) { %>
+      <img src="<%= listing.image.url %>" alt="<%= listing.title %>" class="w-full h-56 object-cover" />
+    <% } %>
+    <div class="p-6 md:p-8">
+      <div class="flex justify-between items-start gap-4 flex-wrap mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900"><%= listing.title %></h2>
+          <p class="text-gray-500 mt-1 flex items-center gap-1 text-sm">
+            <i class="fa-solid fa-location-dot"></i>
+            <%= listing.location %>, <%= listing.country %>
+          </p>
+        </div>
+        <%- include('../includes/booking/statusBadge.ejs', { status: booking.status }) %>
+      </div>
+
+      <% if (booking.confirmationCode) { %>
+        <div class="mb-6 p-4 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Confirmation code</p>
+            <p class="text-xl font-mono font-bold text-gray-900 tracking-wider"><%= booking.confirmationCode %></p>
+          </div>
+          <% if (booking.paymentStatus === 'paid') { %>
+            <p class="booking-payment-note w-fit">Payment received</p>
+          <% } else if (booking.paymentStatus === 'refunded') { %>
+            <p class="booking-payment-note booking-payment-note--muted w-fit">Refunded</p>
+          <% } %>
+        </div>
+      <% } %>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-8">
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Check-in</p>
+          <p class="font-semibold"><%= bookingDisplay.formatBookingDate(booking.checkIn) %></p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Check-out</p>
+          <p class="font-semibold"><%= bookingDisplay.formatBookingDate(booking.checkOut) %></p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Guests</p>
+          <p class="font-semibold"><%= booking.guests %></p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Host</p>
+          <p class="font-semibold"><%= listing.owner?.username || 'Host' %></p>
+        </div>
+      </div>
+
+      <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3">Price details</h3>
+      <%- include('../includes/booking/priceBreakdown.ejs', {
+        nightlyRate: booking.nightlyRate,
+        nights: booking.nights,
+        subtotal: booking.subtotal,
+        cleaningFee: booking.cleaningFee,
+        serviceFee: booking.serviceFee,
+        total: booking.total
+      }) %>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3 justify-center">
+    <a href="/listings/<%= listing._id %>"
+      class="px-6 py-3 border border-gray-200 font-bold text-sm rounded-xl hover:bg-gray-50 transition">
+      View listing
+    </a>
+    <% if (isGuest) { %>
+      <a href="/bookings/trips"
+        class="px-6 py-3 bg-gray-900 text-white font-bold text-sm rounded-xl hover:bg-black transition">
+        All trips
+      </a>
+      <% if (isConfirmed || isPending) { %>
+          <form action="/bookings/<%= booking._id %>/cancel" method="POST"
+            data-confirm="Cancel this reservation? This cannot be undone."
+            data-confirm-title="Cancel trip"
+            data-confirm-ok="Yes, cancel"
+            data-confirm-danger="true">
+          <button type="submit"
+            class="px-6 py-3 border border-rose-200 text-rose-600 font-bold text-sm rounded-xl hover:bg-rose-50 transition">
+            Cancel booking
+          </button>
+        </form>
+      <% } %>
+    <% } %>
+    <% if (isHost && isPending) { %>
+      <form action="/bookings/<%= booking._id %>/accept" method="POST">
+        <button type="submit"
+          class="px-6 py-3 bg-gray-900 text-white font-bold text-sm rounded-xl hover:bg-black transition">
+          Accept request
+        </button>
+      </form>
+      <form action="/bookings/<%= booking._id %>/reject" method="POST"
+        data-confirm="Decline this request? The guest will be refunded."
+        data-confirm-title="Decline booking"
+        data-confirm-ok="Decline"
+        data-confirm-danger="true">
+        <button type="submit"
+          class="px-6 py-3 border border-gray-200 font-bold text-sm rounded-xl hover:bg-gray-50 transition">
+          Decline
+        </button>
+      </form>
+    <% } %>
+    <% if (isHost) { %>
+      <a href="/bookings/host"
+        class="px-6 py-3 border border-gray-200 font-bold text-sm rounded-xl hover:bg-gray-50 transition">
+        All reservations
+      </a>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../includes/booking/pageShellEnd.ejs') %>

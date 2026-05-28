@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     typeof window.imageFileSizeError === "function"
                         ? window.imageFileSizeError(tooLarge)
                         : "One or more images exceed the 5 MB limit.";
-                alert(msg);
+                if (window.NullStayUI) window.NullStayUI.error(msg);
                 form.querySelector(".upload-size-error, .gallery-size-error")?.classList.remove("hidden");
             }
         }, false);

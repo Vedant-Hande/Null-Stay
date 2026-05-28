@@ -16,8 +16,10 @@ import passport from "passport";
 import LocalStrategy from "passport-local";
 import { FLASH_KEYS } from "./utils/constants.js";
 import calculateAvgRating from "./utils/calculateAvgRating.js";
+import * as bookingDisplay from "./utils/bookingDisplay.js";
 import User from "./models/user.js";
 import userRoute from "./routes/userRoute.js";
+import bookingRoute from "./routes/bookingRoute.js";
 import "./config/cloudinary.js";
 
 // es6 imports
@@ -81,6 +83,7 @@ app.use((req, res, next) => {
   res.locals.success = req.flash(FLASH_KEYS.SUCCESS);
   res.locals.error = req.flash(FLASH_KEYS.ERROR);
   res.locals.calculateAvgRating = calculateAvgRating;
+  res.locals.bookingDisplay = bookingDisplay;
   res.locals.currentUser = req.user || null;
   res.locals.isListingsPage =
     req.originalUrl === "/listings" ||
@@ -99,6 +102,7 @@ app.use("/listings", listingRoute);
 app.use("/", reviewRoute);
 app.use("/", infoRoute);
 app.use("/", userRoute);
+app.use("/bookings", bookingRoute);
 
 // Silently handle browser's automatic favicon requests
 app.get("/favicon.ico", (req, res) => res.status(204).end());

@@ -1,0 +1,122 @@
+<% layout("/layouts/boilerplate") %>
+<%- include('../includes/booking/pageShellStart.ejs') %>
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+  <div>
+    <p class="booking-kicker">Travel</p>
+    <h1 class="text-3xl font-semibold tracking-tight text-gray-900">Your trips</h1>
+    <p class="text-gray-500 mt-1">Upcoming getaways and past stays</p>
+  </div>
+  <a href="/listings"
+    class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-xl hover:bg-black transition">
+    <i class="fa-solid fa-magnifying-glass"></i> Explore stays
+  </a>
+</div>
+
+<div class="flex flex-wrap gap-2 mb-8">
+  <% const tabs = [
+    { id: 'all', label: 'All', count: counts.all },
+    { id: 'upcoming', label: 'Upcoming', count: counts.upcoming },
+    { id: 'past', label: 'Past', count: counts.past },
+    { id: 'cancelled', label: 'Cancelled', count: counts.cancelled },
+  ]; %>
+  <% tabs.forEach(tab => { %>
+    <a href="/bookings/trips?filter=<%= tab.id %>"
+      class="booking-tab <%= filter === tab.id ? 'booking-tab--active' : '' %>">
+      <%= tab.label %>
+      <span class="opacity-70 ml-1">(<%= tab.count %>)</span>
+    </a>
+  <% }) %>
+</div>
+
+<% if (!trips.length) { %>
+  <div class="booking-glass p-16 text-center">
+    <p class="booking-kicker text-center mb-2">No trips</p>
+    <h2 class="text-xl font-bold text-gray-900 mb-2">No trips here yet</h2>
+    <p class="text-gray-500 mb-8 max-w-sm mx-auto">
+      <% if (filter === 'all') { %>
+        When you book a stay, it will show up here.
+      <% } else { %>
+        Try another filter or book your next adventure.
+      <% } %>
+    </p>
+    <a href="/listings" class="inline-flex px-8 py-3.5 bg-airbnb text-white font-bold rounded-xl hover:bg-rose-600 transition shadow-lg">
+      Start exploring
+    </a>
+  </div>
+<% } else { %>
+  <div class="grid gap-6">
+    <% trips.forEach((trip) => { %>
+      <% const listing = trip.listing; %>
+      <% if (listing) { %>
+      <article class="booking-trip-card booking-glass overflow-hidden flex flex-col md:flex-row">
+        <a href="/listings/<%= listing._id %>" class="md:w-56 lg:w-64 shrink-0 relative block group">
+          <% if (listing.image?.url) { %>
+            <img src="<%= listing.image.url %>" alt="" class="w-full h-48 md:h-full min-h-[12rem] object-cover group-hover:scale-[1.02] transition duration-500" />
+          <% } else { %>
+            <div class="w-full h-48 md:h-full min-h-[12rem] bg-gray-100 flex items-center justify-center">
+              <i class="fa-solid fa-image text-3xl text-gray-300"></i>
+            </div>
+          <% } %>
+        </a>
+        <div class="p-6 flex-1 flex flex-col gap-4">
+          <div class="flex justify-between items-start gap-3 flex-wrap">
+            <div>
+              <a href="/listings/<%= listing._id %>" class="text-xl font-bold text-gray-900 hover:underline leading-tight">
+                <%= listing.title %>
+              </a>
+              <p class="text-sm text-gray-500 mt-1"><%= listing.location %>, <%= listing.country %></p>
+            </div>
+            <%- include('../includes/booking/statusBadge.ejs', { status: trip.status }) %>
+          </div>
+
+          <div class="flex flex-wrap gap-4 text-sm text-gray-700">
+            <span class="inline-flex items-center gap-2">
+              <i class="fa-regular fa-calendar text-gray-400"></i>
+              <%= bookingDisplay.bookingDateRange(trip.checkIn, trip.checkOut) %>
+            </span>
+            <span class="inline-flex items-center gap-2">
+              <i class="fa-solid fa-user-group text-gray-400"></i>
+              <%= trip.guests %> guest<%= trip.guests > 1 ? 's' : '' %>
+            </span>
+            <span class="inline-flex items-center gap-2">
+              <i class="fa-solid fa-moon text-gray-400"></i>
+              <%= trip.nights %> nights
+            </span>
+          </div>
+
+          <div class="flex items-end justify-between gap-4 flex-wrap mt-auto pt-2 border-t border-gray-100">
+            <div>
+              <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold">Total paid</p>
+              <p class="text-lg font-bold text-gray-900"><%= bookingDisplay.formatInr(trip.total) %></p>
+              <% if (trip.confirmationCode) { %>
+                <p class="text-xs text-gray-500 mt-1 font-mono">Ref <%= trip.confirmationCode %></p>
+              <% } %>
+            </div>
+            <div class="flex gap-3 flex-wrap">
+              <a href="/bookings/<%= trip._id %>"
+                class="px-4 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-xl hover:bg-black transition">
+                View details
+              </a>
+              <% if (trip.status === 'confirmed' || trip.status === 'pending') { %>
+                <form action="/bookings/<%= trip._id %>/cancel" method="POST"
+                  data-confirm="Cancel this reservation? This cannot be undone."
+                  data-confirm-title="Cancel trip"
+                  data-confirm-ok="Yes, cancel"
+                  data-confirm-danger="true">
+                  <button type="submit"
+                    class="px-4 py-2.5 border border-gray-200 text-sm font-bold rounded-xl hover:bg-gray-50 text-rose-600 transition">
+                    Cancel
+                  </button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </article>
+      <% } %>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../includes/booking/pageShellEnd.ejs') %>

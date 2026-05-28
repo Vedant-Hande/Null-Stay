@@ -3,7 +3,8 @@ import wrapAsync from "../utils/wrapAsync.js";
 import { validateListing, validateReview } from "../middleware/validationMiddleware.js";
 import listings from "../models/listing.js";
 import Review from "../models/review.js";
-import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
+import { FLASH_KEYS, FLASH_MESSAGES, BOOKING_FLASH } from "../utils/constants.js";
+import Booking from "../models/booking.js";
 import { isLoggedIn, isOwner, isReviewOwner } from "../middleware/authMiddleware.js";
 import { listingUpload } from "../middleware/uploadMiddleware.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
@@ -16,6 +17,14 @@ import {
 } from "../utils/cloudinaryImages.js";
 import { LISTING_MAX_GALLERY_IMAGES } from "../utils/constants.js";
 import ExpressError from "../utils/ExpressError.js";
+import {
+  calculateBookingTotals,
+  getBookedDateRanges,
+  getListingFees,
+  hasDateOverlap,
+  rangesToDisabledDates,
+  validateBookingDates,
+} from "../utils/bookingUtils.js";
 
 async function uploadCoverImage(file) {
   const result = await uploadToCloudinary(file.buffer);
@@ -158,9 +167,88 @@ router.delete(
     }
 
     await destroyListingImages(listing);
+    await Booking.deleteMany({ listing: id });
     await listings.findByIdAndDelete(id);
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.DELETE_SUCCESS);
     res.redirect("/listings");
+  }),
+);
+
+router.get(
+  "/:id/booked-dates",
+  wrapAsync(async (req, res) => {
+    const ranges = await getBookedDateRanges(req.params.id);
+    const disabled = rangesToDisabledDates(ranges);
+    res.json({ ranges, disabled });
+  }),
+);
+
+router.get(
+  "/:id/checkout",
+  isLoggedIn,
+  wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    const { checkIn, checkOut, guests: guestsStr } = req.query;
+
+    const listing = await listings.findById(id).populate("owner");
+    if (!listing) {
+      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
+      return res.redirect("/listings");
+    }
+
+    const ownerId = listing.owner?._id ?? listing.owner;
+    if (ownerId && ownerId.equals(req.user._id)) {
+      req.flash(FLASH_KEYS.ERROR, BOOKING_FLASH.OWN_LISTING);
+      return res.redirect(`/listings/${id}`);
+    }
+
+    if (!checkIn || !checkOut || !guestsStr) {
+      req.flash(FLASH_KEYS.ERROR, "Please select check-in, check-out, and guests.");
+      return res.redirect(`/listings/${id}`);
+    }
+
+    const guests = parseInt(guestsStr, 10);
+    if (Number.isNaN(guests) || guests < 1) {
+      req.flash(FLASH_KEYS.ERROR, "Invalid guest count.");
+      return res.redirect(`/listings/${id}`);
+    }
+
+    if (guests > listing.guests) {
+      req.flash(
+        FLASH_KEYS.ERROR,
+        `This listing allows up to ${listing.guests} guests.`,
+      );
+      return res.redirect(`/listings/${id}`);
+    }
+
+    const dateResult = validateBookingDates(checkIn, checkOut);
+    if (dateResult.error) {
+      req.flash(FLASH_KEYS.ERROR, dateResult.error);
+      return res.redirect(`/listings/${id}`);
+    }
+
+    if (
+      await hasDateOverlap(
+        listing._id,
+        dateResult.checkIn,
+        dateResult.checkOut,
+      )
+    ) {
+      req.flash(FLASH_KEYS.ERROR, BOOKING_FLASH.DATES_UNAVAILABLE);
+      return res.redirect(`/listings/${id}`);
+    }
+
+    const totals = calculateBookingTotals(listing, dateResult.nights);
+    const fees = getListingFees(listing);
+
+    res.render("bookings/checkout.ejs", {
+      listing,
+      checkIn,
+      checkOut,
+      guests,
+      totals,
+      instantBook: listing.instantBook !== false,
+    });
   }),
 );
 
@@ -190,7 +278,19 @@ router.get(
             listing.reviews.length
           ).toFixed(2)
         : null;
-    res.render("listings/show.ejs", { listing, avgRating }); // Render your view
+    const fees = getListingFees(listing);
+    const isOwner =
+      req.user &&
+      listing.owner &&
+      (listing.owner._id?.equals(req.user._id) ||
+        listing.owner.toString() === req.user._id.toString());
+
+    res.render("listings/show.ejs", {
+      listing,
+      avgRating,
+      fees,
+      isOwner,
+    });
   }),
 );
 

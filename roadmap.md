@@ -1,8 +1,10 @@
 # NullStay Future Features & Roadmap
 
-## 1. Reservation System (To build tomorrow)
+## 1. Reservation System (Implemented — MVP)
 
-Currently, the "Reserve" button on the listing show page is static. We discussed three possible solutions for handling reservations:
+The listing show page booking card supports date selection (Flatpickr), guest count, dynamic pricing, checkout review, instant book (default), host approval when `instantBook: false`, overlap prevention, Trips page (`/bookings/trips`), and host dashboard (`/bookings/host`). Payment gateway not yet integrated.
+
+Original design options for reference:
 
 ### Option 1: Immediate Booking Confirmation (Simplest)
 * **Action:** Clicking "Reserve" immediately creates a `Booking` record in the MongoDB database and redirects the user to an "Upcoming Trips" or "Success" page.
