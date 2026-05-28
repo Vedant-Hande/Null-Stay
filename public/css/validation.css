@@ -5,10 +5,17 @@ input.is-touched:invalid,
 textarea.is-touched:invalid {
     border-color: #ef4444 !important;
 }
+.was-validated .image-upload-field .image-upload-input:invalid + .image-upload-dropzone,
+.image-upload-field .image-upload-input.is-touched:invalid + .image-upload-dropzone {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2;
+}
 .was-validated input:invalid ~ .invalid-feedback, 
 .was-validated textarea:invalid ~ .invalid-feedback,
+.was-validated .image-upload-field .image-upload-input:invalid ~ .invalid-feedback,
 input.is-touched:invalid ~ .invalid-feedback,
-textarea.is-touched:invalid ~ .invalid-feedback {
+textarea.is-touched:invalid ~ .invalid-feedback,
+.image-upload-field .image-upload-input.is-touched:invalid ~ .invalid-feedback {
     display: block;
 }
 

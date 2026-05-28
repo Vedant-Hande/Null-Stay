@@ -59,7 +59,7 @@
                 <h2 class="text-3xl font-bold text-gray-900 mb-8" id="stepTitle">Step 1: The Basics</h2>
 
                 <form action="/listings" method="POST" class="flex flex-col flex-1 needs-validation" novalidate
-                    id="multiStepForm">
+                    id="multiStepForm" enctype="multipart/form-data">
 
                     <!-- Step 1: Basics & Location -->
                     <div class="form-step flex flex-col gap-10 flex-1 overflow-y-auto pr-2 pb-4">
@@ -96,17 +96,7 @@
                                 </div>
                             </div>
 
-                            <div
-                                class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
-                                <div class="relative px-4 py-2">
-                                    <label for="image"
-                                        class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Image
-                                        URL</label>
-                                    <input type="url" id="image" name="listing[image][url]"
-                                        class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 font-medium"
-                                        placeholder="https://...">
-                                </div>
-                            </div>
+                            <%- include("../includes/imageUploadField.ejs", { required: true }) %>
                         </div>
 
                         <!-- Group: Location -->
@@ -279,4 +269,5 @@
         </div>
     </div>
 
-    <script src="/js/multiStepForm.js"></script>
+    <script src="/js/newListing.js"></script>
+    <script src="/js/imageUpload.js"></script>

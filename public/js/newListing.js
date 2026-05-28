@@ -92,7 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const form = document.getElementById("multiStepForm");
 
         // Find all inputs in the current step that have the "required" attribute
-        const inputs = steps[currentStep].querySelectorAll("input[required], textarea[required]");
+        const inputs = steps[currentStep].querySelectorAll(
+            "input[required]:not([type='hidden']), textarea[required], .image-upload-input[required]",
+        );
         let isValid = true;
 
         // Add the 'was-validated' class. This tells our custom CSS to start showing red/green borders and text.
@@ -100,9 +102,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Loop through all required inputs to see if any are empty or invalid
         for (const input of inputs) {
-            // checkValidity() is a built-in browser function that checks things like "is it empty?" or "is it too short?"
             if (!input.checkValidity()) {
-                isValid = false; // If even one input fails, the whole step is invalid
+                isValid = false;
+                input.classList.add("is-touched");
             }
         }
 

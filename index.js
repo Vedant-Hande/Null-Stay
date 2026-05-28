@@ -18,6 +18,7 @@ import { FLASH_KEYS } from "./utils/constants.js";
 import calculateAvgRating from "./utils/calculateAvgRating.js";
 import User from "./models/user.js";
 import userRoute from "./routes/userRoute.js";
+import "./config/cloudinary.js";
 
 // es6 imports
 const __filename = fileURLToPath(import.meta.url);
