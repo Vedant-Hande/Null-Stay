@@ -15,9 +15,9 @@
     <p class="text-gray-600 mb-8 max-w-lg">
       <% if (stripeEnabled) { %>
         <% if (instantBook) { %>
-          Pay securely with Stripe to instantly confirm your stay.
+          Pay securely online — card or UPI QR scan — to instantly confirm your stay.
         <% } else { %>
-          Payment is collected now via Stripe. If the host declines, you'll receive a refund.
+          Pay now with card or UPI. If the host declines, you'll receive a refund.
         <% } %>
       <% } else if (instantBook) { %>
         Complete payment to instantly confirm your stay. Use demo test card <strong class="text-gray-800">4242 4242 4242 4242</strong>.
@@ -69,9 +69,15 @@
       <% if (stripeEnabled) { %>
         <div class="booking-pay-card mb-6 !bg-gray-50 !text-gray-900 border border-gray-100">
           <p class="text-xs uppercase tracking-widest text-gray-400 mb-3">NullStay · Secured by Stripe</p>
-          <p class="text-sm text-gray-600">Test mode: use card <span class="font-mono font-medium">4242 4242 4242 4242</span>, any future expiry, any CVC.</p>
+          <p class="text-sm text-gray-600 mb-2">Pay online with <strong>card</strong> or <strong>UPI</strong> (PhonePe, GPay, Paytm).</p>
+          <% if (stripeLiveMode) { %>
+            <p class="text-sm text-gray-500">Real payment — money will be charged to your card or UPI account.</p>
+          <% } else { %>
+            <p class="text-sm text-gray-500">Test mode — no real charge. Card test: <span class="font-mono font-medium">4242 4242 4242 4242</span>.</p>
+          <% } %>
         </div>
-        <div id="payment-element" class="min-h-[120px] mb-4"></div>
+        <div id="payment-element" class="min-h-[140px] mb-2"></div>
+        <p class="text-xs text-gray-400">UPI QR codes expire after 5 minutes.</p>
       <% } else { %>
         <div class="booking-pay-card mb-6">
           <p class="text-xs uppercase tracking-widest text-gray-400 mb-3">NullStay · Demo mode</p>

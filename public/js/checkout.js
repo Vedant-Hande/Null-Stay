@@ -31,6 +31,16 @@
     }
   }
 
+  function checkoutReturnUrl() {
+    const { listingId, checkIn, checkOut, guests } = form.dataset;
+    const params = new URLSearchParams({
+      checkIn,
+      checkOut,
+      guests,
+    });
+    return `${window.location.origin}/listings/${listingId}/checkout?${params}`;
+  }
+
   function formatDemoCardInputs() {
     const cardNumber = document.getElementById("cardNumber");
     const cardExpiry = document.getElementById("cardExpiry");
@@ -51,6 +61,45 @@
         e.target.value = v;
       });
     }
+  }
+
+  async function handleStripeReturn() {
+    const params = new URLSearchParams(window.location.search);
+    const clientSecret = params.get("payment_intent_client_secret");
+    if (!clientSecret || !stripeEnabled) return false;
+
+    const publishableKey = form.dataset.stripeKey;
+    if (!publishableKey || typeof Stripe === "undefined") return false;
+
+    const stripe = Stripe(publishableKey);
+    const { paymentIntent, error } =
+      await stripe.retrievePaymentIntent(clientSecret);
+
+    if (error) {
+      showError(error.message || "Could not verify payment.");
+      return true;
+    }
+
+    if (paymentIntent.status === "succeeded") {
+      document.getElementById("paymentIntentId").value = paymentIntent.id;
+      setLoading(true);
+      form.submit();
+      return true;
+    }
+
+    if (paymentIntent.status === "processing") {
+      showError(
+        "Payment is processing. Refresh this page in a moment to confirm your booking.",
+      );
+      return true;
+    }
+
+    if (paymentIntent.status === "requires_payment_method") {
+      showError("Payment failed or expired. Please choose a method and try again.");
+      return true;
+    }
+
+    return false;
   }
 
   async function initStripeCheckout() {
@@ -99,7 +148,9 @@
       },
     });
 
-    const paymentElement = elements.create("payment");
+    const paymentElement = elements.create("payment", {
+      layout: { type: "tabs" },
+    });
     paymentElement.mount("#payment-element");
 
     return { stripe, elements };
@@ -113,8 +164,11 @@
 
   let stripeCheckout = null;
 
-  initStripeCheckout().then((ctx) => {
-    stripeCheckout = ctx;
+  handleStripeReturn().then((handled) => {
+    if (handled) return;
+    initStripeCheckout().then((ctx) => {
+      stripeCheckout = ctx;
+    });
   });
 
   form.addEventListener("submit", async (e) => {
@@ -133,6 +187,9 @@
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       redirect: "if_required",
+      confirmParams: {
+        return_url: checkoutReturnUrl(),
+      },
     });
 
     if (error) {
@@ -142,14 +199,23 @@
       return;
     }
 
-    if (!paymentIntent || paymentIntent.status !== "succeeded") {
+    if (paymentIntent && paymentIntent.status === "succeeded") {
+      document.getElementById("paymentIntentId").value = paymentIntent.id;
+      form.submit();
+      return;
+    }
+
+    if (paymentIntent && paymentIntent.status === "processing") {
       setLoading(false);
-      showError("Payment was not completed.");
+      showError(
+        "Payment is processing. We'll confirm your booking once UPI completes.",
+      );
       submitBtn.innerHTML = `<span>${submitLabel}</span>${submitIcon}`;
       return;
     }
 
-    document.getElementById("paymentIntentId").value = paymentIntent.id;
-    form.submit();
+    setLoading(false);
+    showError("Payment was not completed.");
+    submitBtn.innerHTML = `<span>${submitLabel}</span>${submitIcon}`;
   });
 })();

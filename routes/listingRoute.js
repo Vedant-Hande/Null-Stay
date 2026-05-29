@@ -28,6 +28,7 @@ import {
 import {
   getStripePublishableKey,
   isStripeConfigured,
+  isStripeLiveMode,
 } from "../config/stripe.js";
 import {
   notifyAfterListingCreated,
@@ -281,6 +282,7 @@ router.get(
       totals,
       instantBook: listing.instantBook !== false,
       stripeEnabled: isStripeConfigured(),
+      stripeLiveMode: isStripeLiveMode(),
       stripePublishableKey: getStripePublishableKey(),
     });
   }),

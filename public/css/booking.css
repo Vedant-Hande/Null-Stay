@@ -504,6 +504,16 @@
   color: #fff;
 }
 
+.booking-stripe-card {
+  min-height: 2.75rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.booking-stripe-card:focus-within {
+  border-color: #222;
+  box-shadow: 0 0 0 1px #222;
+}
+
 .booking-toast {
   position: fixed;
   bottom: 1.5rem;

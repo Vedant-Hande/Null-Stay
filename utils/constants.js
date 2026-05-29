@@ -50,7 +50,7 @@ export const BOOKING_FLASH = {
   OWN_LISTING: "You cannot book your own listing.",
   UNAUTHORIZED: "You are not allowed to manage this booking.",
   PAYMENT_DECLINED:
-    "Payment declined. Use test card 4242 4242 4242 4242.",
+    "Payment declined. Please try another card or payment method.",
   PAYMENT_FAILED: "Payment could not be completed. Please try again.",
   STRIPE_NOT_CONFIGURED:
     "Online payments are not configured. Contact support or try again later.",

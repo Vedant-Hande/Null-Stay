@@ -58,6 +58,8 @@ import {
   initWebPush,
   isWebPushConfigured,
 } from "./config/webPush.js";
+import { isMailConfigured } from "./config/mail.js";
+import { isStripeConfigured, getStripeModeLabel } from "./config/stripe.js";
 
 import "./config/cloudinary.js";
 
@@ -256,6 +258,27 @@ server.listen(port, () => {
   } else {
     console.log(
       "Web Push: disabled — add VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_CONTACT_EMAIL to .env",
+    );
+  }
+
+  if (isMailConfigured()) {
+    console.log("Email: enabled (SMTP configured)");
+  } else {
+    console.log(
+      "Email: disabled — add SMTP_HOST, SMTP_USER, SMTP_PASS to .env",
+    );
+  }
+
+  if (isStripeConfigured()) {
+    const mode = getStripeModeLabel();
+    if (mode === "live") {
+      console.log("Stripe: LIVE — real card and UPI payments enabled");
+    } else {
+      console.log("Stripe: TEST — use live keys (sk_live_/pk_live_) for real payments");
+    }
+  } else {
+    console.log(
+      "Stripe: disabled — add STRIPE_SECRET_KEY and STRIPE_PUBLISHABLE_KEY to .env",
     );
   }
 

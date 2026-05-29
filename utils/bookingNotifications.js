@@ -1,6 +1,10 @@
 import { BOOKING_STATUSES } from "../models/booking.js";
 import { NOTIFICATION_TYPES } from "../models/notification.js";
 import { notifyUser } from "./notifyUser.js";
+import {
+  sendBookingCreatedEmails,
+  sendBookingCancelledEmails,
+} from "./bookingEmails.js";
 
 function hostId(listing) {
   return listing.owner?._id ?? listing.owner;
@@ -40,6 +44,9 @@ export async function notifyAfterBookingCreated({
         listingId: listing._id,
       });
     }
+    sendBookingCreatedEmails({ booking, listing, guestUser }).catch((err) => {
+      console.error("[mail] booking created:", err.message);
+    });
     return;
   }
 
@@ -66,6 +73,10 @@ export async function notifyAfterBookingCreated({
       listingId: listing._id,
     });
   }
+
+  sendBookingCreatedEmails({ booking, listing, guestUser }).catch((err) => {
+    console.error("[mail] booking created:", err.message);
+  });
 }
 
 export async function notifyAfterBookingAccepted({
@@ -111,19 +122,23 @@ export async function notifyAfterBookingCancelled({
   guestUser,
 }) {
   const host = hostId(listing);
-  if (!host) return;
-
   const guestName = guestUser?.username || "A guest";
   const title = listing?.title || "your listing";
 
-  await notifyUser({
-    app,
-    recipientId: host,
-    type: NOTIFICATION_TYPES.BOOKING_CANCELLED,
-    title: "Booking cancelled",
-    message: `${guestName} cancelled their booking for "${title}".`,
-    link: "/bookings/host",
-    bookingId: booking._id,
-    listingId: listing?._id,
+  if (host) {
+    await notifyUser({
+      app,
+      recipientId: host,
+      type: NOTIFICATION_TYPES.BOOKING_CANCELLED,
+      title: "Booking cancelled",
+      message: `${guestName} cancelled their booking for "${title}".`,
+      link: "/bookings/host",
+      bookingId: booking._id,
+      listingId: listing?._id,
+    });
+  }
+
+  sendBookingCancelledEmails({ booking, listing, guestUser }).catch((err) => {
+    console.error("[mail] booking cancelled:", err.message);
   });
 }

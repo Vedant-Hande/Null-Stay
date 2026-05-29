@@ -6,6 +6,15 @@ export function isStripeConfigured() {
   return Boolean(process.env.STRIPE_SECRET_KEY);
 }
 
+export function isStripeLiveMode() {
+  return process.env.STRIPE_SECRET_KEY?.startsWith("sk_live_") ?? false;
+}
+
+export function getStripeModeLabel() {
+  if (!isStripeConfigured()) return "disabled";
+  return isStripeLiveMode() ? "live" : "test";
+}
+
 export function getStripe() {
   if (!isStripeConfigured()) {
     return null;
