@@ -504,6 +504,16 @@
   color: #fff;
 }
 
+.booking-stripe-card {
+  min-height: 2.75rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.booking-stripe-card:focus-within {
+  border-color: #222;
+  box-shadow: 0 0 0 1px #222;
+}
+
 .booking-toast {
   position: fixed;
   bottom: 1.5rem;
@@ -527,9 +537,29 @@
   background: #be123c;
 }
 
+.booking-host-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .booking-host-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.booking-host-card--pending {
+  box-shadow:
+    0 4px 24px -4px rgba(255, 56, 92, 0.12),
+    inset 3px 0 0 #ff385c;
+}
+
 .booking-stat-pill {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
   background: #fafafa;
   border: 1px solid #f3f4f6;
   border-radius: 1rem;

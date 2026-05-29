@@ -4,7 +4,7 @@ import { validateListing, validateReview } from "../middleware/validationMiddlew
 import listings from "../models/listing.js";
 import Review from "../models/review.js";
 import { FLASH_KEYS, FLASH_MESSAGES, BOOKING_FLASH } from "../utils/constants.js";
-import Booking from "../models/booking.js";
+import Booking, { BOOKING_STATUSES } from "../models/booking.js";
 import { isLoggedIn, isOwner, isReviewOwner } from "../middleware/authMiddleware.js";
 import { listingUpload } from "../middleware/uploadMiddleware.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
@@ -25,6 +25,18 @@ import {
   rangesToDisabledDates,
   validateBookingDates,
 } from "../utils/bookingUtils.js";
+import {
+  getRazorpayKeyId,
+  isRazorpayConfigured,
+  isRazorpayLiveMode,
+} from "../config/razorpay.js";
+import {
+  notifyAfterListingCreated,
+  notifyAfterListingDeleted,
+  notifyAfterListingUpdated,
+  notifyAfterReviewCreated,
+  notifyAfterReviewDeleted,
+} from "../utils/activityNotifications.js";
 
 async function uploadCoverImage(file) {
   const result = await uploadToCloudinary(file.buffer);
@@ -96,6 +108,12 @@ router.post(
     newListing.markModified("image");
     await newListing.save();
 
+    await notifyAfterListingCreated({
+      app: req.app,
+      listing: newListing,
+      hostUser: req.user,
+    });
+
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.CREATE_SUCCESS);
     res.redirect("/listings");
   }),
@@ -148,6 +166,8 @@ router.put(
     if (mainFile) listing.markModified("image");
     await listing.save();
 
+    await notifyAfterListingUpdated({ app: req.app, listing });
+
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.UPDATE_SUCCESS);
     res.redirect(`/listings/${id}`);
   }),
@@ -165,6 +185,19 @@ router.delete(
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
       return res.redirect("/listings");
     }
+
+    const affectedBookings = await Booking.find({
+      listing: id,
+      status: {
+        $in: [BOOKING_STATUSES.PENDING, BOOKING_STATUSES.CONFIRMED],
+      },
+    });
+
+    await notifyAfterListingDeleted({
+      app: req.app,
+      listing,
+      bookings: affectedBookings,
+    });
 
     await destroyListingImages(listing);
     await Booking.deleteMany({ listing: id });
@@ -248,6 +281,9 @@ router.get(
       guests,
       totals,
       instantBook: listing.instantBook !== false,
+      razorpayEnabled: isRazorpayConfigured(),
+      razorpayLiveMode: isRazorpayLiveMode(),
+      razorpayKeyId: getRazorpayKeyId(),
     });
   }),
 );
@@ -339,6 +375,12 @@ router.delete(
     listing.reviews = listing.reviews.filter((r) => r.toString() !== reviewId);
     await listing.save();
     await Review.findByIdAndDelete(reviewId);
+
+    await notifyAfterReviewDeleted({
+      app: req.app,
+      listing,
+      guestUser: req.user,
+    });
 
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.REVIEW.DELETE_SUCCESS);
     res.redirect(`/listings/${id}`);

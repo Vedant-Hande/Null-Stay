@@ -5,6 +5,10 @@ import listings from "../models/listing.js";
 import Review from "../models/review.js";
 import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
 import { isLoggedIn, isReviewOwner } from "../middleware/authMiddleware.js";
+import {
+  notifyAfterReviewCreated,
+  notifyAfterReviewDeleted,
+} from "../utils/activityNotifications.js";
 
 const router = express.Router();
 
@@ -32,6 +36,13 @@ router.post(
     listing.reviews.push(newReview._id); // Add the review reference to the listing
     await listing.save();
 
+    await notifyAfterReviewCreated({
+      app: req.app,
+      listing,
+      review: newReview,
+      guestUser: req.user,
+    });
+
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.REVIEW.CREATE_SUCCESS);
     res.redirect(`/listings/${id}`);
   }),
@@ -53,6 +64,12 @@ router.delete(
     listing.reviews = listing.reviews.filter((r) => r.toString() !== reviewId);
     await listing.save();
     await Review.findByIdAndDelete(reviewId);
+
+    await notifyAfterReviewDeleted({
+      app: req.app,
+      listing,
+      guestUser: req.user,
+    });
 
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.REVIEW.DELETE_SUCCESS);
     res.redirect(`/listings/${id}`);

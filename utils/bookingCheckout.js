@@ -1,6 +1,6 @@
 import listings from "../models/listing.js";
 import Booking, { BOOKING_STATUSES } from "../models/booking.js";
-import { BOOKING_FLASH } from "../constants.js";
+import { BOOKING_FLASH } from "./constants.js";
 import {
   calculateBookingTotals,
   hasDateOverlap,

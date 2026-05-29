@@ -82,6 +82,16 @@ const bookingSchema = new Schema(
     paidAt: {
       type: Date,
     },
+    razorpayOrderId: {
+      type: String,
+      sparse: true,
+      unique: true,
+    },
+    razorpayPaymentId: {
+      type: String,
+      sparse: true,
+      unique: true,
+    },
   },
   { timestamps: true },
 );

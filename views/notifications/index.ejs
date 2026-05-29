@@ -1,0 +1,56 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="max-w-2xl mx-auto px-4 py-10">
+  <div class="flex items-center justify-between gap-4 mb-8">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Inbox</p>
+      <h1 class="text-3xl font-semibold text-gray-900">Notifications</h1>
+      <p class="text-xs text-gray-400 mt-1">Showing the last 12 hours</p>
+    </div>
+    <% if (notifications.some(n => !n.read)) { %>
+      <form action="/notifications/read-all" method="POST" class="js-mark-all-read">
+        <input type="hidden" name="_method" value="PATCH" />
+        <button type="submit"
+          class="text-sm font-semibold text-airbnb hover:text-rose-600 transition">
+          Mark all read
+        </button>
+      </form>
+    <% } %>
+  </div>
+
+  <% if (!notifications.length) { %>
+    <div class="text-center py-16 px-6 rounded-2xl border border-dashed border-gray-200 bg-gray-50">
+      <i class="fa-regular fa-bell text-4xl text-gray-300 mb-4"></i>
+      <p class="text-gray-600 font-medium">No notifications yet</p>
+      <p class="text-sm text-gray-400 mt-1">Nothing in the last 12 hours.</p>
+    </div>
+  <% } else { %>
+    <ul class="space-y-2">
+      <% notifications.forEach((n) => { %>
+        <li>
+          <a href="<%= n.link %>"
+            class="notification-inbox-item block p-4 rounded-xl border transition <%= n.read ? 'border-gray-100 bg-white' : 'border-rose-100 bg-rose-50/40' %>"
+            data-notification-id="<%= n._id %>">
+            <div class="flex gap-3">
+              <div class="shrink-0 w-10 h-10 rounded-full flex items-center justify-center <%= n.read ? 'bg-gray-100 text-gray-500' : 'bg-airbnb/10 text-airbnb' %>">
+                <i class="fa-solid fa-bell text-sm"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="font-semibold text-gray-900 text-sm"><%= n.title %></p>
+                <p class="text-sm text-gray-600 mt-0.5"><%= n.message %></p>
+                <p class="text-xs text-gray-400 mt-2">
+                  <%= new Date(n.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %>
+                </p>
+              </div>
+              <% if (!n.read) { %>
+                <span class="shrink-0 w-2 h-2 rounded-full bg-airbnb mt-2" aria-hidden="true"></span>
+              <% } %>
+            </div>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</div>
+
+<script src="/js/notifications-page.js"></script>
