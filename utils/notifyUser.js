@@ -1,6 +1,10 @@
 import Notification from "../models/notification.js";
 import { getIO } from "../config/socket.js";
 import { sendWebPushToUser } from "./sendWebPush.js";
+import {
+  pruneExpiredNotificationData,
+  recentNotificationFilter,
+} from "./notificationRetention.js";
 
 export function serializeNotification(doc) {
   const n = doc.toObject ? doc.toObject() : doc;
@@ -14,6 +18,7 @@ export function serializeNotification(doc) {
     createdAt: n.createdAt,
     booking: n.booking ? String(n.booking) : null,
     listing: n.listing ? String(n.listing) : null,
+    review: n.review ? String(n.review) : null,
   };
 }
 
@@ -29,6 +34,7 @@ export async function notifyUser({
   link = "/notifications",
   bookingId = null,
   listingId = null,
+  reviewId = null,
 }) {
   if (!recipientId) return null;
 
@@ -42,6 +48,7 @@ export async function notifyUser({
     link,
     booking: bookingId,
     listing: listingId,
+    review: reviewId,
   });
 
   const payload = serializeNotification(notification);
@@ -50,17 +57,21 @@ export async function notifyUser({
     io.to(`user:${recipient}`).emit("notification", payload);
   }
 
-  sendWebPushToUser(recipient, {
-    title,
-    message,
-    link,
-  }).catch((err) => {
-    console.error("Web push failed:", err.message);
+  sendWebPushToUser(recipient, { title, message, link }).then((result) => {
+    if (result.failed > 0 && result.sent === 0) {
+      console.warn(
+        `[push] No delivery for user ${recipient} (${result.failed} failed, 0 sent). Is the device subscribed?`,
+      );
+    }
   });
+
+  pruneExpiredNotificationData().catch(() => {});
 
   return notification;
 }
 
 export async function getUnreadCount(userId) {
-  return Notification.countDocuments({ recipient: userId, read: false });
+  return Notification.countDocuments(
+    recentNotificationFilter({ recipient: userId, read: false }),
+  );
 }

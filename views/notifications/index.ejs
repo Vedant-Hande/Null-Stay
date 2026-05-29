@@ -5,6 +5,7 @@
     <div>
       <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Inbox</p>
       <h1 class="text-3xl font-semibold text-gray-900">Notifications</h1>
+      <p class="text-xs text-gray-400 mt-1">Showing the last 12 hours</p>
     </div>
     <% if (notifications.some(n => !n.read)) { %>
       <form action="/notifications/read-all" method="POST" class="js-mark-all-read">
@@ -21,7 +22,7 @@
     <div class="text-center py-16 px-6 rounded-2xl border border-dashed border-gray-200 bg-gray-50">
       <i class="fa-regular fa-bell text-4xl text-gray-300 mb-4"></i>
       <p class="text-gray-600 font-medium">No notifications yet</p>
-      <p class="text-sm text-gray-400 mt-1">Booking updates will appear here in real time.</p>
+      <p class="text-sm text-gray-400 mt-1">Nothing in the last 12 hours.</p>
     </div>
   <% } else { %>
     <ul class="space-y-2">

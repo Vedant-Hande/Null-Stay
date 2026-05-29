@@ -620,11 +620,30 @@ You cannot test host notifications by booking your **own** listing (blocked by a
 
 ---
 
+## Activity notifications (reviews, listings, more)
+
+**File:** `utils/activityNotifications.js`
+
+| User action | Who gets notified |
+|-------------|-------------------|
+| Guest submits review | Host: "New review" · Guest: "Review published" |
+| Guest deletes review | Host: "Review removed" · Guest: "Review deleted" |
+| Guest books / request | (see `bookingNotifications.js`) |
+| Guest cancels trip | Host + Guest confirmation |
+| Host accepts / declines | Guest |
+| Host creates listing | Host: "Listing published" |
+| Host updates listing | Guests with pending/confirmed bookings |
+| Host deletes listing | Guests with pending/confirmed bookings |
+
+All use the same `notifyUser()` → MongoDB + Socket.io + Web Push.
+
+---
+
 ## Summary
 
 1. **Save** every alert in MongoDB (`notifyUser`).
 2. **Push live** to open tabs with Socket.io (`user:<id>` rooms).
 3. **Push to OS** with Web Push + service worker (needs VAPID + user permission).
-4. **Trigger** from booking routes via `bookingNotifications.js` helpers.
+4. **Trigger** from `bookingNotifications.js` and `activityNotifications.js` in routes.
 
 That is the full notification system in Null Stay.

@@ -30,6 +30,7 @@ import {
   notifyAfterBookingRejected,
   notifyAfterBookingCancelled,
 } from "../utils/bookingNotifications.js";
+import { notifyGuestBookingCancelled } from "../utils/activityNotifications.js";
 
 const router = express.Router();
 
@@ -337,6 +338,11 @@ router.post(
         booking,
         listing: cancelListing,
         guestUser: req.user,
+      });
+      await notifyGuestBookingCancelled({
+        app: req.app,
+        booking,
+        listing: cancelListing,
       });
     }
 

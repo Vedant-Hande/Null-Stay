@@ -5,7 +5,14 @@ export const NOTIFICATION_TYPES = {
   BOOKING_CONFIRMED: "booking_confirmed",
   BOOKING_DECLINED: "booking_declined",
   BOOKING_CANCELLED: "booking_cancelled",
+  BOOKING_CANCELLED_GUEST: "booking_cancelled_guest",
   BOOKING_NEW: "booking_new",
+  REVIEW_NEW: "review_new",
+  REVIEW_SUBMITTED: "review_submitted",
+  REVIEW_REMOVED: "review_removed",
+  LISTING_PUBLISHED: "listing_published",
+  LISTING_UPDATED: "listing_updated",
+  LISTING_REMOVED: "listing_removed",
 };
 
 const notificationSchema = new mongoose.Schema(
@@ -47,6 +54,10 @@ const notificationSchema = new mongoose.Schema(
     listing: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Listing",
+    },
+    review: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
     },
   },
   { timestamps: true },

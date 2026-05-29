@@ -6,6 +6,8 @@ import {
   getVapidPublicKey,
   isWebPushConfigured,
 } from "../config/webPush.js";
+import { pruneExpiredNotificationData } from "../utils/notificationRetention.js";
+import { sendWebPushToUser } from "../utils/sendWebPush.js";
 
 const router = express.Router();
 
@@ -38,10 +40,36 @@ router.post(
         endpoint,
         keys: { p256dh: keys.p256dh, auth: keys.auth },
       },
-      { upsert: true, new: true },
+      { upsert: true, new: true, timestamps: true },
     );
 
+    await pruneExpiredNotificationData();
+
     res.json({ ok: true });
+  }),
+);
+
+router.post(
+  "/test",
+  isLoggedIn,
+  wrapAsync(async (req, res) => {
+    if (!isWebPushConfigured()) {
+      return res.status(503).json({ error: "Web Push is not configured." });
+    }
+
+    const result = await sendWebPushToUser(req.user._id, {
+      title: "NullStay test",
+      message: "Push notifications are working.",
+      link: "/notifications",
+    });
+
+    if (result.skipped === "no_subscriptions") {
+      return res.status(400).json({
+        error: "No active push subscription. Click Turn on and Allow in the browser.",
+      });
+    }
+
+    res.json({ ok: true, ...result });
   }),
 );
 

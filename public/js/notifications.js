@@ -80,9 +80,26 @@
       body: JSON.stringify(sub),
     });
 
-    if (!res.ok) return false;
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      console.error(
+        "[push] Subscribe failed:",
+        errBody.error || res.statusText,
+      );
+      return false;
+    }
 
     pushSubscribed = true;
+
+    const testRes = await fetch("/push/test", {
+      method: "POST",
+      credentials: "same-origin",
+    });
+    if (!testRes.ok) {
+      const testErr = await testRes.json().catch(() => ({}));
+      console.warn("[push] Test delivery:", testErr.error || testRes.status);
+    }
+
     return true;
   }
 

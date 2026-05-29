@@ -47,6 +47,7 @@ import bookingRoute from "./routes/bookingRoute.js";
 import notificationRoute from "./routes/notificationRoute.js";
 
 import { getUnreadCount } from "./utils/notifyUser.js";
+import { pruneExpiredNotificationData } from "./utils/notificationRetention.js";
 
 import { initSocket } from "./config/socket.js";
 
@@ -249,9 +250,18 @@ app.use(errorHandler);
 
 
 server.listen(port, () => {
-
   console.log(`server is listening on port ${port}`);
+  if (isWebPushConfigured()) {
+    console.log("Web Push: enabled (VAPID keys loaded)");
+  } else {
+    console.log(
+      "Web Push: disabled — add VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_CONTACT_EMAIL to .env",
+    );
+  }
 
+  setInterval(() => {
+    pruneExpiredNotificationData().catch(() => {});
+  }, 60 * 60 * 1000);
 });
 
 

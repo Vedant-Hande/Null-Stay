@@ -3,6 +3,7 @@ import wrapAsync from "../utils/wrapAsync.js";
 import { isLoggedIn } from "../middleware/authMiddleware.js";
 import Notification from "../models/notification.js";
 import { getUnreadCount, serializeNotification } from "../utils/notifyUser.js";
+import { recentNotificationFilter } from "../utils/notificationRetention.js";
 
 const router = express.Router();
 
@@ -10,7 +11,9 @@ router.get(
   "/",
   isLoggedIn,
   wrapAsync(async (req, res) => {
-    const notifications = await Notification.find({ recipient: req.user._id })
+    const notifications = await Notification.find(
+      recentNotificationFilter({ recipient: req.user._id }),
+    )
       .sort({ createdAt: -1 })
       .limit(50);
 
@@ -32,9 +35,9 @@ router.get(
   isLoggedIn,
   wrapAsync(async (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 8, 20);
-    const notifications = await Notification.find({
-      recipient: req.user._id,
-    })
+    const notifications = await Notification.find(
+      recentNotificationFilter({ recipient: req.user._id }),
+    )
       .sort({ createdAt: -1 })
       .limit(limit);
 
@@ -49,7 +52,10 @@ router.patch(
   isLoggedIn,
   wrapAsync(async (req, res) => {
     const notification = await Notification.findOneAndUpdate(
-      { _id: req.params.id, recipient: req.user._id },
+      recentNotificationFilter({
+        _id: req.params.id,
+        recipient: req.user._id,
+      }),
       { read: true },
       { new: true },
     );
@@ -66,7 +72,7 @@ router.patch(
   isLoggedIn,
   wrapAsync(async (req, res) => {
     await Notification.updateMany(
-      { recipient: req.user._id, read: false },
+      recentNotificationFilter({ recipient: req.user._id, read: false }),
       { read: true },
     );
     res.json({ ok: true, count: 0 });
