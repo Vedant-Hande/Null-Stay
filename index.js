@@ -17,6 +17,7 @@ import ejsMate from "ejs-mate";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
 import listingRoute from "./routes/listingRoute.js";
+import apiListingRoute from "./routes/apiListingRoute.js";
 
 import reviewRoute from "./routes/reviewRoute.js";
 
@@ -243,6 +244,7 @@ app.get("/", wrapAsync(async (req, res) => {
 
 
 
+app.use("/api/listings", apiListingRoute);
 app.use("/listings", listingRoute);
 
 app.use("/", reviewRoute);

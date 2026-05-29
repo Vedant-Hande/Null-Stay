@@ -36,6 +36,9 @@ export const DEFAULTS = {
 
 export const LISTING_MAX_GALLERY_IMAGES = 5;
 
+/** Listings shown per page on `GET /listings` (see docs/PAGINATION.md). */
+export const LISTINGS_PER_PAGE = 12;
+
 export const DEFAULT_CLEANING_FEE = 1500;
 export const DEFAULT_SERVICE_FEE = 2100;
 

@@ -32,6 +32,12 @@ import {
 } from "../config/razorpay.js";
 import { buildListingFilter } from "../utils/listingSearch.js";
 import {
+  enrichPagination,
+  getPaginationMeta,
+  LISTINGS_PER_PAGE,
+  parsePage,
+} from "../utils/pagination.js";
+import {
   notifyAfterListingCreated,
   notifyAfterListingDeleted,
   notifyAfterListingUpdated,
@@ -76,7 +82,20 @@ router.get(
   "/",
   wrapAsync(async (req, res, next) => {
     const filter = buildListingFilter(req.query);
-    const allListing = await listings.find(filter).populate("reviews");
+    const page = parsePage(req.query.page);
+    const total = await listings.countDocuments(filter);
+    const pagination = enrichPagination(
+      getPaginationMeta(total, page, LISTINGS_PER_PAGE),
+      req.query,
+    );
+
+    const allListing = await listings
+      .find(filter)
+      .populate("reviews")
+      .sort({ createdAt: -1 })
+      .skip(pagination.skip)
+      .limit(pagination.limit);
+
     res.locals.searchQuery = req.query;
 
     let wishlistedIds = [];
@@ -89,6 +108,7 @@ router.get(
       allListing,
       searchQuery: req.query,
       wishlistedIds,
+      pagination,
     });
   }),
 );

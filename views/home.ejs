@@ -3,151 +3,342 @@
 <%
   const featured = typeof featuredListings !== 'undefined' ? featuredListings : [];
   const wishIds = typeof wishlistedIds !== 'undefined' ? wishlistedIds : [];
-  const cats = [
-    { id: 'beachfront', label: 'Beachfront', img: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=500&q=80' },
-    { id: 'cabins', label: 'Cabins', img: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=500&q=80' },
-    { id: 'pools', label: 'Pools', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=80' },
-    { id: 'cities', label: 'Cities', img: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=500&q=80' },
-    { id: 'treehouses', label: 'Treehouses', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=500&q=80' },
-    { id: 'castles', label: 'Castles', img: 'https://images.unsplash.com/photo-1513622470522-26c78140594c?auto=format&fit=crop&w=500&q=80' },
-  ];
+  const mockListings = featured.length
+    ? featured.slice(0, 4)
+    : [
+        { image: { url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400' }, location: 'Goa', country: 'India', price: 4500 },
+        { image: { url: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=400' }, location: 'Manali', country: 'India', price: 3200 },
+        { image: { url: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400' }, location: 'Alleppey', country: 'India', price: 5800 },
+        { image: { url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400' }, location: 'Jaipur', country: 'India', price: 2900 },
+      ];
+  function listingRating(listing) {
+    const revs = listing.reviews || [];
+    if (!revs.length) return null;
+    const sum = revs.reduce((a, r) => a + (r.rating || 0), 0);
+    return (sum / revs.length).toFixed(1);
+  }
 %>
 
-<div class="ns-home">
+<div class="ns-land">
 
-  <!-- Hero -->
-  <section class="ns-hero ns-fade">
-    <div class="ns-hero__photo">
-      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80" alt="" loading="eager" />
-    </div>
-    <div class="ns-hero__shade"></div>
-
-    <div class="ns-hero__grid">
-      <div>
-        <span class="ns-hero__eyebrow">NullStay · Book unique stays</span>
-        <h1 class="ns-hero__title">Your next getaway starts <em>here</em></h1>
-        <p class="ns-hero__lead">
-          Villas, cabins, and city apartments across India — secure UPI checkout, real hosts, and stays you'll actually want to book.
-        </p>
-        <div class="ns-hero__chips">
-          <span class="ns-hero__chip"><i class="fa-solid fa-shield-halved"></i> Secure payments</span>
-          <span class="ns-hero__chip"><i class="fa-solid fa-star"></i> Rated stays</span>
-          <span class="ns-hero__chip"><i class="fa-solid fa-comments"></i> Message hosts</span>
-        </div>
+  <header class="ns-nav" id="nsNav">
+    <div class="ns-nav__inner">
+      <a href="/" class="ns-nav__logo">
+        <i class="fa-brands fa-airbnb"></i>
+        NullStay
+      </a>
+      <nav class="ns-nav__links" aria-label="Primary">
+        <a href="#discover">Discover</a>
+        <a href="#book">Book</a>
+        <a href="#host">Host</a>
+        <a href="/help">Help</a>
+      </nav>
+      <div class="ns-nav__actions">
+        <% if (currentUser) { %>
+          <a href="/bookings/trips" class="ns-btn-ghost">Trips</a>
+          <a href="/listings" class="ns-btn-white">Explore stays</a>
+        <% } else { %>
+          <a href="/login" class="ns-btn-ghost">Sign in</a>
+          <a href="/signup" class="ns-btn-white">Get started</a>
+        <% } %>
       </div>
+    </div>
+  </header>
 
-      <div class="ns-search">
-        <div class="ns-search__head">
-          <h2>Find a stay</h2>
-          <p>Search by place, country, or guests</p>
-        </div>
-        <form action="/listings" method="GET" class="ns-search__fields">
-          <div class="ns-search__row">
-            <i class="fa-solid fa-location-dot"></i>
-            <div style="flex:1;min-width:0">
-              <label for="ns-q">Where</label>
-              <input id="ns-q" type="text" name="q" placeholder="Goa, Manali, Jaipur…" autocomplete="off" />
-            </div>
+  <% if (success && success.length) { %>
+    <div class="ns-flash"><div class="flash-success"><%= success %></div></div>
+  <% } %>
+  <% if (error && error.length) { %>
+    <div class="ns-flash"><div class="flash-error"><%= error %></div></div>
+  <% } %>
+
+  <section class="ns-hero ns-fade">
+    <div class="ns-hero__bg" aria-hidden="true"></div>
+    <div class="ns-hero__inner">
+      <div class="ns-hero__content">
+        <p class="ns-hero__badge">
+          <i class="fa-solid fa-star" aria-hidden="true"></i>
+          Curated stays across India
+        </p>
+        <h1>Find your next<br><em>unforgettable</em> stay.</h1>
+        <p class="ns-hero__sub">
+          Villas, cabins, and city homes — book with UPI, message hosts, and manage trips in one beautiful place.
+        </p>
+
+        <form class="ns-hero-search" action="/listings" method="GET" role="search">
+          <div class="ns-hero-search__field">
+            <label for="hero-q">Where</label>
+            <input id="hero-q" type="text" name="q" placeholder="Goa, Manali, Jaipur…" autocomplete="off" />
           </div>
-          <div class="ns-search__row">
-            <i class="fa-solid fa-globe"></i>
-            <div style="flex:1;min-width:0">
-              <label for="ns-country">Country</label>
-              <input id="ns-country" type="text" name="country" placeholder="India" autocomplete="off" />
-            </div>
+          <div class="ns-hero-search__field ns-hero-search__field--sm">
+            <label for="hero-guests">Guests</label>
+            <input id="hero-guests" type="number" name="guests" min="1" placeholder="2" />
           </div>
-          <div class="ns-search__row">
-            <i class="fa-solid fa-user-group"></i>
-            <div style="flex:1;min-width:0">
-              <label for="ns-guests">Guests</label>
-              <input id="ns-guests" type="number" name="guests" min="1" placeholder="2" />
-            </div>
-          </div>
-          <button type="submit" class="ns-search__submit">
-            <i class="fa-solid fa-magnifying-glass"></i> Search stays
+          <button type="submit" class="ns-hero-search__btn" aria-label="Search stays">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Search</span>
           </button>
         </form>
-      </div>
-    </div>
-  </section>
 
-  <!-- Trust -->
-  <div class="ns-trust ns-fade">
-    <div class="ns-trust__item">
-      <span class="ns-trust__icon"><i class="fa-solid fa-house"></i></span>
-      <div>
-        <div class="ns-trust__label"><%= featured.length ? featured.length + '+' : '50+' %> listings</div>
-        <div class="ns-trust__sub">Unique places to stay</div>
-      </div>
-    </div>
-    <div class="ns-trust__item">
-      <span class="ns-trust__icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
-      <div>
-        <div class="ns-trust__label">UPI &amp; cards</div>
-        <div class="ns-trust__sub">Razorpay checkout</div>
-      </div>
-    </div>
-    <div class="ns-trust__item">
-      <span class="ns-trust__icon"><i class="fa-solid fa-bell"></i></span>
-      <div>
-        <div class="ns-trust__label">Live updates</div>
-        <div class="ns-trust__sub">Booking alerts</div>
-      </div>
-    </div>
-    <div class="ns-trust__item">
-      <span class="ns-trust__icon"><i class="fa-solid fa-heart"></i></span>
-      <div>
-        <div class="ns-trust__label">Wishlists</div>
-        <div class="ns-trust__sub">Save favourites</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Categories -->
-  <section class="ns-section ns-fade">
-    <div class="ns-section__top">
-      <div>
-        <p class="ns-section__kicker">Browse</p>
-        <h2 class="ns-section__title">Explore by vibe</h2>
-      </div>
-    </div>
-    <div class="ns-cats">
-      <% cats.forEach(cat => { %>
-        <a href="/listings?category=<%= cat.id %>" class="ns-cat">
-          <img src="<%= cat.img %>" alt="" loading="lazy" />
-          <div class="ns-cat__overlay"></div>
-          <span class="ns-cat__label"><%= cat.label %></span>
-        </a>
-      <% }) %>
-    </div>
-  </section>
-
-  <!-- Featured -->
-  <% if (featured.length) { %>
-    <section class="ns-section ns-section--alt ns-fade">
-      <div class="ns-section__top">
-        <div>
-          <p class="ns-section__kicker">Popular now</p>
-          <h2 class="ns-section__title">Featured stays</h2>
+        <div class="ns-hero-stats">
+          <div class="ns-hero-stat">
+            <strong>100+</strong>
+            <span>Unique listings</span>
+          </div>
+          <div class="ns-hero-stat">
+            <strong>UPI</strong>
+            <span>Instant checkout</span>
+          </div>
+          <div class="ns-hero-stat">
+            <strong>24/7</strong>
+            <span>Host messaging</span>
+          </div>
         </div>
-        <a href="/listings" class="ns-section__link">View all <i class="fa-solid fa-arrow-right text-xs"></i></a>
       </div>
-      <div class="ns-grid">
-        <% featured.slice(0, 8).forEach(listing => { %>
+
+      <div class="ns-mock-wrap">
+        <div class="ns-mock ns-mock--float ns-mock--interactive"
+          data-ns-mock="listings"
+          data-mock-id="hero"
+          data-limit="4"
+          data-cols="4">
+          <div class="ns-mock__bar">
+            <span class="ns-mock__dot"></span>
+            <span class="ns-mock__dot"></span>
+            <span class="ns-mock__dot"></span>
+            <label class="ns-mock__search-wrap">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="search" class="ns-mock__search" placeholder="Search listings — Goa, Manali…" autocomplete="off" aria-label="Search listings preview" />
+            </label>
+          </div>
+          <p class="ns-mock__status" data-ns-mock-status aria-live="polite"></p>
+          <div class="ns-mock__body ns-mock__body--cols-4" data-ns-mock-body>
+            <div class="ns-mock-skeleton" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ns-categories ns-fade" aria-label="Browse by type">
+    <div class="ns-categories__inner">
+      <a href="/listings?category=beachfront" class="ns-cat-pill">
+        <span class="ns-cat-pill__icon"><i class="fa-solid fa-umbrella-beach"></i></span>
+        Beachfront
+      </a>
+      <a href="/listings?category=pools" class="ns-cat-pill">
+        <span class="ns-cat-pill__icon"><i class="fa-solid fa-water"></i></span>
+        Amazing pools
+      </a>
+      <a href="/listings?category=cabins" class="ns-cat-pill">
+        <span class="ns-cat-pill__icon"><i class="fa-solid fa-house-user"></i></span>
+        Cabins
+      </a>
+      <a href="/listings?category=cities" class="ns-cat-pill">
+        <span class="ns-cat-pill__icon"><i class="fa-solid fa-city"></i></span>
+        Iconic cities
+      </a>
+      <a href="/listings?category=treehouses" class="ns-cat-pill">
+        <span class="ns-cat-pill__icon"><i class="fa-solid fa-tree"></i></span>
+        Treehouses
+      </a>
+      <a href="/listings" class="ns-cat-pill ns-cat-pill--all">
+        View all
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </section>
+
+  <section class="ns-steps ns-fade" aria-label="How NullStay works">
+    <div class="ns-steps__intro">
+      <span class="ns-eyebrow">Simple flow</span>
+      <h2>Book in three moves</h2>
+    </div>
+    <ol class="ns-steps__list">
+      <li class="ns-steps__item">
+        <div class="ns-steps__icon"><i class="fa-solid fa-magnifying-glass-location"></i></div>
+        <span class="ns-steps__num" aria-hidden="true">01</span>
+        <h3>Search &amp; save</h3>
+        <p>Filter by city, price, and vibe. Heart stays into wishlists while you plan.</p>
+      </li>
+      <li class="ns-steps__item">
+        <div class="ns-steps__icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+        <span class="ns-steps__num" aria-hidden="true">02</span>
+        <h3>Pay with UPI</h3>
+        <p>Secure Razorpay checkout — UPI, cards, or netbanking. Host confirms your dates.</p>
+      </li>
+      <li class="ns-steps__item">
+        <div class="ns-steps__icon"><i class="fa-solid fa-paper-plane"></i></div>
+        <span class="ns-steps__num" aria-hidden="true">03</span>
+        <h3>Go &amp; connect</h3>
+        <p>Message your host, get trip updates, and show up knowing what to expect.</p>
+      </li>
+    </ol>
+  </section>
+
+  <nav class="ns-tabs" aria-label="Features">
+    <a href="#discover" class="is-active"><i class="fa-solid fa-compass"></i> Discover</a>
+    <a href="#book"><i class="fa-solid fa-credit-card"></i> Book</a>
+    <a href="#message"><i class="fa-solid fa-comments"></i> Message</a>
+    <a href="#host"><i class="fa-solid fa-house"></i> Host</a>
+  </nav>
+
+  <section class="ns-feature ns-fade" id="discover">
+    <div class="ns-feature__copy">
+      <span class="ns-eyebrow">Discover</span>
+      <h2>Find stays that match your vibe</h2>
+      <p>Filter by destination, country, price, and guests. Browse beachfront villas, mountain cabins, pool homes, and city apartments — all in one search.</p>
+      <ul class="ns-checklist">
+        <li><i class="fa-solid fa-check"></i> Smart filters &amp; categories</li>
+        <li><i class="fa-solid fa-check"></i> Real photos from hosts</li>
+        <li><i class="fa-solid fa-check"></i> Save to wishlists</li>
+      </ul>
+      <a href="/listings" class="ns-link">Start exploring →</a>
+    </div>
+    <div class="ns-feature__visual">
+      <div class="ns-mock ns-mock--interactive"
+        data-ns-mock="listings"
+        data-limit="2"
+        data-cols="2"
+        data-default-q="goa"
+        data-category="beachfront">
+        <div class="ns-mock__bar">
+          <span class="ns-mock__dot"></span><span class="ns-mock__dot"></span><span class="ns-mock__dot"></span>
+          <label class="ns-mock__search-wrap">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" class="ns-mock__search" value="goa" placeholder="Beachfront · Goa…" autocomplete="off" aria-label="Search beachfront stays" />
+          </label>
+        </div>
+        <p class="ns-mock__status" data-ns-mock-status aria-live="polite"></p>
+        <div class="ns-mock__body ns-mock__body--cols-2" data-ns-mock-body>
+          <div class="ns-mock-skeleton" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ns-feature ns-feature--alt ns-feature--reverse ns-fade" id="book">
+    <div class="ns-feature__copy">
+      <span class="ns-eyebrow">Book</span>
+      <h2>Pay securely with UPI or card</h2>
+      <p>Checkout with Razorpay — UPI QR, cards, and netbanking. Hosts confirm your request and you get instant updates by email and notifications.</p>
+      <ul class="ns-checklist">
+        <li><i class="fa-solid fa-check"></i> Razorpay checkout</li>
+        <li><i class="fa-solid fa-check"></i> Email confirmations</li>
+        <li><i class="fa-solid fa-check"></i> Trip dashboard</li>
+      </ul>
+      <a href="/listings" class="ns-link">Book a stay →</a>
+    </div>
+    <div class="ns-feature__visual">
+      <div class="ns-mock ns-mock--checkout ns-mock--interactive"
+        data-ns-mock="checkout"
+        data-limit="1"
+        data-default-q="goa">
+        <div class="ns-mock__bar">
+          <span class="ns-mock__dot"></span><span class="ns-mock__dot"></span><span class="ns-mock__dot"></span>
+          <label class="ns-mock__search-wrap">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" class="ns-mock__search" value="goa" placeholder="Search stay to checkout…" autocomplete="off" aria-label="Search for checkout preview" />
+          </label>
+        </div>
+        <p class="ns-mock__status" data-ns-mock-status aria-live="polite"></p>
+        <div class="ns-mock__body" data-ns-mock-body>
+          <div class="ns-mock-skeleton ns-mock-skeleton--checkout" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ns-feature ns-fade" id="message">
+    <div class="ns-feature__copy">
+      <span class="ns-eyebrow">Message</span>
+      <h2>Talk to your host before you go</h2>
+      <p>Ask about check-in, amenities, or local tips. Real-time chat with email fallback — reply from your inbox when you're on the move.</p>
+      <ul class="ns-checklist">
+        <li><i class="fa-solid fa-check"></i> In-app messaging</li>
+        <li><i class="fa-solid fa-check"></i> Email notifications</li>
+        <li><i class="fa-solid fa-check"></i> Reply-to host inbox</li>
+      </ul>
+      <a href="<%= currentUser ? '/messages' : '/login' %>" class="ns-link">Open messages →</a>
+    </div>
+    <div class="ns-feature__visual">
+      <div class="ns-mock ns-mock--chat ns-mock--interactive"
+        data-ns-mock="messages"
+        data-limit="1"
+        data-default-q="goa">
+        <div class="ns-mock__bar">
+          <span class="ns-mock__dot"></span><span class="ns-mock__dot"></span><span class="ns-mock__dot"></span>
+          <label class="ns-mock__search-wrap">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" class="ns-mock__search" value="goa" placeholder="Messages — search a stay…" autocomplete="off" aria-label="Search for messages preview" />
+          </label>
+        </div>
+        <p class="ns-mock__status" data-ns-mock-status aria-live="polite"></p>
+        <div class="ns-mock__body" data-ns-mock-body>
+          <div class="ns-mock-skeleton ns-mock-skeleton--chat" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ns-feature ns-feature--alt ns-feature--reverse ns-fade" id="host">
+    <div class="ns-feature__copy">
+      <span class="ns-eyebrow">Host</span>
+      <h2>Earn from your space</h2>
+      <p>List your property, manage reservations from one dashboard, accept or decline requests, and connect with guests when bookings are confirmed.</p>
+      <ul class="ns-checklist">
+        <li><i class="fa-solid fa-check"></i> Host dashboard</li>
+        <li><i class="fa-solid fa-check"></i> Accept / decline requests</li>
+        <li><i class="fa-solid fa-check"></i> Guest messaging</li>
+      </ul>
+      <a href="<%= currentUser ? '/listings/new' : '/signup' %>" class="ns-link">Start hosting →</a>
+    </div>
+    <div class="ns-feature__visual">
+      <div class="ns-mock ns-mock--interactive"
+        data-ns-mock="host"
+        data-limit="1"
+        data-default-q="goa">
+        <div class="ns-mock__bar">
+          <span class="ns-mock__dot"></span><span class="ns-mock__dot"></span><span class="ns-mock__dot"></span>
+          <label class="ns-mock__search-wrap">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" class="ns-mock__search" value="goa" placeholder="Search reservation…" autocomplete="off" aria-label="Search host reservations preview" />
+          </label>
+        </div>
+        <p class="ns-mock__status" data-ns-mock-status aria-live="polite"></p>
+        <div class="ns-mock__body" data-ns-mock-body>
+          <div class="ns-mock-skeleton ns-mock-skeleton--host" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <% if (featured.length) { %>
+    <section class="ns-featured ns-fade">
+      <div class="ns-featured__head">
+        <div>
+          <span class="ns-eyebrow">Featured</span>
+          <h2>Popular on NullStay</h2>
+        </div>
+        <a href="/listings" class="ns-link">View all →</a>
+      </div>
+      <div class="ns-listing-grid">
+        <% featured.slice(0, 6).forEach((listing, idx) => { %>
           <% const saved = wishIds.includes(String(listing._id)); %>
-          <% const avg = calculateAvgRating(listing.reviews); %>
-          <article class="ns-card">
-            <a href="/listings/<%= listing._id %>" class="block">
-              <div class="ns-card__img">
-                <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80' %>"
-                  alt="<%= listing.title %>" loading="lazy" />
+          <% const rating = listingRating(listing); %>
+          <div class="relative ns-listing-wrap" style="--i: <%= idx %>">
+            <a href="/listings/<%= listing._id %>" class="ns-listing-card block">
+              <div class="ns-listing-card__img">
+                <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600' %>" alt="<%= listing.title %>" loading="lazy" />
+                <% if (rating) { %>
+                  <span class="ns-listing-card__badge"><i class="fa-solid fa-star"></i> <%= rating %></span>
+                <% } %>
               </div>
-              <div class="ns-card__meta">
-                <p class="ns-card__loc"><%= listing.location %>, <%= listing.country %></p>
-                <% if (avg) { %><span class="text-sm shrink-0"><i class="fa-solid fa-star text-xs"></i> <%= avg %></span><% } %>
+              <div class="ns-listing-card__body">
+                <div class="ns-listing-card__loc"><%= listing.location %>, <%= listing.country %></div>
+                <div class="ns-listing-card__title"><%= listing.title %></div>
+                <div class="ns-listing-card__price">&#8377;<%= listing.price ? listing.price.toLocaleString('en-IN') : 'N/A' %> <span>/ night</span></div>
               </div>
-              <p class="ns-card__title"><%= listing.title %></p>
-              <p class="ns-card__price">&#8377;<%= listing.price ? listing.price.toLocaleString('en-IN') : 'N/A' %> <span>/ night</span></p>
             </a>
             <% if (currentUser) { %>
               <button type="button" data-wishlist-toggle data-listing-id="<%= listing._id %>"
@@ -158,111 +349,197 @@
                 <i class="wishlist-heart__icon fa-heart <%= saved ? 'fa-solid' : 'fa-regular' %>" aria-hidden="true"></i>
               </button>
             <% } %>
-          </article>
+          </div>
         <% }) %>
       </div>
     </section>
   <% } %>
 
-  <!-- Editorial -->
-  <section class="ns-section ns-fade">
-    <div class="ns-split">
-      <div class="ns-split__photos">
-        <div class="ns-split__main">
-          <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=900&q=80" alt="" loading="lazy" />
-        </div>
-        <div class="ns-split__accent">
-          <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=600&q=80" alt="" loading="lazy" />
-        </div>
+  <section class="ns-trust ns-fade" aria-label="Why NullStay">
+    <div class="ns-trust__item">
+      <span class="ns-trust__icon"><i class="fa-solid fa-shield-halved"></i></span>
+      <div>
+        <strong>Secure payments</strong>
+        <span>Powered by Razorpay</span>
       </div>
-      <div class="ns-split__body">
-        <p class="ns-section__kicker">Why NullStay</p>
-        <h2 class="ns-section__title" style="margin-bottom:1rem">Travel that feels personal</h2>
-        <p>Real homes with real hosts — not generic hotel rooms. Book in minutes, pay securely, and talk to your host before you arrive.</p>
-        <ul class="ns-perks">
-          <li><i class="fa-solid fa-check"></i> UPI &amp; card payments via Razorpay</li>
-          <li><i class="fa-solid fa-check"></i> Direct guest ↔ host messaging</li>
-          <li><i class="fa-solid fa-check"></i> Wishlists &amp; instant booking alerts</li>
-        </ul>
-        <a href="/listings" class="ns-btn">Browse all stays <i class="fa-solid fa-arrow-right text-sm"></i></a>
+    </div>
+    <div class="ns-trust__item">
+      <span class="ns-trust__icon"><i class="fa-solid fa-bolt"></i></span>
+      <div>
+        <strong>UPI &amp; cards</strong>
+        <span>Checkout in seconds</span>
+      </div>
+    </div>
+    <div class="ns-trust__item">
+      <span class="ns-trust__icon"><i class="fa-solid fa-heart"></i></span>
+      <div>
+        <strong>Wishlists</strong>
+        <span>Save stays you love</span>
+      </div>
+    </div>
+    <div class="ns-trust__item">
+      <span class="ns-trust__icon"><i class="fa-solid fa-bell"></i></span>
+      <div>
+        <strong>Live updates</strong>
+        <span>Booking &amp; message alerts</span>
       </div>
     </div>
   </section>
 
-  <!-- How it works -->
-  <section class="ns-section ns-section--alt ns-fade">
-    <div class="ns-section__top">
-      <div>
-        <p class="ns-section__kicker">Simple flow</p>
-        <h2 class="ns-section__title">How NullStay works</h2>
-      </div>
-    </div>
-    <div class="ns-steps">
-      <div class="ns-step">
-        <div class="ns-step__num">1</div>
-        <h3>Search &amp; save</h3>
-        <p>Filter by location, price, and vibe. Heart listings to your wishlist.</p>
-      </div>
-      <div class="ns-step">
-        <div class="ns-step__num">2</div>
-        <h3>Book securely</h3>
-        <p>Pay with UPI or card. Your host confirms — you get notified instantly.</p>
-      </div>
-      <div class="ns-step">
-        <div class="ns-step__num">3</div>
-        <h3>Stay &amp; review</h3>
-        <p>Message your host anytime. Share your experience after your trip.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Bento -->
-  <section class="ns-section ns-fade">
-    <div class="ns-section__top">
-      <div>
-        <p class="ns-section__kicker">Collections</p>
-        <h2 class="ns-section__title">Curated experiences</h2>
-      </div>
-    </div>
-    <div class="ns-bento">
-      <a href="/listings?category=cities" class="ns-bento__item ns-bento__lg">
-        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80" alt="" loading="lazy" />
-        <div class="ns-bento__shade"></div>
-        <div class="ns-bento__text">
-          <p class="ns-bento__tag">Featured</p>
-          <p class="ns-bento__name">City apartments</p>
+  <section class="ns-testimonials ns-fade">
+    <span class="ns-eyebrow ns-eyebrow--center">Loved by guests</span>
+    <h2>Stories from the road</h2>
+    <div class="ns-testimonial-grid">
+      <blockquote class="ns-testimonial-card">
+        <div class="ns-stars" aria-hidden="true">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
         </div>
-      </a>
-      <a href="/listings?category=beachfront" class="ns-bento__item ns-bento__wide">
-        <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=1000&q=80" alt="" loading="lazy" />
-        <div class="ns-bento__shade"></div>
-        <div class="ns-bento__text"><p class="ns-bento__name">Beachfront escapes</p></div>
-      </a>
-      <a href="/listings?category=pools" class="ns-bento__item">
-        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" alt="" loading="lazy" />
-        <div class="ns-bento__shade"></div>
-        <div class="ns-bento__text"><p class="ns-bento__name">Pool villas</p></div>
-      </a>
-      <a href="/listings?category=cabins" class="ns-bento__item">
-        <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80" alt="" loading="lazy" />
-        <div class="ns-bento__shade"></div>
-        <div class="ns-bento__text"><p class="ns-bento__name">Mountain cabins</p></div>
-      </a>
+        <p>"Found a beach villa in Goa in minutes. UPI payment was seamless and the host replied within an hour."</p>
+        <footer class="ns-testimonial-author">
+          <span class="ns-testimonial-avatar">A</span>
+          <div>
+            <div class="ns-testimonial-name">Ananya S.</div>
+            <div class="ns-testimonial-role">Guest · Goa</div>
+          </div>
+        </footer>
+      </blockquote>
+      <blockquote class="ns-testimonial-card">
+        <div class="ns-stars" aria-hidden="true">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p>"Wishlists and filters make planning trips so easy. The UI feels premium — better than scrolling random listings."</p>
+        <footer class="ns-testimonial-author">
+          <span class="ns-testimonial-avatar">R</span>
+          <div>
+            <div class="ns-testimonial-name">Rohan K.</div>
+            <div class="ns-testimonial-role">Guest · Manali</div>
+          </div>
+        </footer>
+      </blockquote>
+      <blockquote class="ns-testimonial-card">
+        <div class="ns-stars" aria-hidden="true">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p>"Listed my apartment and got my first booking the same week. The host dashboard is straightforward."</p>
+        <footer class="ns-testimonial-author">
+          <span class="ns-testimonial-avatar">P</span>
+          <div>
+            <div class="ns-testimonial-name">Priya M.</div>
+            <div class="ns-testimonial-role">Host · Bangalore</div>
+          </div>
+        </footer>
+      </blockquote>
     </div>
   </section>
 
-  <!-- Host -->
-  <section class="ns-section ns-fade" style="padding-top:0">
-    <div class="ns-host">
-      <div>
-        <h2>Share your space. Earn on NullStay.</h2>
-        <p>List your property, manage reservations, and connect with guests — all in one dashboard.</p>
-      </div>
-      <a href="<%= currentUser ? '/listings/new' : '/signup' %>" class="ns-btn ns-btn--rose">
-        <%= currentUser ? 'List your property' : 'Start hosting' %>
-        <i class="fa-solid fa-arrow-right text-sm"></i>
-      </a>
+  <section class="ns-tools ns-fade">
+    <div class="ns-tools__head">
+      <span class="ns-eyebrow">Platform</span>
+      <h2>Everything you need</h2>
+    </div>
+    <div class="ns-tools-grid">
+      <article class="ns-tool-card">
+        <div class="ns-tool-card__icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <h3>Smart search</h3>
+        <p>Filter by location, price, country, and category — beachfront, cabins, pools, and more.</p>
+      </article>
+      <article class="ns-tool-card">
+        <div class="ns-tool-card__icon"><i class="fa-solid fa-heart"></i></div>
+        <h3>Wishlists</h3>
+        <p>Save stays you love and come back when you're ready to book — no account friction.</p>
+      </article>
+      <article class="ns-tool-card">
+        <div class="ns-tool-card__icon"><i class="fa-solid fa-bell"></i></div>
+        <h3>Live notifications</h3>
+        <p>Get alerts when hosts accept, decline, or when you receive a new message.</p>
+      </article>
     </div>
   </section>
+
+  <section class="ns-faq ns-fade" aria-label="Frequently asked questions">
+    <div class="ns-faq__layout">
+      <div class="ns-faq__intro">
+        <span class="ns-eyebrow">FAQ</span>
+        <h2>Quick answers</h2>
+        <p>New to NullStay? Here’s what guests and hosts ask most.</p>
+        <a href="/help" class="ns-link">Visit help center →</a>
+      </div>
+      <div class="ns-faq__list">
+        <details class="ns-faq__item">
+          <summary>How do I pay for a stay?</summary>
+          <p>Checkout uses Razorpay — UPI QR, debit/credit cards, and netbanking. You’ll see the full price breakdown before you pay.</p>
+        </details>
+        <details class="ns-faq__item">
+          <summary>When is my booking confirmed?</summary>
+          <p>After payment, your host accepts or declines the request. You’ll get email and in-app updates either way.</p>
+        </details>
+        <details class="ns-faq__item">
+          <summary>Can I message the host first?</summary>
+          <p>Yes. Open Messages from your account to ask about check-in, amenities, or the neighbourhood before you book.</p>
+        </details>
+        <details class="ns-faq__item">
+          <summary>How do I list my property?</summary>
+          <p>Sign up, tap “List your space,” add photos and pricing in rupees. You control availability and who you host.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="ns-ticker" aria-hidden="true">
+    <div class="ns-ticker__track">
+      <span>Goa</span><span>·</span><span>Manali</span><span>·</span><span>Jaipur</span><span>·</span><span>Alleppey</span><span>·</span><span>Rishikesh</span><span>·</span><span>Udaipur</span><span>·</span><span>Bangalore</span><span>·</span>
+      <span>Goa</span><span>·</span><span>Manali</span><span>·</span><span>Jaipur</span><span>·</span><span>Alleppey</span><span>·</span><span>Rishikesh</span><span>·</span><span>Udaipur</span><span>·</span><span>Bangalore</span><span>·</span>
+    </div>
+  </section>
+
+  <section class="ns-final ns-fade">
+    <div class="ns-final__card">
+      <h2>Your next trip starts here.</h2>
+      <p>Explore unique stays across India — or list your space and welcome your first guest.</p>
+      <div class="ns-final__cta">
+        <a href="/listings" class="ns-btn-lg-white"><i class="fa-solid fa-compass"></i> Explore stays</a>
+        <a href="<%= currentUser ? '/listings/new' : '/signup' %>" class="ns-btn-lg-outline"><%= currentUser ? 'List your property' : 'Sign up free' %></a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="ns-footer">
+    <div class="ns-footer__brand">
+      <a href="/" class="ns-nav__logo"><i class="fa-brands fa-airbnb"></i> NullStay</a>
+      <p>Unique stays across India. Book, host, and connect — beautifully simple.</p>
+    </div>
+    <div class="ns-footer__grid">
+      <div class="ns-footer__col">
+        <h4>Product</h4>
+        <a href="/listings">Explore</a>
+        <a href="/wishlists">Wishlists</a>
+        <a href="/bookings/trips">Trips</a>
+      </div>
+      <div class="ns-footer__col">
+        <h4>Host</h4>
+        <a href="/listings/new">List your space</a>
+        <a href="/bookings/host">Reservations</a>
+        <a href="/hosting">Hosting guide</a>
+      </div>
+      <div class="ns-footer__col">
+        <h4>Company</h4>
+        <a href="/careers">Careers</a>
+        <a href="/help">Help</a>
+        <a href="/terms">Terms</a>
+      </div>
+      <div class="ns-footer__col">
+        <h4>Legal</h4>
+        <a href="/privacy">Privacy</a>
+        <a href="/privacy-choices">Privacy choices</a>
+        <a href="/sitemap">Sitemap</a>
+      </div>
+    </div>
+    <div class="ns-footer__bottom">
+      <span>© <%= new Date().getFullYear() %> NullStay</span>
+      <span>
+        <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>
+      </span>
+    </div>
+  </footer>
 
 </div>

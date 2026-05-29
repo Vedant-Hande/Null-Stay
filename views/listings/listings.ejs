@@ -4,11 +4,14 @@
   const sq = typeof searchQuery !== "undefined" ? searchQuery : {};
   const hasFilters = sq.q || sq.country || sq.minPrice || sq.maxPrice || sq.guests || sq.category;
   const wishIds = typeof wishlistedIds !== "undefined" ? wishlistedIds : [];
+  const totalCount = typeof pagination !== "undefined" && pagination ? pagination.total : allListing.length;
 %>
 
-<% if (hasFilters) { %>
+<link rel="stylesheet" href="/css/pagination.css">
+
+<% if (hasFilters || (typeof pagination !== "undefined" && pagination && pagination.total > 0)) { %>
   <div class="mb-6 flex flex-wrap items-center gap-3 text-sm">
-    <span class="font-semibold text-gray-900"><%= allListing.length %> result<%= allListing.length === 1 ? "" : "s" %></span>
+    <span class="font-semibold text-gray-900"><%= totalCount %> result<%= totalCount === 1 ? "" : "s" %></span>
     <% if (sq.q) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700">“<%= sq.q %>”</span><% } %>
     <% if (sq.country) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700"><%= sq.country %></span><% } %>
     <% if (sq.category) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700 capitalize"><%= sq.category %></span><% } %>
