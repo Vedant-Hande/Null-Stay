@@ -94,12 +94,18 @@ Want to run Null Stay locally? Follow these steps:
    ```
 
 3. **Configure Environment Variables**
-   Create a `.env` file in the root directory and add the following:
+   Copy `.env.example` to `.env` and fill in your values:
    ```env
    CONN_PORT=8080
-   # Add your MongoDB Connection String
-   # MONGO_URI=mongodb://localhost:27017/nullstay 
+   DB_URL=mongodb://127.0.0.1:27017/null-stay
+   SESSION_SECRET=your_session_secret
+
+   # Stripe (test keys from https://dashboard.stripe.com/test/apikeys)
+   STRIPE_SECRET_KEY=sk_test_...
+   STRIPE_PUBLISHABLE_KEY=pk_test_...
+   STRIPE_CURRENCY=inr
    ```
+   Without Stripe keys, checkout uses **demo mode** (fake card form, no real charge).
 
 4. **Start the development server**
    ```bash
@@ -115,7 +121,7 @@ Want to run Null Stay locally? Follow these steps:
 ## 🗺️ Roadmap & Future Enhancements
 
 We are continuously working to make Null Stay the ultimate booking platform. Upcoming features include:
-- **Comprehensive Reservation System**: Integration with Stripe for secure payment processing.
+- **Stripe payments**: Checkout uses Stripe Payment Intents when API keys are configured; refunds on cancel/decline.
 - **Double-Booking Prevention Engine**: Real-time calendar synchronization to lock dates.
 - **Authentication & Authorization**: Role-based access for Hosts vs. Guests using Passport.js.
 - **AI-Powered "Vibe" Search**: Natural language search using vector embeddings (e.g., *"Quiet cabin in the snow"*).

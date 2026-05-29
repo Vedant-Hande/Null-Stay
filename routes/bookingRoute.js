@@ -1,20 +1,29 @@
 import express from "express";
 import wrapAsync from "../utils/wrapAsync.js";
 import { isLoggedIn } from "../middleware/authMiddleware.js";
-import { validateBooking } from "../middleware/validationMiddleware.js";
+import {
+  validateBooking,
+  validateBookingPaymentIntent,
+} from "../middleware/validationMiddleware.js";
 import Booking, { BOOKING_STATUSES } from "../models/booking.js";
 import listings from "../models/listing.js";
 import { FLASH_KEYS, BOOKING_FLASH } from "../utils/constants.js";
+import { hasDateOverlap } from "../utils/bookingUtils.js";
 import {
-  calculateBookingTotals,
-  hasDateOverlap,
-  validateBookingDates,
-} from "../utils/bookingUtils.js";
-import {
-  generateConfirmationCode,
   isPastBooking,
   isUpcomingBooking,
 } from "../utils/bookingDisplay.js";
+import { isStripeConfigured } from "../config/stripe.js";
+import { prepareBookingCheckout } from "../utils/bookingCheckout.js";
+import {
+  createBookingPaymentIntent,
+  verifyBookingPaymentIntent,
+  refundBookingPayment,
+} from "../utils/stripePayments.js";
+import {
+  createBookingFromCheckout,
+  findBookingByPaymentIntent,
+} from "../utils/createBookingFromCheckout.js";
 
 const router = express.Router();
 
@@ -39,6 +48,61 @@ function filterTrips(trips, filter) {
   }
   return trips;
 }
+
+function checkoutRedirect(listingId, checkIn, checkOut, guests) {
+  return `/listings/${listingId}/checkout?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`;
+}
+
+async function markPaidBookingRefunded(booking) {
+  if (booking.paymentStatus !== "paid") {
+    return;
+  }
+  if (booking.stripePaymentIntentId) {
+    await refundBookingPayment(booking.stripePaymentIntentId);
+  }
+  booking.paymentStatus = "refunded";
+}
+
+function flashAfterBookingCreate(req, status) {
+  if (status === BOOKING_STATUSES.CONFIRMED) {
+    req.flash(FLASH_KEYS.SUCCESS, BOOKING_FLASH.CREATED);
+  } else {
+    req.flash(FLASH_KEYS.SUCCESS, BOOKING_FLASH.REQUEST_SENT);
+  }
+}
+
+router.post(
+  "/payment-intent",
+  isLoggedIn,
+  validateBookingPaymentIntent,
+  wrapAsync(async (req, res) => {
+    if (!isStripeConfigured()) {
+      return res.status(503).json({
+        error: "Stripe is not configured on this server.",
+      });
+    }
+
+    const prepared = await prepareBookingCheckout({
+      user: req.user,
+      body: req.body,
+    });
+
+    if (prepared.error) {
+      return res.status(400).json({ error: prepared.error });
+    }
+
+    const intent = await createBookingPaymentIntent({
+      amount: prepared.totals.total,
+      listingId: prepared.listing._id,
+      guestId: req.user._id,
+      checkIn: prepared.checkInStr,
+      checkOut: prepared.checkOutStr,
+      guests: prepared.guests,
+    });
+
+    res.json({ clientSecret: intent.client_secret });
+  }),
+);
 
 router.get(
   "/trips",
@@ -134,10 +198,70 @@ router.post(
       checkIn: checkInStr,
       checkOut: checkOutStr,
       guests,
+      paymentIntentId,
       cardNumber,
     } = req.body;
 
-    const redirectCheckout = `/listings/${listingId}/checkout?checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guests}`;
+    const redirectCheckout = checkoutRedirect(
+      listingId,
+      checkInStr,
+      checkOutStr,
+      guests,
+    );
+
+    const prepared = await prepareBookingCheckout({
+      user: req.user,
+      body: { listingId, checkIn: checkInStr, checkOut: checkOutStr, guests },
+    });
+
+    if (prepared.error) {
+      req.flash(FLASH_KEYS.ERROR, prepared.error);
+      return res.redirect(prepared.redirect || "/listings");
+    }
+
+    const { listing, totals, checkIn, checkOut, nights } = {
+      ...prepared,
+      checkIn: prepared.bookingData.checkIn,
+      checkOut: prepared.bookingData.checkOut,
+      nights: prepared.bookingData.nights,
+    };
+    const guestCount = prepared.guests;
+
+    if (isStripeConfigured()) {
+      const existing = await findBookingByPaymentIntent(paymentIntentId);
+      if (existing) {
+        flashAfterBookingCreate(req, existing.status);
+        return res.redirect(`/bookings/${existing._id}`);
+      }
+
+      const verification = await verifyBookingPaymentIntent(paymentIntentId, {
+        expectedAmount: totals.total,
+        listingId: listing._id,
+        guestId: req.user._id,
+        checkIn: checkInStr,
+        checkOut: checkOutStr,
+        guests: guestCount,
+      });
+
+      if (!verification.ok) {
+        req.flash(FLASH_KEYS.ERROR, verification.error);
+        return res.redirect(redirectCheckout);
+      }
+
+      const { booking, status } = await createBookingFromCheckout({
+        listing,
+        guestId: req.user._id,
+        checkIn,
+        checkOut,
+        guests: guestCount,
+        nights,
+        totals,
+        stripePaymentIntentId: paymentIntentId,
+      });
+
+      flashAfterBookingCreate(req, status);
+      return res.redirect(`/bookings/${booking._id}`);
+    }
 
     const digits = String(cardNumber).replace(/\s/g, "");
     if (digits !== DEMO_CARD_DIGITS) {
@@ -145,71 +269,17 @@ router.post(
       return res.redirect(redirectCheckout);
     }
 
-    const listing = await listings.findById(listingId).populate("owner");
-    if (!listing) {
-      req.flash(FLASH_KEYS.ERROR, "Listing not found.");
-      return res.redirect("/listings");
-    }
-
-    const ownerId = listing.owner?._id ?? listing.owner;
-    if (ownerId && ownerId.equals(req.user._id)) {
-      req.flash(FLASH_KEYS.ERROR, BOOKING_FLASH.OWN_LISTING);
-      return res.redirect(`/listings/${listingId}`);
-    }
-
-    if (guests > listing.guests) {
-      req.flash(
-        FLASH_KEYS.ERROR,
-        `This listing allows up to ${listing.guests} guests.`,
-      );
-      return res.redirect(redirectCheckout);
-    }
-
-    const dateResult = validateBookingDates(checkInStr, checkOutStr);
-    if (dateResult.error) {
-      req.flash(FLASH_KEYS.ERROR, dateResult.error);
-      return res.redirect(`/listings/${listingId}`);
-    }
-
-    const { checkIn, checkOut, nights } = dateResult;
-
-    if (await hasDateOverlap(listing._id, checkIn, checkOut)) {
-      req.flash(FLASH_KEYS.ERROR, BOOKING_FLASH.DATES_UNAVAILABLE);
-      return res.redirect(`/listings/${listingId}`);
-    }
-
-    const totals = calculateBookingTotals(listing, nights);
-    const instantBook = listing.instantBook !== false;
-    const status = instantBook
-      ? BOOKING_STATUSES.CONFIRMED
-      : BOOKING_STATUSES.PENDING;
-
-    const booking = new Booking({
-      listing: listing._id,
-      guest: req.user._id,
+    const { booking, status } = await createBookingFromCheckout({
+      listing,
+      guestId: req.user._id,
       checkIn,
       checkOut,
-      guests,
+      guests: guestCount,
       nights,
-      nightlyRate: totals.nightlyRate,
-      subtotal: totals.subtotal,
-      cleaningFee: totals.cleaningFee,
-      serviceFee: totals.serviceFee,
-      total: totals.total,
-      status,
-      paymentStatus: "paid",
-      paidAt: new Date(),
-      confirmationCode: generateConfirmationCode(),
+      totals,
     });
 
-    await booking.save();
-
-    if (status === BOOKING_STATUSES.CONFIRMED) {
-      req.flash(FLASH_KEYS.SUCCESS, BOOKING_FLASH.CREATED);
-    } else {
-      req.flash(FLASH_KEYS.SUCCESS, BOOKING_FLASH.REQUEST_SENT);
-    }
-
+    flashAfterBookingCreate(req, status);
     res.redirect(`/bookings/${booking._id}`);
   }),
 );
@@ -237,9 +307,7 @@ router.post(
     }
 
     booking.status = BOOKING_STATUSES.CANCELLED;
-    if (booking.paymentStatus === "paid") {
-      booking.paymentStatus = "refunded";
-    }
+    await markPaidBookingRefunded(booking);
     await booking.save();
     req.flash(FLASH_KEYS.SUCCESS, BOOKING_FLASH.CANCELLED);
     res.redirect("/bookings/trips");
@@ -275,9 +343,7 @@ router.post(
       )
     ) {
       booking.status = BOOKING_STATUSES.REJECTED;
-      if (booking.paymentStatus === "paid") {
-        booking.paymentStatus = "refunded";
-      }
+      await markPaidBookingRefunded(booking);
       await booking.save();
       req.flash(FLASH_KEYS.ERROR, BOOKING_FLASH.DATES_UNAVAILABLE);
       return res.redirect("/bookings/host");
@@ -311,9 +377,7 @@ router.post(
     }
 
     booking.status = BOOKING_STATUSES.REJECTED;
-    if (booking.paymentStatus === "paid") {
-      booking.paymentStatus = "refunded";
-    }
+    await markPaidBookingRefunded(booking);
     await booking.save();
     req.flash(FLASH_KEYS.SUCCESS, BOOKING_FLASH.REJECTED);
     res.redirect("/bookings/host");

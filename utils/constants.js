@@ -51,6 +51,9 @@ export const BOOKING_FLASH = {
   UNAUTHORIZED: "You are not allowed to manage this booking.",
   PAYMENT_DECLINED:
     "Payment declined. Use test card 4242 4242 4242 4242.",
+  PAYMENT_FAILED: "Payment could not be completed. Please try again.",
+  STRIPE_NOT_CONFIGURED:
+    "Online payments are not configured. Contact support or try again later.",
 };
 
 /** Per-file upload limit (must match middleware/uploadMiddleware.js) */

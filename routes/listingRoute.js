@@ -25,6 +25,10 @@ import {
   rangesToDisabledDates,
   validateBookingDates,
 } from "../utils/bookingUtils.js";
+import {
+  getStripePublishableKey,
+  isStripeConfigured,
+} from "../config/stripe.js";
 
 async function uploadCoverImage(file) {
   const result = await uploadToCloudinary(file.buffer);
@@ -248,6 +252,8 @@ router.get(
       guests,
       totals,
       instantBook: listing.instantBook !== false,
+      stripeEnabled: isStripeConfigured(),
+      stripePublishableKey: getStripePublishableKey(),
     });
   }),
 );

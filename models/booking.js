@@ -82,6 +82,11 @@ const bookingSchema = new Schema(
     paidAt: {
       type: Date,
     },
+    stripePaymentIntentId: {
+      type: String,
+      sparse: true,
+      unique: true,
+    },
   },
   { timestamps: true },
 );

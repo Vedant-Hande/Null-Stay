@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
-export const bookingCreateSchema = Joi.object({
+const bookingBaseFields = {
   listingId: Joi.string().required().messages({
     "any.required": "Listing is required",
   }),
@@ -21,6 +21,17 @@ export const bookingCreateSchema = Joi.object({
   agreeTerms: Joi.boolean().valid(true).required().messages({
     "any.only": "You must agree to the cancellation policy",
   }),
+};
+
+export const bookingCreateStripeSchema = Joi.object({
+  ...bookingBaseFields,
+  paymentIntentId: Joi.string().trim().required().messages({
+    "any.required": "Payment is required",
+  }),
+});
+
+export const bookingCreateDemoSchema = Joi.object({
+  ...bookingBaseFields,
   cardName: Joi.string().trim().min(2).max(80).required().messages({
     "any.required": "Name on card is required",
   }),
@@ -46,3 +57,13 @@ export const bookingCreateSchema = Joi.object({
     "string.pattern.base": "Enter a valid CVC",
   }),
 });
+
+export const bookingPaymentIntentSchema = Joi.object({
+  listingId: bookingBaseFields.listingId,
+  checkIn: bookingBaseFields.checkIn,
+  checkOut: bookingBaseFields.checkOut,
+  guests: bookingBaseFields.guests,
+});
+
+/** @deprecated use bookingCreateStripeSchema or bookingCreateDemoSchema */
+export const bookingCreateSchema = bookingCreateDemoSchema;
