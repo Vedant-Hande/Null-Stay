@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import http from "http";
+import os from "os";
 
 import dotenv from "dotenv";
 
@@ -58,6 +59,7 @@ import { initSocket } from "./config/socket.js";
 import pushRoute from "./routes/pushRoute.js";
 import wishlistRoute from "./routes/wishlistRoute.js";
 import messageRoute from "./routes/messageRoute.js";
+import devRoute from "./routes/devRoute.js";
 
 import {
   getVapidPublicKey,
@@ -95,7 +97,21 @@ const app = express();
 
 const server = http.createServer(app);
 
-const port = process.env.CONN_PORT;
+const port = Number(process.env.CONN_PORT) || 8080;
+const host = process.env.HOST || "0.0.0.0";
+
+function getLanUrls(listenPort) {
+  const urls = [];
+  const nets = os.networkInterfaces();
+  for (const ifaces of Object.values(nets)) {
+    for (const net of ifaces || []) {
+      if (net.family === "IPv4" && !net.internal) {
+        urls.push(`http://${net.address}:${listenPort}`);
+      }
+    }
+  }
+  return urls;
+}
 
 
 
@@ -257,6 +273,7 @@ app.use("/notifications", notificationRoute);
 app.use("/push", pushRoute);
 app.use("/wishlists", wishlistRoute);
 app.use("/messages", messageRoute);
+app.use("/dev", devRoute);
 
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
@@ -268,8 +285,18 @@ app.use(errorHandler);
 
 
 
-server.listen(port, () => {
-  console.log(`server is listening on port ${port}`);
+server.listen(port, host, () => {
+  console.log(`server is listening on http://127.0.0.1:${port} (local)`);
+  const lan = getLanUrls(port);
+  if (lan.length) {
+    console.log("Reach this PC on your LAN (phone on same Wi‑Fi):");
+    lan.forEach((url) => console.log(`  → ${url}`));
+  }
+  if (host === "0.0.0.0") {
+    console.log(
+      "Port forwarding: forward router external port → this PC's LAN IP:" + port,
+    );
+  }
   if (isWebPushConfigured()) {
     console.log("Web Push: enabled (VAPID keys loaded)");
   } else {
