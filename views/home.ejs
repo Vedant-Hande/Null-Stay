@@ -21,29 +21,8 @@
 
 <div class="ns-land">
 
-  <header class="ns-nav" id="nsNav">
-    <div class="ns-nav__inner">
-      <a href="/" class="ns-nav__logo">
-        <i class="fa-brands fa-airbnb"></i>
-        NullStay
-      </a>
-      <nav class="ns-nav__links" aria-label="Primary">
-        <a href="#discover">Discover</a>
-        <a href="#book">Book</a>
-        <a href="#host">Host</a>
-        <a href="/help">Help</a>
-      </nav>
-      <div class="ns-nav__actions">
-        <% if (currentUser) { %>
-          <a href="/bookings/trips" class="ns-btn-ghost">Trips</a>
-          <a href="/listings" class="ns-btn-white">Explore stays</a>
-        <% } else { %>
-          <a href="/login" class="ns-btn-ghost">Sign in</a>
-          <a href="/signup" class="ns-btn-white">Get started</a>
-        <% } %>
-      </div>
-    </div>
-  </header>
+  <% landingNavMode = 'home'; landingActive = ''; %>
+  <%- include('includes/landingNav.ejs') %>
 
   <% if (success && success.length) { %>
     <div class="ns-flash"><div class="flash-success"><%= success %></div></div>
@@ -503,43 +482,6 @@
     </div>
   </section>
 
-  <footer class="ns-footer">
-    <div class="ns-footer__brand">
-      <a href="/" class="ns-nav__logo"><i class="fa-brands fa-airbnb"></i> NullStay</a>
-      <p>Unique stays across India. Book, host, and connect — beautifully simple.</p>
-    </div>
-    <div class="ns-footer__grid">
-      <div class="ns-footer__col">
-        <h4>Product</h4>
-        <a href="/listings">Explore</a>
-        <a href="/wishlists">Wishlists</a>
-        <a href="/bookings/trips">Trips</a>
-      </div>
-      <div class="ns-footer__col">
-        <h4>Host</h4>
-        <a href="/listings/new">List your space</a>
-        <a href="/bookings/host">Reservations</a>
-        <a href="/hosting">Hosting guide</a>
-      </div>
-      <div class="ns-footer__col">
-        <h4>Company</h4>
-        <a href="/careers">Careers</a>
-        <a href="/help">Help</a>
-        <a href="/terms">Terms</a>
-      </div>
-      <div class="ns-footer__col">
-        <h4>Legal</h4>
-        <a href="/privacy">Privacy</a>
-        <a href="/privacy-choices">Privacy choices</a>
-        <a href="/sitemap">Sitemap</a>
-      </div>
-    </div>
-    <div class="ns-footer__bottom">
-      <span>© <%= new Date().getFullYear() %> NullStay</span>
-      <span>
-        <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>
-      </span>
-    </div>
-  </footer>
+  <%- include('includes/landingFooter.ejs') %>
 
 </div>

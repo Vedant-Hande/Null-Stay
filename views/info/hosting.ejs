@@ -1,68 +1,82 @@
-<% layout('layouts/boilerplate') -%>
+<% layout('layouts/landing') -%>
+<% landingActive = 'host'; %>
 
-<!-- Hosting Landing Page -->
-<div class="-mt-8">
-    <!-- Hero Section -->
-    <div class="relative h-[85vh] w-full overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
-            class="absolute inset-0 w-full h-full object-cover" alt="Luxury Home">
-        <div class="absolute inset-0 bg-black/30 backdrop-blur-[2px]"></div>
-        
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-            <h1 class="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter drop-shadow-2xl">
-                NullStay it.
-            </h1>
-            <p class="text-xl md:text-2xl text-white/90 mb-10 max-w-2xl font-light drop-shadow-lg">
-                You could earn a lot by sharing your home with travelers from around the world.
-            </p>
-            <a href="/listings/new" class="bg-airbnb hover:bg-rose-600 text-white text-xl font-bold py-5 px-12 rounded-2xl shadow-2xl transition transform hover:-translate-y-1">
-                Start Hosting Now
-            </a>
-        </div>
+<div class="ns-host-page">
+  <section class="ns-host-hero" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400')">
+    <div class="ns-host-hero__content">
+      <span class="ns-eyebrow"><i class="fa-solid fa-house-chimney"></i> For hosts</span>
+      <h1>Turn your space into someone’s dream trip</h1>
+      <p>List in minutes. Set prices in rupees. Get paid when guests book — with UPI-ready checkout built for India.</p>
+      <a href="<%= currentUser ? '/listings/new' : '/signup' %>" class="ns-btn-lg-white">
+        <i class="fa-solid fa-plus"></i> List your property
+      </a>
     </div>
+  </section>
 
-    <!-- Benefits Section -->
-    <div class="py-24 max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-        <div class="text-center mb-20">
-            <h2 class="text-4xl font-bold text-gray-900 mb-4">Why host on NullStay?</h2>
-            <p class="text-xl text-gray-500 font-light">Join a global community of unique homeowners.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div class="text-center">
-                <div class="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                    <i class="fa-solid fa-shield-heart text-3xl text-airbnb"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-4">Total protection</h3>
-                <p class="text-gray-500 leading-relaxed font-light">With AirCover for Hosts, you're protected against damage and liability every time you host.</p>
-            </div>
-            <div class="text-center">
-                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                    <i class="fa-solid fa-wand-magic-sparkles text-3xl text-blue-500"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-4">Simple setup</h3>
-                <p class="text-gray-500 leading-relaxed font-light">Our 3-step listing process makes it incredibly easy to get your property live in minutes.</p>
-            </div>
-            <div class="text-center">
-                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                    <i class="fa-solid fa-coins text-3xl text-green-500"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-4">Extra income</h3>
-                <p class="text-gray-500 leading-relaxed font-light">Turn your extra space into an earning opportunity to fund your own next adventure.</p>
-            </div>
-        </div>
+  <div class="ns-host-stats">
+    <div class="ns-host-stat">
+      <strong>₹</strong>
+      <span>Rupee pricing</span>
     </div>
-
-    <!-- CTA Section -->
-    <div class="bg-gray-50 py-24 px-6 text-center">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold mb-8 tracking-tight">Ready to open your doors?</h2>
-            <p class="text-xl text-gray-500 mb-12 font-light leading-relaxed">
-                Join thousands of hosts and start your journey today. We'll support you every step of the way.
-            </p>
-            <a href="/listings/new" class="inline-block bg-gray-900 hover:bg-black text-white font-bold py-5 px-14 rounded-2xl shadow-xl transition transform hover:-translate-y-1">
-                Create Listing
-            </a>
-        </div>
+    <div class="ns-host-stat">
+      <strong>UPI</strong>
+      <span>Guest checkout</span>
     </div>
+    <div class="ns-host-stat">
+      <strong>24/7</strong>
+      <span>Dashboard access</span>
+    </div>
+  </div>
+
+  <section class="ns-host-steps">
+    <span class="ns-eyebrow" style="display: block; text-align: center; margin-bottom: 0.5rem;">How it works</span>
+    <h2>Hosting in three steps</h2>
+    <div class="ns-host-steps__grid">
+      <div class="ns-host-step">
+        <span class="ns-host-step__num">1</span>
+        <div class="ns-host-step__icon"><i class="fa-solid fa-camera"></i></div>
+        <h3>Create your listing</h3>
+        <p>Add photos, description, amenities, and nightly price in ₹.</p>
+      </div>
+      <div class="ns-host-step">
+        <span class="ns-host-step__num">2</span>
+        <div class="ns-host-step__icon"><i class="fa-solid fa-inbox"></i></div>
+        <h3>Accept guests</h3>
+        <p>Review requests from your host dashboard — accept or decline each booking.</p>
+      </div>
+      <div class="ns-host-step">
+        <span class="ns-host-step__num">3</span>
+        <div class="ns-host-step__icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+        <h3>Welcome travelers</h3>
+        <p>Message guests, share check-in details, and build great reviews.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="ns-host-benefits">
+    <div class="ns-host-benefit">
+      <div class="ns-host-benefit__icon"><i class="fa-solid fa-sliders"></i></div>
+      <h3>You’re in control</h3>
+      <p>Set your price, house rules, and who you welcome. No automatic bookings unless you choose.</p>
+    </div>
+    <div class="ns-host-benefit">
+      <div class="ns-host-benefit__icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <h3>Secure payments</h3>
+      <p>Guests pay through Razorpay. You get clear booking confirmations and guest details.</p>
+    </div>
+    <div class="ns-host-benefit">
+      <div class="ns-host-benefit__icon"><i class="fa-solid fa-chart-line"></i></div>
+      <h3>Grow your income</h3>
+      <p>From spare rooms to full villas — earn from space that would otherwise sit empty.</p>
+    </div>
+  </div>
+
+  <section class="ns-static-cta">
+    <h3>Ready to host on NullStay?</h3>
+    <p>Join hosts listing beach houses, mountain cabins, and city apartments across India.</p>
+    <div class="ns-static-cta__actions">
+      <a href="<%= currentUser ? '/listings/new' : '/signup' %>" class="ns-btn-lg-white">Create your listing</a>
+      <a href="/help" class="ns-btn-lg-outline">Hosting FAQ</a>
+    </div>
+  </section>
 </div>

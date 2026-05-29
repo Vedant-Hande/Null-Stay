@@ -41,7 +41,6 @@ import * as bookingDisplay from "./utils/bookingDisplay.js";
 
 import User from "./models/user.js";
 import listings from "./models/listing.js";
-import Wishlist from "./models/wishlist.js";
 import wrapAsync from "./utils/wrapAsync.js";
 
 import userRoute from "./routes/userRoute.js";
@@ -69,6 +68,10 @@ import { isMailConfigured } from "./config/mail.js";
 import { isRazorpayConfigured, getRazorpayModeLabel } from "./config/razorpay.js";
 
 import "./config/cloudinary.js";
+import cache, { isCacheEnabled } from "./config/cache.js";
+import { getStaticCacheOptions } from "./middleware/staticCache.js";
+import { getCachedFeaturedListings } from "./utils/listingCache.js";
+import { getWishlistedIdsForUser } from "./utils/wishlistIds.js";
 
 initWebPush();
 
@@ -146,7 +149,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), getStaticCacheOptions()));
 
 app.use(methodOverride("_method"));
 
@@ -227,17 +230,11 @@ app.use(async (req, res, next) => {
 
 
 app.get("/", wrapAsync(async (req, res) => {
-  const featuredListings = await listings
-    .find()
-    .sort({ createdAt: -1 })
-    .limit(8)
-    .populate("reviews");
-
-  let wishlistedIds = [];
-  if (req.user) {
-    const rows = await Wishlist.find({ user: req.user._id }).select("listing");
-    wishlistedIds = rows.map((w) => String(w.listing));
-  }
+  const { rows: featuredListings } = await getCachedFeaturedListings(
+    listings,
+    8,
+  );
+  const wishlistedIds = await getWishlistedIdsForUser(req.user?._id);
 
   res.render("home.ejs", { featuredListings, wishlistedIds });
 }));
@@ -300,6 +297,15 @@ server.listen(port, () => {
     console.log(
       "Razorpay: disabled — add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET to .env",
     );
+  }
+
+  if (isCacheEnabled) {
+    const { size, maxEntries } = cache.stats();
+    console.log(
+      `Cache: enabled (TTL ${process.env.CACHE_TTL_SECONDS || 60}s, ${size}/${maxEntries} keys)`,
+    );
+  } else {
+    console.log("Cache: disabled (set CACHE_ENABLED=true to enable)");
   }
 
   setInterval(() => {

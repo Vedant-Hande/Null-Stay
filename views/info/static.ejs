@@ -1,44 +1,154 @@
-<% layout('layouts/boilerplate') -%>
+<% layout('layouts/landing') -%>
 
-<div class="max-w-4xl mx-auto py-16 px-4">
-    <div class="mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4"><%= title %></h1>
-        <p class="text-lg text-gray-500 font-light">Last updated: April 2026</p>
+<%
+  const key = typeof pageKey !== 'undefined' ? pageKey : 'generic';
+  const isLegal = ['terms', 'privacy', 'privacy-choices'].includes(key);
+%>
+
+<div class="ns-static">
+  <header class="ns-static-hero">
+    <div class="ns-static-hero__glow" aria-hidden="true"></div>
+    <div class="ns-static-hero__inner">
+      <% if (key === 'careers') { %>
+        <span class="ns-eyebrow"><i class="fa-solid fa-briefcase"></i> Careers</span>
+      <% } else if (key === 'privacy' || key === 'privacy-choices') { %>
+        <span class="ns-eyebrow"><i class="fa-solid fa-lock"></i> Privacy</span>
+      <% } else if (key === 'sitemap') { %>
+        <span class="ns-eyebrow"><i class="fa-solid fa-sitemap"></i> Navigate</span>
+      <% } else { %>
+        <span class="ns-eyebrow"><i class="fa-solid fa-file-lines"></i> Legal</span>
+      <% } %>
+      <h1><%= title %></h1>
+      <% if (key !== 'sitemap') { %>
+        <p class="ns-static-hero__meta">Last updated April 2026</p>
+      <% } else { %>
+        <p class="ns-static-hero__sub">Every corner of NullStay — in one place.</p>
+      <% } %>
+    </div>
+  </header>
+
+  <% if (key === 'sitemap') { %>
+    <nav class="ns-sitemap-grid" aria-label="Sitemap">
+      <a href="/" class="ns-sitemap-link">
+        <span class="ns-sitemap-link__icon"><i class="fa-solid fa-house"></i></span>
+        Home
+        <span>Start here</span>
+      </a>
+      <a href="/listings" class="ns-sitemap-link">
+        <span class="ns-sitemap-link__icon"><i class="fa-solid fa-compass"></i></span>
+        Explore stays
+        <span>Search &amp; book</span>
+      </a>
+      <a href="/hosting" class="ns-sitemap-link">
+        <span class="ns-sitemap-link__icon"><i class="fa-solid fa-house-chimney"></i></span>
+        Hosting
+        <span>List your space</span>
+      </a>
+      <a href="/help" class="ns-sitemap-link">
+        <span class="ns-sitemap-link__icon"><i class="fa-solid fa-life-ring"></i></span>
+        Help Centre
+        <span>Support &amp; FAQ</span>
+      </a>
+      <a href="/login" class="ns-sitemap-link">
+        <span class="ns-sitemap-link__icon"><i class="fa-solid fa-right-to-bracket"></i></span>
+        Log in
+        <span>Your account</span>
+      </a>
+      <a href="/signup" class="ns-sitemap-link">
+        <span class="ns-sitemap-link__icon"><i class="fa-solid fa-user-plus"></i></span>
+        Sign up
+        <span>Join NullStay</span>
+      </a>
+      <a href="/terms" class="ns-sitemap-link">
+        <span class="ns-sitemap-link__icon"><i class="fa-solid fa-scale-balanced"></i></span>
+        Terms
+        <span>Legal</span>
+      </a>
+      <a href="/privacy" class="ns-sitemap-link">
+        <span class="ns-sitemap-link__icon"><i class="fa-solid fa-shield"></i></span>
+        Privacy
+        <span>Your data</span>
+      </a>
+      <a href="/careers" class="ns-sitemap-link">
+        <span class="ns-sitemap-link__icon"><i class="fa-solid fa-briefcase"></i></span>
+        Careers
+        <span>Work with us</span>
+      </a>
+    </nav>
+  <% } else { %>
+    <div class="ns-static-layout <%= isLegal ? 'ns-static-layout--legal' : '' %>">
+      <% if (isLegal) { %>
+        <aside class="ns-static-sidebar">
+          <h3>On this page</h3>
+          <a href="#section-1">Overview</a>
+          <a href="#section-2">Details</a>
+          <a href="#section-3">Your rights</a>
+          <a href="/help">Help Centre</a>
+        </aside>
+      <% } %>
+
+      <div class="ns-static-prose">
+        <% if (key === 'terms') { %>
+          <article class="ns-static-prose-card" id="section-1">
+            <h2><span class="ns-section-num">1</span> Agreement</h2>
+            <p>By using NullStay you agree to these terms. Guests and hosts must provide accurate information, communicate honestly, and follow local laws.</p>
+          </article>
+          <article class="ns-static-prose-card" id="section-2">
+            <h2><span class="ns-section-num">2</span> Bookings &amp; payments</h2>
+            <p>Payments are processed via Razorpay (UPI, cards, netbanking). A booking is pending until the host accepts. Cancellation rules are shown at checkout.</p>
+          </article>
+          <article class="ns-static-prose-card" id="section-3">
+            <h2><span class="ns-section-num">3</span> Host responsibilities</h2>
+            <p>Hosts must keep listings accurate, respond to requests promptly, and provide safe, habitable accommodations.</p>
+          </article>
+        <% } else if (key === 'privacy') { %>
+          <article class="ns-static-prose-card" id="section-1">
+            <h2><span class="ns-section-num">1</span> What we collect</h2>
+            <p>Account details (name, email), booking data, messages between guests and hosts, and technical logs needed to run the service.</p>
+          </article>
+          <article class="ns-static-prose-card" id="section-2">
+            <h2><span class="ns-section-num">2</span> How we use it</h2>
+            <p>To process bookings, send transactional emails, improve search, and keep the platform secure. We do not sell personal data.</p>
+          </article>
+          <article class="ns-static-prose-card" id="section-3">
+            <h2><span class="ns-section-num">3</span> Your choices</h2>
+            <p>Update your profile anytime. Contact us to request access or deletion where applicable under Indian privacy norms.</p>
+          </article>
+        <% } else if (key === 'privacy-choices') { %>
+          <article class="ns-static-prose-card" id="section-1">
+            <h2><span class="ns-section-num">1</span> Marketing</h2>
+            <p>Control promotional emails from account settings. Essential booking and security messages will still be sent.</p>
+          </article>
+          <article class="ns-static-prose-card" id="section-2">
+            <h2><span class="ns-section-num">2</span> Cookies</h2>
+            <p>We use session cookies to keep you signed in. We may add analytics cookies in future with clear notice.</p>
+          </article>
+        <% } else if (key === 'careers') { %>
+          <article class="ns-static-prose-card" id="section-1">
+            <h2><span class="ns-section-num">1</span> Build with us</h2>
+            <p>NullStay is reimagining how India books unique stays — villas, homestays, and experiences beyond generic hotels.</p>
+          </article>
+          <article class="ns-static-prose-card" id="section-2">
+            <h2><span class="ns-section-num">2</span> Open applications</h2>
+            <p>We’re always interested in engineers, designers, and hospitality operators. Send your portfolio or CV and tell us what excites you.</p>
+            <p><a href="mailto:careers@nullstay.com" class="ns-link">careers@nullstay.com</a></p>
+          </article>
+        <% } else { %>
+          <article class="ns-static-prose-card">
+            <h2>Welcome</h2>
+            <p>NullStay connects travelers with unique homes across India — with UPI-friendly checkout and direct host messaging.</p>
+          </article>
+        <% } %>
+      </div>
     </div>
 
-    <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-8">
-        <section>
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. Welcome to NullStay</h2>
-            <p>
-                At NullStay, we are committed to providing a premium marketplace for luxury vacation rentals and unique homes. 
-                Whether you are a guest looking for your next adventure or a host sharing your home, our platform is built 
-                on trust, transparency, and high-quality service.
-            </p>
-        </section>
-
-        <section>
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">2. Our Mission</h2>
-            <p>
-                Our mission is to create a world where anyone can belong anywhere, by providing a high-fidelity 
-                and reliable experience that connects people across the globe.
-            </p>
-        </section>
-
-        <section>
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">3. Getting Started</h2>
-            <p>
-                You can browse thousands of unique stays, from beachfront villas to historic castles. 
-                Use our search filters to find exactly what you're looking for, and book with confidence 
-                knowing that every listing is curated for excellence.
-            </p>
-        </section>
-
-        <section class="bg-gray-50 p-8 rounded-2xl border border-gray-100">
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Need help?</h3>
-            <p class="text-gray-600 mb-6">Our support team is available 24/7 to assist you with any questions or concerns.</p>
-            <a href="mailto:support@nullstay.com" class="inline-block bg-gray-900 text-white font-bold py-3 px-8 rounded-xl hover:bg-black transition shadow-md">
-                Contact Support
-            </a>
-        </section>
-    </div>
+    <section class="ns-static-cta">
+      <h3>Questions about this page?</h3>
+      <p>We’re happy to clarify terms, privacy, or how NullStay works.</p>
+      <div class="ns-static-cta__actions">
+        <a href="/help" class="ns-btn-lg-white">Help Centre</a>
+        <a href="mailto:support@nullstay.com" class="ns-btn-lg-outline">Contact support</a>
+      </div>
+    </section>
+  <% } %>
 </div>

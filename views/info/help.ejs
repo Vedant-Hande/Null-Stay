@@ -1,70 +1,103 @@
-<% layout('layouts/boilerplate') -%>
+<% layout('layouts/landing') -%>
+<% landingActive = 'help'; %>
 
-<div class="bg-gray-50 -mt-8 pt-16 pb-24">
-    <!-- Help Center Hero -->
-    <div class="max-w-4xl mx-auto px-6 text-center mb-16">
-        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-8 tracking-tight">Help Centre</h1>
-        
-        <!-- Search Bar -->
-        <div class="relative max-w-2xl mx-auto group">
-            <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-airbnb transition-colors"></i>
-            <input type="text" placeholder="Search for help topics..." 
-                class="w-full py-5 pl-14 pr-6 bg-white border border-gray-200 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-airbnb/20 focus:border-airbnb transition-all text-lg">
-        </div>
+<div class="ns-static">
+  <header class="ns-static-hero">
+    <div class="ns-static-hero__glow" aria-hidden="true"></div>
+    <div class="ns-static-hero__inner">
+      <span class="ns-eyebrow"><i class="fa-solid fa-life-ring"></i> Support</span>
+      <h1>How can we <em>help?</em></h1>
+      <p class="ns-static-hero__sub">Everything you need to book stays, manage trips, host your property, and pay securely on NullStay.</p>
+      <div class="ns-static-hero__actions">
+        <a href="/listings" class="ns-btn-lg-white"><i class="fa-solid fa-compass"></i> Explore stays</a>
+        <a href="mailto:support@nullstay.com" class="ns-btn-lg-outline">Email support</a>
+      </div>
     </div>
+  </header>
 
-    <!-- Category Grid -->
-    <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Getting Started -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer">
-                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-rocket text-xl text-blue-500"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Getting Started</h3>
-                <p class="text-gray-500 mb-6 font-light">Learn the basics of booking, hosting, and managing your account.</p>
-                <a href="#" class="text-airbnb font-semibold hover:underline flex items-center gap-2">
-                    Browse topics <i class="fa-solid fa-chevron-right text-xs"></i>
-                </a>
-            </div>
+  <div class="ns-static-chips">
+    <span class="ns-static-chip"><i class="fa-solid fa-bolt"></i> UPI checkout</span>
+    <span class="ns-static-chip"><i class="fa-solid fa-comments"></i> Host messaging</span>
+    <span class="ns-static-chip"><i class="fa-solid fa-calendar"></i> Trip dashboard</span>
+    <span class="ns-static-chip"><i class="fa-solid fa-heart"></i> Wishlists</span>
+  </div>
 
-            <!-- Your Bookings -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer">
-                <div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-calendar-check text-xl text-airbnb"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Your Bookings</h3>
-                <p class="text-gray-500 mb-6 font-light">Manage reservations, cancellations, and house rules.</p>
-                <a href="/bookings/trips" class="text-airbnb font-semibold hover:underline flex items-center gap-2">
-                    View your trips <i class="fa-solid fa-chevron-right text-xs"></i>
-                </a>
-            </div>
+  <div class="ns-help-search-wrap">
+    <form class="ns-help-search" action="/listings" method="GET" role="search">
+      <input type="text" name="q" placeholder="Search destinations — Goa, Manali, Jaipur…" aria-label="Search stays" />
+      <button type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+    </form>
+  </div>
 
-            <!-- Trust & Safety -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer">
-                <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-shield-halved text-xl text-green-500"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Trust & Safety</h3>
-                <p class="text-gray-500 mb-6 font-light">Learn about our protection for hosts and guests.</p>
-                <a href="#" class="text-airbnb font-semibold hover:underline flex items-center gap-2">
-                    Browse topics <i class="fa-solid fa-chevron-right text-xs"></i>
-                </a>
-            </div>
-        </div>
+  <div class="ns-help-grid">
+    <a href="/listings" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-compass"></i></div>
+      <h3>Find a stay</h3>
+      <p>Search by city, price, guests, and category — beachfront, cabins, pools, and more.</p>
+      <span class="ns-help-card__link">Browse listings <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="/bookings/trips" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-suitcase"></i></div>
+      <h3>Your trips</h3>
+      <p>Track bookings, see host responses, and manage upcoming getaways.</p>
+      <span class="ns-help-card__link">View trips <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="/hosting" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-house-chimney"></i></div>
+      <h3>Become a host</h3>
+      <p>List your space, set rupee pricing, and accept guests from one dashboard.</p>
+      <span class="ns-help-card__link">Start hosting <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="/listings?category=beachfront" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-umbrella-beach"></i></div>
+      <h3>Beachfront stays</h3>
+      <p>Coastal villas and sea-view homes across India’s best beaches.</p>
+      <span class="ns-help-card__link">See beachfront <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="<%= currentUser ? '/messages' : '/login' %>" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-comments"></i></div>
+      <h3>Message a host</h3>
+      <p>Ask about check-in, amenities, or parking before you book.</p>
+      <span class="ns-help-card__link">Open messages <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="/help" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-credit-card"></i></div>
+      <h3>Payments</h3>
+      <p>Pay with UPI, cards, or netbanking through secure Razorpay checkout.</p>
+      <span class="ns-help-card__link">Learn more below <i class="fa-solid fa-arrow-down"></i></span>
+    </a>
+  </div>
+
+  <section class="ns-help-faq">
+    <div class="ns-help-faq__head">
+      <span class="ns-eyebrow">FAQ</span>
+      <h2>Quick answers</h2>
+      <p>Common questions from guests and hosts.</p>
     </div>
+    <details class="ns-faq__item">
+      <summary>How do I book a stay?</summary>
+      <p>Search listings, pick your dates, and pay at checkout. Your host confirms the request — you’ll get email and in-app updates.</p>
+    </details>
+    <details class="ns-faq__item">
+      <summary>Can I pay with UPI?</summary>
+      <p>Yes. Checkout supports UPI QR, debit/credit cards, and netbanking via Razorpay.</p>
+    </details>
+    <details class="ns-faq__item">
+      <summary>How do I list my property?</summary>
+      <p>Sign up, tap “List your space,” add photos and pricing in ₹. You control who books and when.</p>
+    </details>
+    <details class="ns-faq__item">
+      <summary>How do I contact support?</summary>
+      <p>Email <a href="mailto:support@nullstay.com" class="ns-link">support@nullstay.com</a> — we typically reply within one business day.</p>
+    </details>
+  </section>
 
-    <!-- Contact Support Banner -->
-    <div class="max-w-4xl mx-auto px-6 mt-24">
-        <div class="bg-gray-900 rounded-[2rem] p-12 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-airbnb/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
-            <div class="relative z-10">
-                <h2 class="text-3xl font-bold text-white mb-4">Still need help?</h2>
-                <p class="text-gray-400 text-lg font-light">Our support team is available 24/7 to assist you.</p>
-            </div>
-            <a href="mailto:support@nullstay.com" class="relative z-10 bg-white text-gray-900 font-bold py-4 px-10 rounded-2xl hover:bg-gray-100 transition shadow-lg transform hover:-translate-y-1">
-                Contact Support
-            </a>
-        </div>
+  <section class="ns-static-cta">
+    <h3>Still stuck?</h3>
+    <p>Our team is here for booking issues, payments, and account help.</p>
+    <div class="ns-static-cta__actions">
+      <a href="mailto:support@nullstay.com" class="ns-btn-lg-white"><i class="fa-solid fa-envelope"></i> Email us</a>
+      <a href="/" class="ns-btn-lg-outline">Back to home</a>
     </div>
+  </section>
 </div>

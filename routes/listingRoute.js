@@ -31,12 +31,14 @@ import {
   isRazorpayLiveMode,
 } from "../config/razorpay.js";
 import { buildListingFilter } from "../utils/listingSearch.js";
+import { LISTINGS_PER_PAGE } from "../utils/pagination.js";
 import {
-  enrichPagination,
-  getPaginationMeta,
-  LISTINGS_PER_PAGE,
-  parsePage,
-} from "../utils/pagination.js";
+  getCachedListingSearch,
+  getCachedListingDetail,
+  invalidateListingsCache,
+  invalidateListingDetail,
+} from "../utils/listingCache.js";
+import { getWishlistedIdsForUser } from "../utils/wishlistIds.js";
 import {
   notifyAfterListingCreated,
   notifyAfterListingDeleted,
@@ -81,34 +83,30 @@ const router = express.Router();
 router.get(
   "/",
   wrapAsync(async (req, res, next) => {
-    const filter = buildListingFilter(req.query);
-    const page = parsePage(req.query.page);
-    const total = await listings.countDocuments(filter);
-    const pagination = enrichPagination(
-      getPaginationMeta(total, page, LISTINGS_PER_PAGE),
-      req.query,
-    );
+    if (req.query.page && parseInt(req.query.page, 10) > 1) {
+      const q = { ...req.query };
+      delete q.page;
+      const qs = new URLSearchParams(q).toString();
+      return res.redirect("/listings" + (qs ? `?${qs}` : ""));
+    }
 
-    const allListing = await listings
-      .find(filter)
-      .populate("reviews")
-      .sort({ createdAt: -1 })
-      .skip(pagination.skip)
-      .limit(pagination.limit);
+    const filter = buildListingFilter(req.query);
+    const { pagination: scrollPagination, rows: allListing } =
+      await getCachedListingSearch(listings, {
+        filter,
+        page: 1,
+        perPage: LISTINGS_PER_PAGE,
+      });
 
     res.locals.searchQuery = req.query;
 
-    let wishlistedIds = [];
-    if (req.user) {
-      const rows = await Wishlist.find({ user: req.user._id }).select("listing");
-      wishlistedIds = rows.map((w) => String(w.listing));
-    }
+    const wishlistedIds = await getWishlistedIdsForUser(req.user?._id);
 
     res.render("listings/listings.ejs", {
       allListing,
       searchQuery: req.query,
       wishlistedIds,
-      pagination,
+      scrollPagination,
     });
   }),
 );
@@ -148,6 +146,8 @@ router.post(
       listing: newListing,
       hostUser: req.user,
     });
+
+    invalidateListingsCache();
 
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.CREATE_SUCCESS);
     res.redirect("/listings");
@@ -202,6 +202,8 @@ router.put(
     await listing.save();
 
     await notifyAfterListingUpdated({ app: req.app, listing });
+
+    invalidateListingDetail(id);
 
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.LISTING.UPDATE_SUCCESS);
     res.redirect(`/listings/${id}`);
@@ -328,15 +330,7 @@ router.get(
   "/:id",
   wrapAsync(async (req, res, next) => {
     const { id } = req.params;
-    const listing = await listings
-      .findById(id)
-      .populate({
-        path: "reviews",
-        populate: {
-          path: "owner",
-        },
-      })
-      .populate("owner");
+    const { listing } = await getCachedListingDetail(listings, id);
     if (!listing) {
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
       return res.redirect("/listings");
@@ -397,6 +391,8 @@ router.post(
     listing.reviews.push(newReview._id);
     await listing.save();
 
+    invalidateListingDetail(id);
+
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.REVIEW.CREATE_SUCCESS);
     res.redirect(`/listings/${id}`);
   }),
@@ -424,6 +420,8 @@ router.delete(
       listing,
       guestUser: req.user,
     });
+
+    invalidateListingDetail(id);
 
     req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.REVIEW.DELETE_SUCCESS);
     res.redirect(`/listings/${id}`);

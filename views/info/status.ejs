@@ -1,202 +1,97 @@
-<% layout('layouts/boilerplate') -%>
+<% layout('layouts/landing') -%>
 
-<div class="bg-gray-50 -mt-8 pt-16 pb-24 min-h-screen">
-    <!-- Server Status Header -->
-    <div class="max-w-4xl mx-auto px-6 text-center mb-16">
-        <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 font-medium px-4 py-1.5 rounded-full text-sm mb-6 border border-emerald-100 hover:scale-105 transition-transform duration-300">
-            <span class="flex h-2.5 w-2.5 relative">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-            </span>
-            Application Server Active
-        </div>
-        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4 tracking-tight">Server Telemetry</h1>
-        <p class="text-gray-500 text-lg font-light max-w-2xl mx-auto">
-            A comprehensive overview of live server activity, V8 engine memory usage, active resource handles, database counts, and system environments.
-        </p>
+<div class="ns-static">
+  <header class="ns-static-hero">
+    <div class="ns-static-hero__glow" aria-hidden="true"></div>
+    <div class="ns-static-hero__inner">
+      <div class="ns-status-hero-badge">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        All systems operational
+      </div>
+      <h1>System <em>status</em></h1>
+      <p class="ns-static-hero__sub">Live health of the NullStay app — uptime, memory, database, and environment.</p>
     </div>
+  </header>
 
-    <!-- Telemetry Cards -->
-    <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <!-- Application Uptime -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col justify-between">
-                <div>
-                    <div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-clock text-xl text-airbnb"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Application Uptime</h3>
-                    <p class="text-gray-400 text-sm mb-4 font-light">Time since Node.js process was launched</p>
-                    <div class="text-3xl font-bold text-gray-800 tracking-tight mb-2">
-                        <%= stats.appUptime %>
-                    </div>
-                </div>
-                <div class="text-xs text-gray-400 border-t pt-3 flex items-center justify-between mt-4">
-                    <span>Process ID (PID)</span>
-                    <span class="font-medium text-gray-600"><%= stats.pid %></span>
-                </div>
-            </div>
+  <div class="ns-static-chips">
+    <span class="ns-static-chip"><i class="fa-solid fa-server"></i> Node <%= stats.nodeVersion %></span>
+    <span class="ns-static-chip"><i class="fa-solid fa-database"></i> <%= stats.dbStatus %></span>
+    <span class="ns-static-chip"><i class="fa-solid fa-clock"></i> Up <%= stats.appUptime %></span>
+  </div>
 
-            <!-- V8 Heap Memory -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col justify-between">
-                <div>
-                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-memory text-xl text-blue-500"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">V8 Heap Allocation</h3>
-                    <p class="text-gray-400 text-sm mb-4 font-light">Memory currently held by the engine</p>
-                    <div class="text-3xl font-bold text-gray-800 tracking-tight mb-2">
-                        <%= stats.heapUsed %> <span class="text-lg font-normal text-gray-400">/ <%= stats.heapTotal %></span>
-                    </div>
-                </div>
-                <div class="mt-4 border-t pt-4">
-                    <div class="w-full bg-gray-100 rounded-full h-2.5 mb-2 overflow-hidden">
-                        <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-500 ease-out" style="width: <%= stats.heapPercent %>%"></div>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-500">
-                        <span>Used: <%= stats.heapPercent %>%</span>
-                        <span>RSS: <%= stats.rss %></span>
-                    </div>
-                </div>
-            </div>
+  <div class="ns-status-grid">
+    <article class="ns-status-card">
+      <div class="ns-status-card__icon"><i class="fa-solid fa-clock"></i></div>
+      <h3>Uptime</h3>
+      <p class="ns-status-card__label">Process running time</p>
+      <div class="ns-status-card__value"><%= stats.appUptime %></div>
+      <div class="ns-status-card__footer">
+        <span>PID</span>
+        <span><%= stats.pid %></span>
+      </div>
+    </article>
 
-            <!-- Database & Connection -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col justify-between">
-                <div>
-                    <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-database text-xl text-emerald-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Database Layer</h3>
-                    <p class="text-gray-400 text-sm mb-4 font-light">Live connection to MongoDB database</p>
-                    <div class="text-3xl font-bold tracking-tight mb-2 <%= stats.dbStatus === 'Connected' ? 'text-emerald-600' : 'text-amber-600' %>">
-                        <%= stats.dbStatus %>
-                    </div>
-                </div>
-                <div class="text-xs text-gray-400 border-t pt-3 flex items-center justify-between mt-4">
-                    <span>Collections active</span>
-                    <span class="font-medium text-gray-600"><%= stats.collectionsCount %> active</span>
-                </div>
-            </div>
+    <article class="ns-status-card">
+      <div class="ns-status-card__icon"><i class="fa-solid fa-memory"></i></div>
+      <h3>Memory</h3>
+      <p class="ns-status-card__label">V8 heap used / total</p>
+      <div class="ns-status-card__value" style="font-size: 1.25rem;"><%= stats.heapUsed %></div>
+      <div class="ns-status-card__footer">
+        <span>Utilization</span>
+        <span><%= stats.heapPercent %>%</span>
+      </div>
+    </article>
 
-            <!-- Platform & Active Counts (Mid row) -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col justify-between">
-                <div>
-                    <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-chart-line text-xl text-amber-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Resources in Use</h3>
-                    <p class="text-gray-400 text-sm mb-4 font-light">Current resource allocations</p>
-                    <div class="grid grid-cols-2 gap-4 mb-2">
-                        <div>
-                            <span class="block text-xs font-medium text-gray-400">Active Handles</span>
-                            <span class="text-xl font-bold text-gray-800"><%= stats.activeHandles %></span>
-                        </div>
-                        <div>
-                            <span class="block text-xs font-medium text-gray-400">Active Requests</span>
-                            <span class="text-xl font-bold text-gray-800"><%= stats.activeRequests %></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-xs text-gray-400 border-t pt-3 flex items-center justify-between mt-4">
-                    <span>System Load Avg</span>
-                    <span class="font-medium text-gray-600"><%= stats.loadAvg %></span>
-                </div>
-            </div>
+    <article class="ns-status-card">
+      <div class="ns-status-card__icon"><i class="fa-solid fa-database"></i></div>
+      <h3>Database</h3>
+      <p class="ns-status-card__label">MongoDB</p>
+      <div class="ns-status-card__value" style="font-size: 1.2rem; color: <%= stats.dbStatus === 'Connected' ? '#059669' : '#d97706' %>"><%= stats.dbStatus %></div>
+      <div class="ns-status-card__footer">
+        <span>Listings</span>
+        <span><%= stats.listingsCount %></span>
+      </div>
+    </article>
 
-            <!-- Database statistics (Mid row) -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col justify-between">
-                <div>
-                    <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-list text-xl text-indigo-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Content Overview</h3>
-                    <p class="text-gray-400 text-sm mb-4 font-light">Direct counts of site data</p>
-                    <div class="grid grid-cols-2 gap-4 mb-2">
-                        <div>
-                            <span class="block text-xs font-medium text-gray-400">Listings</span>
-                            <span class="text-xl font-bold text-gray-800"><%= stats.listingsCount %></span>
-                        </div>
-                        <div>
-                            <span class="block text-xs font-medium text-gray-400">Reviews</span>
-                            <span class="text-xl font-bold text-gray-800"><%= stats.reviewsCount %></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-xs text-gray-400 border-t pt-3 flex items-center justify-between mt-4">
-                    <span>Database Engine</span>
-                    <span class="font-medium text-gray-600">MongoDB / Mongoose</span>
-                </div>
-            </div>
+    <article class="ns-status-card">
+      <div class="ns-status-card__icon"><i class="fa-solid fa-gauge-high"></i></div>
+      <h3>Resources</h3>
+      <p class="ns-status-card__label">Active handles / requests</p>
+      <div class="ns-status-card__value" style="font-size: 1.125rem;"><%= stats.activeHandles %> / <%= stats.activeRequests %></div>
+      <div class="ns-status-card__footer">
+        <span>Load</span>
+        <span><%= stats.loadAvg %></span>
+      </div>
+    </article>
 
-            <!-- V8 advanced metrics -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col justify-between">
-                <div>
-                    <div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-cubes text-xl text-purple-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Engine Limits</h3>
-                    <p class="text-gray-400 text-sm mb-4 font-light">Allocated runtime limits by V8</p>
-                    <div class="grid grid-cols-1 gap-y-3 mb-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-400 font-medium">Total Available</span>
-                            <span class="text-sm font-semibold text-gray-700"><%= stats.totalAvailableSize %></span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-400 font-medium">Heap Limit</span>
-                            <span class="text-sm font-semibold text-gray-700"><%= stats.heapSizeLimit %></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-xs text-gray-400 border-t pt-3 flex items-center justify-between mt-4">
-                    <span>Heap limits are set by hardware</span>
-                </div>
-            </div>
+    <article class="ns-status-card">
+      <div class="ns-status-card__icon"><i class="fa-solid fa-star"></i></div>
+      <h3>Content</h3>
+      <p class="ns-status-card__label">Platform data</p>
+      <div class="ns-status-card__value" style="font-size: 1.125rem;"><%= stats.reviewsCount %> reviews</div>
+      <div class="ns-status-card__footer">
+        <span>Collections</span>
+        <span><%= stats.collectionsCount %></span>
+      </div>
+    </article>
 
-            <!-- Application Settings -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col justify-between md:col-span-2">
-                <div>
-                    <div class="w-12 h-12 bg-pink-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-sliders text-xl text-pink-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Environment Details</h3>
-                    <p class="text-gray-400 text-sm mb-6 font-light">Application server runtime settings and variables</p>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-                        <div class="flex items-center justify-between py-2 border-b border-gray-50">
-                            <span class="text-sm font-medium text-gray-500">Node Environment</span>
-                            <span class="text-sm text-gray-800 font-mono select-all uppercase font-semibold"><%= stats.env %></span>
-                        </div>
-                        <div class="flex items-center justify-between py-2 border-b border-gray-50">
-                            <span class="text-sm font-medium text-gray-500">Node.js Version</span>
-                            <span class="text-sm text-gray-800 font-mono select-all"><%= stats.nodeVersion %></span>
-                        </div>
-                        <div class="flex items-center justify-between py-2 border-b border-gray-50">
-                            <span class="text-sm font-medium text-gray-500">Server Port</span>
-                            <span class="text-sm text-gray-800 font-mono font-semibold"><%= stats.port %></span>
-                        </div>
-                        <div class="flex items-center justify-between py-2 border-b border-gray-50">
-                            <span class="text-sm font-medium text-gray-500">Local Server Time</span>
-                            <span class="text-sm text-gray-800"><%= stats.serverTime %></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Refresh Actions -->
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col justify-between">
-                <div>
-                    <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-arrow-rotate-right text-xl text-amber-500"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Real-Time Refresh</h3>
-                    <p class="text-gray-400 text-sm mb-4 font-light">Reload the telemetry data</p>
-                    <p class="text-gray-500 text-sm font-light mb-6">Fetch the most current server performance and uptime metrics instantaneously.</p>
-                </div>
-                <button onclick="window.location.reload();" class="w-full py-3.5 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-2xl shadow-sm transition hover:-translate-y-0.5 text-center flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-arrows-rotate text-sm"></i> Refresh Now
-                </button>
-            </div>
-        </div>
-    </div>
+    <article class="ns-status-card ns-status-card--wide">
+      <div class="ns-status-card__icon"><i class="fa-solid fa-sliders"></i></div>
+      <h3>Environment</h3>
+      <p class="ns-status-card__label">Runtime configuration</p>
+      <div style="margin-top: 1rem;">
+        <div class="ns-status-env-row"><span>Environment</span><strong><%= stats.env %></strong></div>
+        <div class="ns-status-env-row"><span>Node version</span><strong><%= stats.nodeVersion %></strong></div>
+        <div class="ns-status-env-row"><span>Port</span><strong><%= stats.port %></strong></div>
+        <div class="ns-status-env-row"><span>RSS memory</span><strong><%= stats.rss %></strong></div>
+        <div class="ns-status-env-row"><span>Server time</span><strong><%= stats.serverTime %></strong></div>
+      </div>
+      <button type="button" class="ns-status-refresh" onclick="window.location.reload()">
+        <i class="fa-solid fa-arrows-rotate"></i> Refresh metrics
+      </button>
+    </article>
+  </div>
 </div>
