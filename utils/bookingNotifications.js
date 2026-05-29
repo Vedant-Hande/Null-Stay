@@ -43,6 +43,17 @@ export async function notifyAfterBookingCreated({
     return;
   }
 
+  await notifyUser({
+    app,
+    recipientId: booking.guest,
+    type: NOTIFICATION_TYPES.BOOKING_REQUEST,
+    title: "Request sent",
+    message: `Your request to book "${title}" was sent to the host.`,
+    link,
+    bookingId: booking._id,
+    listingId: listing._id,
+  });
+
   if (host) {
     await notifyUser({
       app,

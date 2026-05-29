@@ -8,6 +8,7 @@
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/utilities.css">
+    <link rel="stylesheet" href="/css/notifications.css">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Google Fonts -->
@@ -53,6 +54,8 @@
 
 
 <body class="min-h-screen flex flex-col bg-white custom-scroll relative">
+    <div id="notificationToastStack" class="notification-toast-stack" aria-live="polite"></div>
+    <%- include('../includes/desktopNotifyBanner.ejs') %>
     <!-- Search Backdrop Overlay -->
     <div id="searchBackdrop" class="fixed inset-0 bg-black/40 z-[60] hidden transition-opacity duration-300 opacity-0">
     </div>
@@ -104,7 +107,9 @@
                             class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
                             <a href="/login">Log in</a>
                         </div>
-                        <% } %>
+                        <% } else { %>
+                            <%- include('../includes/notificationPanel.ejs') %>
+                            <% } %>
 
                             <div class="relative">
                                 <div id="userMenuBtn"
@@ -138,8 +143,13 @@
                                         <% } else { %>
                                             <a href="#"
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Messages</a>
-                                            <a href="#"
-                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Notifications</a>
+                                            <a href="/notifications"
+                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition flex items-center justify-between gap-2">
+                                                <span>Notifications</span>
+                                                <% if (unreadNotificationCount > 0) { %>
+                                                    <span class="text-xs font-bold bg-airbnb text-white px-2 py-0.5 rounded-full"><%= unreadNotificationCount > 99 ? '99+' : unreadNotificationCount %></span>
+                                                <% } %>
+                                            </a>
                                             <a href="/bookings/trips"
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Trips</a>
                                             <a href="#"
@@ -362,6 +372,14 @@
     <script src="/js/nullstay-ui.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/newListing.js"></script>
+    <% if (currentUser) { %>
+    <script>window.__NULLSTAY_USER_ID__ = "<%= currentUser._id %>";</script>
+    <% if (typeof webPushEnabled !== 'undefined' && webPushEnabled && vapidPublicKey) { %>
+    <script>window.__NULLSTAY_VAPID_KEY__ = "<%= vapidPublicKey %>";</script>
+    <% } %>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/notifications.js"></script>
+    <% } %>
 </body>
 
 </html>

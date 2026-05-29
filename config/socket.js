@@ -14,8 +14,10 @@ export function initSocket(server, app, sessionMiddleware) {
     cors: { origin: false },
   });
 
-  const wrap = (middleware) => (socket, next) =>
-    middleware(socket.request, {}, next);
+  const wrap = (middleware) => (socket, next) => {
+    const res = socket.request.res || { end: () => {} };
+    middleware(socket.request, res, next);
+  };
 
   io.use(wrap(sessionMiddleware));
   io.use(wrap(app.get("passportInit")));
@@ -27,7 +29,7 @@ export function initSocket(server, app, sessionMiddleware) {
       socket.disconnect(true);
       return;
     }
-    socket.join(`user:${user._id}`);
+    socket.join(`user:${String(user._id)}`);
   });
 
   app.set("io", io);

@@ -24,6 +24,12 @@ import {
   createBookingFromCheckout,
   findBookingByPaymentIntent,
 } from "../utils/createBookingFromCheckout.js";
+import {
+  notifyAfterBookingCreated,
+  notifyAfterBookingAccepted,
+  notifyAfterBookingRejected,
+  notifyAfterBookingCancelled,
+} from "../utils/bookingNotifications.js";
 
 const router = express.Router();
 
@@ -259,6 +265,13 @@ router.post(
         stripePaymentIntentId: paymentIntentId,
       });
 
+      await notifyAfterBookingCreated({
+        app: req.app,
+        booking,
+        listing,
+        guestUser: req.user,
+      });
+
       flashAfterBookingCreate(req, status);
       return res.redirect(`/bookings/${booking._id}`);
     }
@@ -277,6 +290,13 @@ router.post(
       guests: guestCount,
       nights,
       totals,
+    });
+
+    await notifyAfterBookingCreated({
+      app: req.app,
+      booking,
+      listing,
+      guestUser: req.user,
     });
 
     flashAfterBookingCreate(req, status);
@@ -309,6 +329,17 @@ router.post(
     booking.status = BOOKING_STATUSES.CANCELLED;
     await markPaidBookingRefunded(booking);
     await booking.save();
+
+    const cancelListing = await listings.findById(booking.listing);
+    if (cancelListing) {
+      await notifyAfterBookingCancelled({
+        app: req.app,
+        booking,
+        listing: cancelListing,
+        guestUser: req.user,
+      });
+    }
+
     req.flash(FLASH_KEYS.SUCCESS, BOOKING_FLASH.CANCELLED);
     res.redirect("/bookings/trips");
   }),
@@ -345,12 +376,24 @@ router.post(
       booking.status = BOOKING_STATUSES.REJECTED;
       await markPaidBookingRefunded(booking);
       await booking.save();
+      await notifyAfterBookingRejected({
+        app: req.app,
+        booking,
+        listing: booking.listing,
+      });
       req.flash(FLASH_KEYS.ERROR, BOOKING_FLASH.DATES_UNAVAILABLE);
       return res.redirect("/bookings/host");
     }
 
     booking.status = BOOKING_STATUSES.CONFIRMED;
     await booking.save();
+
+    await notifyAfterBookingAccepted({
+      app: req.app,
+      booking,
+      listing: booking.listing,
+    });
+
     req.flash(FLASH_KEYS.SUCCESS, BOOKING_FLASH.ACCEPTED);
     res.redirect("/bookings/host");
   }),
@@ -379,6 +422,13 @@ router.post(
     booking.status = BOOKING_STATUSES.REJECTED;
     await markPaidBookingRefunded(booking);
     await booking.save();
+
+    await notifyAfterBookingRejected({
+      app: req.app,
+      booking,
+      listing: booking.listing,
+    });
+
     req.flash(FLASH_KEYS.SUCCESS, BOOKING_FLASH.REJECTED);
     res.redirect("/bookings/host");
   }),

@@ -1,0 +1,110 @@
+.notification-bell-btn {
+  position: relative;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1.125rem;
+  text-align: center;
+  color: #fff;
+  background: #ff385c;
+  border-radius: 9999px;
+  border: 2px solid #fff;
+}
+
+.notification-badge.hidden {
+  display: none;
+}
+
+.notification-dropdown.is-open {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.notification-dropdown-item {
+  display: block;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f9fafb;
+  transition: background 0.15s;
+}
+
+.notification-dropdown-item:hover {
+  background: #f9fafb;
+}
+
+.notification-dropdown-item.is-unread {
+  background: #fff5f5;
+}
+
+.notification-dropdown-item__title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.notification-dropdown-item__message {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.125rem;
+  line-height: 1.35;
+}
+
+.notification-dropdown-item__time {
+  font-size: 0.6875rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+}
+
+.notification-toast-stack {
+  position: fixed;
+  top: 5rem;
+  right: 1rem;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: min(22rem, calc(100vw - 2rem));
+  pointer-events: none;
+}
+
+.notification-toast {
+  pointer-events: auto;
+  padding: 0.875rem 1rem;
+  background: #fff;
+  border: 1px solid #f3f4f6;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  animation: notification-slide-in 0.35s ease;
+  border-left: 3px solid #ff385c;
+}
+
+.notification-toast__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.notification-toast__message {
+  font-size: 0.8125rem;
+  color: #4b5563;
+  margin-top: 0.25rem;
+}
+
+@keyframes notification-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

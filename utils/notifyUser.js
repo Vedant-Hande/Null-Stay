@@ -1,5 +1,6 @@
 import Notification from "../models/notification.js";
 import { getIO } from "../config/socket.js";
+import { sendWebPushToUser } from "./sendWebPush.js";
 
 export function serializeNotification(doc) {
   const n = doc.toObject ? doc.toObject() : doc;
@@ -31,8 +32,10 @@ export async function notifyUser({
 }) {
   if (!recipientId) return null;
 
+  const recipient = String(recipientId);
+
   const notification = await Notification.create({
-    recipient: recipientId,
+    recipient,
     type,
     title,
     message,
@@ -44,8 +47,16 @@ export async function notifyUser({
   const payload = serializeNotification(notification);
   const io = app?.get?.("io") ?? getIO();
   if (io) {
-    io.to(`user:${recipientId}`).emit("notification", payload);
+    io.to(`user:${recipient}`).emit("notification", payload);
   }
+
+  sendWebPushToUser(recipient, {
+    title,
+    message,
+    link,
+  }).catch((err) => {
+    console.error("Web push failed:", err.message);
+  });
 
   return notification;
 }
