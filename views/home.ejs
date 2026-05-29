@@ -1,108 +1,268 @@
 <% layout('layouts/boilerplate') -%>
 
-<div class="flex flex-col gap-16 pb-16">
-    
-    <!-- Hero Section -->
-    <div class="relative w-full h-[60vh] md:h-[75vh] rounded-3xl overflow-hidden mt-4">
-        <!-- Hero Image -->
-        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-            alt="Luxury Villa" class="absolute inset-0 w-full h-full object-cover">
-            
-        <!-- Subtle Gradient Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-0"></div>
+<%
+  const featured = typeof featuredListings !== 'undefined' ? featuredListings : [];
+  const wishIds = typeof wishlistedIds !== 'undefined' ? wishlistedIds : [];
+  const cats = [
+    { id: 'beachfront', label: 'Beachfront', img: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=500&q=80' },
+    { id: 'cabins', label: 'Cabins', img: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=500&q=80' },
+    { id: 'pools', label: 'Pools', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=80' },
+    { id: 'cities', label: 'Cities', img: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=500&q=80' },
+    { id: 'treehouses', label: 'Treehouses', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=500&q=80' },
+    { id: 'castles', label: 'Castles', img: 'https://images.unsplash.com/photo-1513622470522-26c78140594c?auto=format&fit=crop&w=500&q=80' },
+  ];
+%>
 
-        <!-- Content -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
-            <h1 class="text-white text-4xl md:text-6xl font-bold tracking-tight drop-shadow-md mb-6 max-w-4xl">
-                Find your next <span class="text-airbnb">perfect</span> stay
-            </h1>
-            <p class="text-white/90 text-lg md:text-xl mb-10 max-w-2xl drop-shadow-sm font-light">
-                Discover incredible homes, cabins, and unique spaces curated for the ultimate NullStay experience.
-            </p>
-            <a href="/listings" class="bg-airbnb hover:bg-rose-600 text-white font-semibold py-3.5 px-8 rounded-xl transition duration-300 text-lg transform hover:-translate-y-1">
-                Explore the Collection
-            </a>
-        </div>
+<div class="ns-home">
+
+  <!-- Hero -->
+  <section class="ns-hero ns-fade">
+    <div class="ns-hero__photo">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80" alt="" loading="eager" />
     </div>
+    <div class="ns-hero__shade"></div>
 
-    <!-- "The Art of Travel" Split Section -->
-    <div class="flex flex-col lg:flex-row items-center gap-12 md:gap-20 py-8">
-        <div class="lg:w-1/2 flex flex-col justify-center">
-            <h2 class="text-sm font-bold uppercase tracking-widest text-airbnb mb-4">NullStay Premier</h2>
-            <h3 class="text-3xl md:text-5xl font-semibold leading-tight text-gray-900 mb-6">
-                Elevate your journey with hand-selected architectural marvels.
-            </h3>
-            <p class="text-lg text-gray-600 font-light max-w-xl mb-8 leading-relaxed">
-                Every NullStay property is vetted for extraordinary design, premium amenities, and unparalleled locations. Experience travel without compromise.
-            </p>
-            <a href="/listings" class="inline-flex items-center gap-3 text-gray-900 font-semibold hover:text-airbnb transition group w-max border-b border-gray-900 hover:border-airbnb pb-1">
-                Discover the collection <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
-            </a>
+    <div class="ns-hero__grid">
+      <div>
+        <span class="ns-hero__eyebrow">NullStay · Book unique stays</span>
+        <h1 class="ns-hero__title">Your next getaway starts <em>here</em></h1>
+        <p class="ns-hero__lead">
+          Villas, cabins, and city apartments across India — secure UPI checkout, real hosts, and stays you'll actually want to book.
+        </p>
+        <div class="ns-hero__chips">
+          <span class="ns-hero__chip"><i class="fa-solid fa-shield-halved"></i> Secure payments</span>
+          <span class="ns-hero__chip"><i class="fa-solid fa-star"></i> Rated stays</span>
+          <span class="ns-hero__chip"><i class="fa-solid fa-comments"></i> Message hosts</span>
         </div>
+      </div>
 
-        <div class="lg:w-1/2 relative h-[500px] w-full">
-            <div class="absolute top-0 right-0 w-3/4 h-[70%] rounded-2xl overflow-hidden z-10 hover:z-30 transition-all duration-500 hover:scale-[1.02] shadow-md">
-                <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Luxury Cabin" class="w-full h-full object-cover">
+      <div class="ns-search">
+        <div class="ns-search__head">
+          <h2>Find a stay</h2>
+          <p>Search by place, country, or guests</p>
+        </div>
+        <form action="/listings" method="GET" class="ns-search__fields">
+          <div class="ns-search__row">
+            <i class="fa-solid fa-location-dot"></i>
+            <div style="flex:1;min-width:0">
+              <label for="ns-q">Where</label>
+              <input id="ns-q" type="text" name="q" placeholder="Goa, Manali, Jaipur…" autocomplete="off" />
             </div>
-            <div class="absolute bottom-0 left-0 w-2/3 h-[60%] rounded-2xl overflow-hidden z-20 hover:z-30 transition-all duration-500 hover:scale-[1.02] border-4 border-white shadow-xl">
-                <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Coastal Home" class="w-full h-full object-cover">
+          </div>
+          <div class="ns-search__row">
+            <i class="fa-solid fa-globe"></i>
+            <div style="flex:1;min-width:0">
+              <label for="ns-country">Country</label>
+              <input id="ns-country" type="text" name="country" placeholder="India" autocomplete="off" />
             </div>
-        </div>
+          </div>
+          <div class="ns-search__row">
+            <i class="fa-solid fa-user-group"></i>
+            <div style="flex:1;min-width:0">
+              <label for="ns-guests">Guests</label>
+              <input id="ns-guests" type="number" name="guests" min="1" placeholder="2" />
+            </div>
+          </div>
+          <button type="submit" class="ns-search__submit">
+            <i class="fa-solid fa-magnifying-glass"></i> Search stays
+          </button>
+        </form>
+      </div>
     </div>
+  </section>
 
-    <!-- Bento-Box Collections Grid -->
-    <div class="py-8">
-        <div class="flex items-end justify-between mb-8">
-            <h2 class="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900">Curated Experiences</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-[1000px] md:h-[600px]">
-            <!-- Bento Item 1: Large Featured -->
-            <a href="/listings" class="md:col-span-2 md:row-span-2 rounded-2xl overflow-hidden relative group cursor-pointer block h-full">
-                <div class="absolute inset-0 bg-gray-200 z-0">
-                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Penthouses" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
-                <div class="absolute bottom-0 left-0 p-8 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition duration-500">
-                    <p class="text-white/80 text-xs font-bold uppercase tracking-widest mb-2">Featured</p>
-                    <h3 class="text-3xl font-bold text-white mb-2">Skyline Penthouses</h3>
-                    <p class="text-white/90 font-light opacity-0 group-hover:opacity-100 transition duration-500 delay-100">Live above the clouds in the world's greatest cities.</p>
-                </div>
-            </a>
-
-            <!-- Bento Item 2: Top Right -->
-            <a href="/listings" class="md:col-span-2 md:row-span-1 rounded-2xl overflow-hidden relative group cursor-pointer block h-full">
-                <div class="absolute inset-0 bg-gray-200 z-0">
-                    <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Mansions" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-10"></div>
-                <div class="absolute bottom-0 left-0 p-6 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition duration-500">
-                    <h3 class="text-2xl font-bold text-white mb-1">Modern Mansions</h3>
-                    <p class="text-white/90 text-sm font-light opacity-0 group-hover:opacity-100 transition duration-500">Unparalleled luxury and design.</p>
-                </div>
-            </a>
-
-            <!-- Bento Item 3: Bottom Middle -->
-            <a href="/listings" class="md:col-span-1 md:row-span-1 rounded-2xl overflow-hidden relative group cursor-pointer block h-full">
-                <div class="absolute inset-0 bg-gray-200 z-0">
-                    <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Coastal" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-10"></div>
-                <div class="absolute bottom-0 left-0 p-6 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition duration-500">
-                    <h3 class="text-xl font-bold text-white mb-1">Oceanfront</h3>
-                </div>
-            </a>
-
-            <!-- Bento Item 4: Bottom Right -->
-            <a href="/listings" class="md:col-span-1 md:row-span-1 rounded-2xl overflow-hidden relative group cursor-pointer block h-full">
-                <div class="absolute inset-0 bg-gray-200 z-0">
-                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Spa" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-10"></div>
-                <div class="absolute bottom-0 left-0 p-6 z-20 w-full transform translate-y-2 group-hover:translate-y-0 transition duration-500">
-                    <h3 class="text-xl font-bold text-white mb-1">Spa Retreats</h3>
-                </div>
-            </a>
-        </div>
+  <!-- Trust -->
+  <div class="ns-trust ns-fade">
+    <div class="ns-trust__item">
+      <span class="ns-trust__icon"><i class="fa-solid fa-house"></i></span>
+      <div>
+        <div class="ns-trust__label"><%= featured.length ? featured.length + '+' : '50+' %> listings</div>
+        <div class="ns-trust__sub">Unique places to stay</div>
+      </div>
     </div>
+    <div class="ns-trust__item">
+      <span class="ns-trust__icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+      <div>
+        <div class="ns-trust__label">UPI &amp; cards</div>
+        <div class="ns-trust__sub">Razorpay checkout</div>
+      </div>
+    </div>
+    <div class="ns-trust__item">
+      <span class="ns-trust__icon"><i class="fa-solid fa-bell"></i></span>
+      <div>
+        <div class="ns-trust__label">Live updates</div>
+        <div class="ns-trust__sub">Booking alerts</div>
+      </div>
+    </div>
+    <div class="ns-trust__item">
+      <span class="ns-trust__icon"><i class="fa-solid fa-heart"></i></span>
+      <div>
+        <div class="ns-trust__label">Wishlists</div>
+        <div class="ns-trust__sub">Save favourites</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <section class="ns-section ns-fade">
+    <div class="ns-section__top">
+      <div>
+        <p class="ns-section__kicker">Browse</p>
+        <h2 class="ns-section__title">Explore by vibe</h2>
+      </div>
+    </div>
+    <div class="ns-cats">
+      <% cats.forEach(cat => { %>
+        <a href="/listings?category=<%= cat.id %>" class="ns-cat">
+          <img src="<%= cat.img %>" alt="" loading="lazy" />
+          <div class="ns-cat__overlay"></div>
+          <span class="ns-cat__label"><%= cat.label %></span>
+        </a>
+      <% }) %>
+    </div>
+  </section>
+
+  <!-- Featured -->
+  <% if (featured.length) { %>
+    <section class="ns-section ns-section--alt ns-fade">
+      <div class="ns-section__top">
+        <div>
+          <p class="ns-section__kicker">Popular now</p>
+          <h2 class="ns-section__title">Featured stays</h2>
+        </div>
+        <a href="/listings" class="ns-section__link">View all <i class="fa-solid fa-arrow-right text-xs"></i></a>
+      </div>
+      <div class="ns-grid">
+        <% featured.slice(0, 8).forEach(listing => { %>
+          <% const saved = wishIds.includes(String(listing._id)); %>
+          <% const avg = calculateAvgRating(listing.reviews); %>
+          <article class="ns-card">
+            <a href="/listings/<%= listing._id %>" class="block">
+              <div class="ns-card__img">
+                <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80' %>"
+                  alt="<%= listing.title %>" loading="lazy" />
+              </div>
+              <div class="ns-card__meta">
+                <p class="ns-card__loc"><%= listing.location %>, <%= listing.country %></p>
+                <% if (avg) { %><span class="text-sm shrink-0"><i class="fa-solid fa-star text-xs"></i> <%= avg %></span><% } %>
+              </div>
+              <p class="ns-card__title"><%= listing.title %></p>
+              <p class="ns-card__price">&#8377;<%= listing.price ? listing.price.toLocaleString('en-IN') : 'N/A' %> <span>/ night</span></p>
+            </a>
+            <% if (currentUser) { %>
+              <button type="button" data-wishlist-toggle data-listing-id="<%= listing._id %>"
+                class="wishlist-heart wishlist-heart--overlay <%= saved ? 'is-saved' : '' %>"
+                aria-pressed="<%= saved ? 'true' : 'false' %>"
+                aria-label="<%= saved ? 'Remove from wishlist' : 'Save to wishlist' %>">
+                <span class="wishlist-heart__ring" aria-hidden="true"></span>
+                <i class="wishlist-heart__icon fa-heart <%= saved ? 'fa-solid' : 'fa-regular' %>" aria-hidden="true"></i>
+              </button>
+            <% } %>
+          </article>
+        <% }) %>
+      </div>
+    </section>
+  <% } %>
+
+  <!-- Editorial -->
+  <section class="ns-section ns-fade">
+    <div class="ns-split">
+      <div class="ns-split__photos">
+        <div class="ns-split__main">
+          <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=900&q=80" alt="" loading="lazy" />
+        </div>
+        <div class="ns-split__accent">
+          <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=600&q=80" alt="" loading="lazy" />
+        </div>
+      </div>
+      <div class="ns-split__body">
+        <p class="ns-section__kicker">Why NullStay</p>
+        <h2 class="ns-section__title" style="margin-bottom:1rem">Travel that feels personal</h2>
+        <p>Real homes with real hosts — not generic hotel rooms. Book in minutes, pay securely, and talk to your host before you arrive.</p>
+        <ul class="ns-perks">
+          <li><i class="fa-solid fa-check"></i> UPI &amp; card payments via Razorpay</li>
+          <li><i class="fa-solid fa-check"></i> Direct guest ↔ host messaging</li>
+          <li><i class="fa-solid fa-check"></i> Wishlists &amp; instant booking alerts</li>
+        </ul>
+        <a href="/listings" class="ns-btn">Browse all stays <i class="fa-solid fa-arrow-right text-sm"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="ns-section ns-section--alt ns-fade">
+    <div class="ns-section__top">
+      <div>
+        <p class="ns-section__kicker">Simple flow</p>
+        <h2 class="ns-section__title">How NullStay works</h2>
+      </div>
+    </div>
+    <div class="ns-steps">
+      <div class="ns-step">
+        <div class="ns-step__num">1</div>
+        <h3>Search &amp; save</h3>
+        <p>Filter by location, price, and vibe. Heart listings to your wishlist.</p>
+      </div>
+      <div class="ns-step">
+        <div class="ns-step__num">2</div>
+        <h3>Book securely</h3>
+        <p>Pay with UPI or card. Your host confirms — you get notified instantly.</p>
+      </div>
+      <div class="ns-step">
+        <div class="ns-step__num">3</div>
+        <h3>Stay &amp; review</h3>
+        <p>Message your host anytime. Share your experience after your trip.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento -->
+  <section class="ns-section ns-fade">
+    <div class="ns-section__top">
+      <div>
+        <p class="ns-section__kicker">Collections</p>
+        <h2 class="ns-section__title">Curated experiences</h2>
+      </div>
+    </div>
+    <div class="ns-bento">
+      <a href="/listings?category=cities" class="ns-bento__item ns-bento__lg">
+        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80" alt="" loading="lazy" />
+        <div class="ns-bento__shade"></div>
+        <div class="ns-bento__text">
+          <p class="ns-bento__tag">Featured</p>
+          <p class="ns-bento__name">City apartments</p>
+        </div>
+      </a>
+      <a href="/listings?category=beachfront" class="ns-bento__item ns-bento__wide">
+        <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=1000&q=80" alt="" loading="lazy" />
+        <div class="ns-bento__shade"></div>
+        <div class="ns-bento__text"><p class="ns-bento__name">Beachfront escapes</p></div>
+      </a>
+      <a href="/listings?category=pools" class="ns-bento__item">
+        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" alt="" loading="lazy" />
+        <div class="ns-bento__shade"></div>
+        <div class="ns-bento__text"><p class="ns-bento__name">Pool villas</p></div>
+      </a>
+      <a href="/listings?category=cabins" class="ns-bento__item">
+        <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80" alt="" loading="lazy" />
+        <div class="ns-bento__shade"></div>
+        <div class="ns-bento__text"><p class="ns-bento__name">Mountain cabins</p></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Host -->
+  <section class="ns-section ns-fade" style="padding-top:0">
+    <div class="ns-host">
+      <div>
+        <h2>Share your space. Earn on NullStay.</h2>
+        <p>List your property, manage reservations, and connect with guests — all in one dashboard.</p>
+      </div>
+      <a href="<%= currentUser ? '/listings/new' : '/signup' %>" class="ns-btn ns-btn--rose">
+        <%= currentUser ? 'List your property' : 'Start hosting' %>
+        <i class="fa-solid fa-arrow-right text-sm"></i>
+      </a>
+    </div>
+  </section>
+
 </div>

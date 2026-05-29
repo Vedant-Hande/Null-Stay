@@ -153,6 +153,7 @@ export async function sendBookingCreatedEmails({ booking, listing, guestUser }) 
     tasks.push(
       sendMail({
         to: guestEmail,
+        replyTo: host?.email || undefined,
         subject: isConfirmed
           ? `Booking confirmed — ${listing.title}`
           : `Request sent — ${listing.title}`,
@@ -178,6 +179,7 @@ export async function sendBookingCreatedEmails({ booking, listing, guestUser }) 
     tasks.push(
       sendMail({
         to: host.email,
+        replyTo: guestEmail || undefined,
         subject: isConfirmed
           ? `New reservation — ${listing.title}`
           : `New booking request — ${listing.title}`,
@@ -219,6 +221,7 @@ export async function sendBookingCancelledEmails({ booking, listing, guestUser }
     tasks.push(
       sendMail({
         to: guestEmail,
+        replyTo: host?.email || undefined,
         subject: `Trip cancelled — ${listing.title}`,
         html: emailLayout({
           kicker: "Cancellation",
@@ -238,6 +241,7 @@ export async function sendBookingCancelledEmails({ booking, listing, guestUser }
     tasks.push(
       sendMail({
         to: host.email,
+        replyTo: guestEmail || undefined,
         subject: `Booking cancelled — ${listing.title}`,
         html: emailLayout({
           kicker: "Cancellation",
@@ -259,5 +263,64 @@ export async function sendBookingCancelledEmails({ booking, listing, guestUser }
         console.error("[mail] booking cancelled email failed:", r.reason?.message);
       }
     });
+  });
+}
+
+export async function sendBookingAcceptedEmails({ booking, listing }) {
+  const base = appBaseUrl();
+  const guest = await userEmail(booking.guest);
+  const hostId = listing.owner?._id ?? listing.owner;
+  const host = await userEmail(hostId);
+  if (!guest?.email) return;
+
+  const guestName = guest.username || "Guest";
+  const details = bookingDetailsHtml({ listing, booking, guestName });
+
+  await sendMail({
+    to: guest.email,
+    replyTo: host?.email || undefined,
+    subject: `Request accepted — ${listing.title}`,
+    html: emailLayout({
+      kicker: "Request accepted",
+      heading: "Your booking was accepted",
+      body: `
+        <p style="margin:0 0 16px;">Hi <strong>${escapeHtml(guestName)}</strong>,</p>
+        <p style="margin:0 0 20px;">Great news — <strong>${escapeHtml(host?.username || "your host")}</strong> accepted your request. Your stay is confirmed.</p>
+        ${details}`,
+      ctaLabel: "View booking",
+      ctaUrl: `${base}/bookings/${booking._id}`,
+      footerNote: "Reply to this email to contact your host directly.",
+    }),
+  }).catch((err) => {
+    console.error("[mail] booking accepted email failed:", err.message);
+  });
+}
+
+export async function sendBookingRejectedEmails({ booking, listing }) {
+  const base = appBaseUrl();
+  const guest = await userEmail(booking.guest);
+  const hostId = listing.owner?._id ?? listing.owner;
+  const host = await userEmail(hostId);
+  if (!guest?.email) return;
+
+  const guestName = guest.username || "Guest";
+  const details = bookingDetailsHtml({ listing, booking, guestName });
+
+  await sendMail({
+    to: guest.email,
+    replyTo: host?.email || undefined,
+    subject: `Request declined — ${listing.title}`,
+    html: emailLayout({
+      kicker: "Request declined",
+      heading: "Your booking request was declined",
+      body: `
+        <p style="margin:0 0 16px;">Hi <strong>${escapeHtml(guestName)}</strong>,</p>
+        <p style="margin:0 0 20px;">Unfortunately the host declined your request for this listing. If payment was collected, a refund will be processed.</p>
+        ${details}`,
+      ctaLabel: "Browse listings",
+      ctaUrl: `${base}/listings`,
+    }),
+  }).catch((err) => {
+    console.error("[mail] booking rejected email failed:", err.message);
   });
 }

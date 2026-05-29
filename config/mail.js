@@ -33,7 +33,7 @@ function getTransporter() {
   return transporter;
 }
 
-export async function sendMail({ to, subject, html, text }) {
+export async function sendMail({ to, subject, html, text, replyTo }) {
   if (!to) return { skipped: true, reason: "no_recipient" };
 
   if (!isMailConfigured()) {
@@ -43,13 +43,17 @@ export async function sendMail({ to, subject, html, text }) {
 
   const transport = getTransporter();
   try {
-    const info = await transport.sendMail({
+    const mailOptions = {
       from: getMailFrom(),
       to,
       subject,
       html,
       text: text || html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim(),
-    });
+    };
+    if (replyTo) {
+      mailOptions.replyTo = replyTo;
+    }
+    const info = await transport.sendMail(mailOptions);
     console.log(`[mail] sent → ${to}: ${subject}`);
     return { ok: true, messageId: info.messageId };
   } catch (err) {

@@ -25,9 +25,21 @@
           <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition">
             <i class="fa-solid fa-arrow-up-from-bracket"></i> Share
           </div>
-          <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition">
-            <i class="fa-regular fa-heart"></i> Save
-          </div>
+          <% if (currentUser) { %>
+            <button type="button" data-wishlist-toggle data-listing-id="<%= listing._id %>"
+              class="wishlist-heart wishlist-heart--pill <%= isWishlisted ? 'is-saved' : '' %>"
+              aria-pressed="<%= isWishlisted ? 'true' : 'false' %>"
+              aria-label="<%= isWishlisted ? 'Remove from wishlist' : 'Save to wishlist' %>">
+              <span class="wishlist-heart__ring" aria-hidden="true"></span>
+              <i class="wishlist-heart__icon fa-heart <%= isWishlisted ? 'fa-solid' : 'fa-regular' %>" aria-hidden="true"></i>
+              <span class="wishlist-heart__label" data-wishlist-label><%= isWishlisted ? 'Saved' : 'Save' %></span>
+            </button>
+          <% } else { %>
+            <a href="/login" class="wishlist-heart wishlist-heart--pill">
+              <i class="wishlist-heart__icon fa-regular fa-heart" aria-hidden="true"></i>
+              <span class="wishlist-heart__label">Save</span>
+            </a>
+          <% } %>
         </div>
       </div>
     </div>
@@ -103,6 +115,13 @@
             <%= (listing.owner && listing.owner.username) ? listing.owner.username.charAt(0) : 'V' %>
           </div>
         </div>
+
+        <% if (currentUser && !isOwner && listing.owner?._id) { %>
+          <a href="/messages/<%= listing.owner._id %>/<%= listing._id %>"
+            class="inline-flex items-center gap-2 w-fit px-5 py-2.5 border border-gray-900 rounded-lg font-semibold text-sm hover:bg-gray-50 transition">
+            <i class="fa-regular fa-comment-dots"></i> Message host
+          </a>
+        <% } %>
 
         <!-- Description -->
         <div class="border-b border-gray-200 py-6">

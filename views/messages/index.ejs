@@ -1,0 +1,37 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="max-w-3xl mx-auto">
+  <div class="mb-8">
+    <p class="booking-kicker mb-2">Inbox</p>
+    <h1 class="text-3xl font-semibold tracking-tight text-gray-900">Messages</h1>
+  </div>
+
+  <% if (threads.length) { %>
+    <div class="divide-y divide-gray-100 border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-sm">
+      <% for (const thread of threads) { %>
+        <a href="/messages/<%= thread.other._id %>/<%= thread.listing?._id %>"
+          class="flex items-center gap-4 p-4 hover:bg-gray-50 transition">
+          <div class="w-12 h-12 rounded-full bg-airbnb text-white flex items-center justify-center font-bold uppercase shrink-0">
+            <%= thread.other.username?.charAt(0) || "?" %>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-2">
+              <p class="font-semibold text-gray-900 truncate"><%= thread.other.username %></p>
+              <% if (thread.unread > 0) { %>
+                <span class="text-xs font-bold bg-airbnb text-white px-2 py-0.5 rounded-full"><%= thread.unread %></span>
+              <% } %>
+            </div>
+            <p class="text-sm text-gray-500 truncate"><%= thread.listing?.title || "Listing" %></p>
+            <p class="text-sm text-gray-400 truncate mt-0.5"><%= thread.lastMessage.body %></p>
+          </div>
+        </a>
+      <% } %>
+    </div>
+  <% } else { %>
+    <div class="text-center py-16 text-gray-500">
+      <i class="fa-regular fa-comment-dots text-5xl mb-4 text-gray-300"></i>
+      <h2 class="text-xl font-semibold text-gray-900">No messages yet</h2>
+      <p class="mt-2">Message a host from a listing page to ask questions before booking.</p>
+    </div>
+  <% } %>
+</div>

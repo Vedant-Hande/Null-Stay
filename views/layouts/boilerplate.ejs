@@ -9,10 +9,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/utilities.css">
     <link rel="stylesheet" href="/css/notifications.css">
+    <link rel="stylesheet" href="/css/wishlist.css">
+    <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>
+    <link rel="stylesheet" href="/css/home.css">
+    <% } %>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -59,6 +63,49 @@
     <!-- Search Backdrop Overlay -->
     <div id="searchBackdrop" class="fixed inset-0 bg-black/40 z-[60] hidden transition-opacity duration-300 opacity-0">
     </div>
+    <!-- Expanded Search Panel -->
+    <div id="expandedSearch"
+        class="fixed top-24 left-1/2 -translate-x-1/2 z-[70] w-[95%] max-w-[850px] hidden opacity-0 scale-95 transition-all duration-300">
+        <form action="/listings" method="GET"
+            class="bg-white rounded-[32px] shadow-[0_6px_20px_rgba(0,0,0,0.2)] border border-gray-200 p-2 flex flex-col md:flex-row items-stretch md:items-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
+            <div class="flex-1 px-6 py-4">
+                <label class="block text-xs font-bold text-gray-800 mb-1">Where</label>
+                <input type="text" name="q" placeholder="Search destinations"
+                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.q ? searchQuery.q : '' %>"
+                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
+            </div>
+            <div class="flex-1 px-6 py-4">
+                <label class="block text-xs font-bold text-gray-800 mb-1">Country</label>
+                <input type="text" name="country" placeholder="Any country"
+                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.country ? searchQuery.country : '' %>"
+                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
+            </div>
+            <div class="px-6 py-4 w-full md:w-28">
+                <label class="block text-xs font-bold text-gray-800 mb-1">Min price</label>
+                <input type="number" name="minPrice" min="0" placeholder="₹"
+                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.minPrice ? searchQuery.minPrice : '' %>"
+                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
+            </div>
+            <div class="px-6 py-4 w-full md:w-28">
+                <label class="block text-xs font-bold text-gray-800 mb-1">Max price</label>
+                <input type="number" name="maxPrice" min="0" placeholder="₹"
+                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.maxPrice ? searchQuery.maxPrice : '' %>"
+                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
+            </div>
+            <div class="px-6 py-4 w-full md:w-24">
+                <label class="block text-xs font-bold text-gray-800 mb-1">Guests</label>
+                <input type="number" name="guests" min="1" placeholder="1"
+                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.guests ? searchQuery.guests : '' %>"
+                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
+            </div>
+            <div class="p-2 flex items-center justify-center">
+                <button type="submit"
+                    class="bg-airbnb hover:bg-rose-600 text-white rounded-full p-4 flex items-center justify-center transition shadow-md">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </form>
+    </div>
     <!-- Navbar -->
     <nav class="sticky top-0 bg-white z-50 border-b border-gray-200">
         <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
@@ -66,7 +113,7 @@
 
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="/listings" class="flex items-center text-airbnb text-2xl font-bold">
+                    <a href="/" class="flex items-center text-airbnb text-2xl font-bold">
                         <i class="fa-brands fa-airbnb text-3xl me-2"></i>
                         <span class="hidden lg:block">NullStay</span>
                     </a>
@@ -141,7 +188,7 @@
                                         <a href="#" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Help
                                             Center</a>
                                         <% } else { %>
-                                            <a href="#"
+                                            <a href="/messages"
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Messages</a>
                                             <a href="/notifications"
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition flex items-center justify-between gap-2">
@@ -152,7 +199,7 @@
                                             </a>
                                             <a href="/bookings/trips"
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Trips</a>
-                                            <a href="#"
+                                            <a href="/wishlists"
                                                 class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Wishlists</a>
                                             <div class="border-t border-gray-200 my-1"></div>
                                             <a href="/listings/new"
@@ -179,36 +226,36 @@
         <% if (typeof isListingsPage !== "undefined" && isListingsPage) { %>
         <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-2">
             <div class="flex flex-row items-center justify-between overflow-x-auto gap-8 pt-1 hide-scrollbar">
-                <div
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 border-neutral-800 text-neutral-800 hover:text-neutral-800 cursor-pointer opacity-100 min-w-max">
+                <a href="/listings?category=pools"
+                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'pools' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
                     <i class="fa-solid fa-water text-lg"></i>
                     <div class="text-xs font-medium">Amazing pools</div>
-                </div>
-                <div
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                </a>
+                <a href="/listings?category=beachfront"
+                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'beachfront' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
                     <i class="fa-solid fa-umbrella-beach text-lg"></i>
                     <div class="text-xs font-medium">Beachfront</div>
-                </div>
-                <div
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                </a>
+                <a href="/listings?category=castles"
+                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'castles' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
                     <i class="fa-brands fa-fort-awesome text-lg"></i>
                     <div class="text-xs font-medium">Castles</div>
-                </div>
-                <div
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                </a>
+                <a href="/listings?category=treehouses"
+                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'treehouses' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
                     <i class="fa-solid fa-tree text-lg"></i>
                     <div class="text-xs font-medium">Treehouses</div>
-                </div>
-                <div
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                </a>
+                <a href="/listings?category=cabins"
+                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'cabins' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
                     <i class="fa-solid fa-house-user text-lg"></i>
                     <div class="text-xs font-medium">Cabins</div>
-                </div>
-                <div
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-800 cursor-pointer opacity-70 min-w-max transition">
+                </a>
+                <a href="/listings?category=cities"
+                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'cities' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
                     <i class="fa-solid fa-city text-lg"></i>
                     <div class="text-xs font-medium">Iconic cities</div>
-                </div>
+                </a>
             </div>
             <style>
                 .hide-scrollbar::-webkit-scrollbar {
@@ -372,6 +419,9 @@
     <script src="/js/nullstay-ui.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/newListing.js"></script>
+    <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>
+    <script src="/js/home.js"></script>
+    <% } %>
     <% if (currentUser) { %>
     <script>window.__NULLSTAY_USER_ID__ = "<%= currentUser._id %>";</script>
     <% if (typeof webPushEnabled !== 'undefined' && webPushEnabled && vapidPublicKey) { %>
@@ -379,6 +429,8 @@
     <% } %>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/notifications.js"></script>
+    <script src="/js/messages.js"></script>
+    <script src="/js/wishlist.js"></script>
     <% } %>
 </body>
 

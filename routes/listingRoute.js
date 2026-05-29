@@ -30,6 +30,7 @@ import {
   isRazorpayConfigured,
   isRazorpayLiveMode,
 } from "../config/razorpay.js";
+import { buildListingFilter } from "../utils/listingSearch.js";
 import {
   notifyAfterListingCreated,
   notifyAfterListingDeleted,
@@ -37,6 +38,7 @@ import {
   notifyAfterReviewCreated,
   notifyAfterReviewDeleted,
 } from "../utils/activityNotifications.js";
+import Wishlist from "../models/wishlist.js";
 
 async function uploadCoverImage(file) {
   const result = await uploadToCloudinary(file.buffer);
@@ -73,8 +75,21 @@ const router = express.Router();
 router.get(
   "/",
   wrapAsync(async (req, res, next) => {
-    const allListing = await listings.find({}).populate("reviews");
-    res.render("listings/listings", { allListing });
+    const filter = buildListingFilter(req.query);
+    const allListing = await listings.find(filter).populate("reviews");
+    res.locals.searchQuery = req.query;
+
+    let wishlistedIds = [];
+    if (req.user) {
+      const rows = await Wishlist.find({ user: req.user._id }).select("listing");
+      wishlistedIds = rows.map((w) => String(w.listing));
+    }
+
+    res.render("listings/listings.ejs", {
+      allListing,
+      searchQuery: req.query,
+      wishlistedIds,
+    });
   }),
 );
 
@@ -321,11 +336,19 @@ router.get(
       (listing.owner._id?.equals(req.user._id) ||
         listing.owner.toString() === req.user._id.toString());
 
+    let isWishlisted = false;
+    if (req.user) {
+      isWishlisted = Boolean(
+        await Wishlist.findOne({ user: req.user._id, listing: listing._id }),
+      );
+    }
+
     res.render("listings/show.ejs", {
       listing,
       avgRating,
       fees,
       isOwner,
+      isWishlisted,
     });
   }),
 );

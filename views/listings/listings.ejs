@@ -1,20 +1,39 @@
 <% layout("/layouts/boilerplate") %>
 
+<%
+  const sq = typeof searchQuery !== "undefined" ? searchQuery : {};
+  const hasFilters = sq.q || sq.country || sq.minPrice || sq.maxPrice || sq.guests || sq.category;
+  const wishIds = typeof wishlistedIds !== "undefined" ? wishlistedIds : [];
+%>
+
+<% if (hasFilters) { %>
+  <div class="mb-6 flex flex-wrap items-center gap-3 text-sm">
+    <span class="font-semibold text-gray-900"><%= allListing.length %> result<%= allListing.length === 1 ? "" : "s" %></span>
+    <% if (sq.q) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700">“<%= sq.q %>”</span><% } %>
+    <% if (sq.country) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700"><%= sq.country %></span><% } %>
+    <% if (sq.category) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700 capitalize"><%= sq.category %></span><% } %>
+    <% if (sq.guests) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700"><%= sq.guests %>+ guests</span><% } %>
+    <% if (sq.minPrice || sq.maxPrice) { %>
+      <span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700">
+        ₹<%= sq.minPrice || "0" %> – <%= sq.maxPrice || "∞" %>
+      </span>
+    <% } %>
+    <a href="/listings" class="text-airbnb font-medium hover:underline">Clear all</a>
+  </div>
+<% } %>
+
   <!-- Listings Grid -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
     <% for(let listing of allListing) { %>
-      <div class="col-span-1 group cursor-pointer">
-        <a href="/listings/<%= listing._id %>" class="block">
+      <% const saved = wishIds.includes(String(listing._id)); %>
+      <div class="col-span-1 group relative">
+        <a href="/listings/<%= listing._id %>" class="block cursor-pointer">
           <!-- Image Container -->
           <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3">
             <img
               src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' %>"
               alt="<%= listing.title %>"
               class="object-cover h-full w-full group-hover:scale-105 transition duration-300">
-            <!-- Heart Icon -->
-            <div class="absolute top-3 right-3 text-white">
-              <i class="fa-regular fa-heart text-2xl drop-shadow-md transition"></i>
-            </div>
           </div>
 
           <!-- Text Info -->
@@ -42,6 +61,15 @@
             </div>
           </div>
         </a>
+        <% if (currentUser) { %>
+          <button type="button" data-wishlist-toggle data-listing-id="<%= listing._id %>"
+            class="wishlist-heart wishlist-heart--overlay absolute top-3 right-3 z-10 <%= saved ? 'is-saved' : '' %>"
+            aria-pressed="<%= saved ? 'true' : 'false' %>"
+            aria-label="<%= saved ? 'Remove from wishlist' : 'Save to wishlist' %>">
+            <span class="wishlist-heart__ring" aria-hidden="true"></span>
+            <i class="wishlist-heart__icon fa-heart <%= saved ? 'fa-solid' : 'fa-regular' %>" aria-hidden="true"></i>
+          </button>
+        <% } %>
       </div>
       <% } %>
   </div>
@@ -49,7 +77,13 @@
   <% if(allListing.length===0) { %>
     <div class="h-[50vh] flex flex-col items-center justify-center text-neutral-500 text-center">
       <i class="fa-solid fa-house-circle-exclamation text-6xl mb-4 text-gray-300"></i>
-      <h2 class="text-2xl font-semibold text-gray-900">No properties found</h2>
-      <p class="mt-2 text-lg font-light">Be the first to add a property to the marketplace.</p>
+      <% if (hasFilters) { %>
+        <h2 class="text-2xl font-semibold text-gray-900">No listings match your search</h2>
+        <p class="mt-2 text-lg font-light">Try different filters or browse all properties.</p>
+        <a href="/listings" class="mt-6 inline-flex items-center gap-2 bg-airbnb text-white px-5 py-3 rounded-xl font-semibold">View all listings</a>
+      <% } else { %>
+        <h2 class="text-2xl font-semibold text-gray-900">No properties found</h2>
+        <p class="mt-2 text-lg font-light">Be the first to add a property to the marketplace.</p>
+      <% } %>
     </div>
     <% } %>

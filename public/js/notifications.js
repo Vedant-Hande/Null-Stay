@@ -416,6 +416,12 @@
 
     socket.on("notification", handleIncoming);
 
+    socket.on("new_message", (payload) => {
+      document.dispatchEvent(
+        new CustomEvent("nullstay:new_message", { detail: payload }),
+      );
+    });
+
     socket.on("connect", () => {
       refreshCount();
     });

@@ -39,6 +39,9 @@ import calculateAvgRating from "./utils/calculateAvgRating.js";
 import * as bookingDisplay from "./utils/bookingDisplay.js";
 
 import User from "./models/user.js";
+import listings from "./models/listing.js";
+import Wishlist from "./models/wishlist.js";
+import wrapAsync from "./utils/wrapAsync.js";
 
 import userRoute from "./routes/userRoute.js";
 
@@ -48,10 +51,13 @@ import notificationRoute from "./routes/notificationRoute.js";
 
 import { getUnreadCount } from "./utils/notifyUser.js";
 import { pruneExpiredNotificationData } from "./utils/notificationRetention.js";
+import { pruneOldCancelledBookings } from "./utils/bookingRetention.js";
 
 import { initSocket } from "./config/socket.js";
 
 import pushRoute from "./routes/pushRoute.js";
+import wishlistRoute from "./routes/wishlistRoute.js";
+import messageRoute from "./routes/messageRoute.js";
 
 import {
   getVapidPublicKey,
@@ -192,12 +198,12 @@ app.use(async (req, res, next) => {
   res.locals.vapidPublicKey = getVapidPublicKey();
 
   res.locals.isListingsPage =
-
     req.originalUrl === "/listings" ||
-
     req.originalUrl === "/listings/" ||
-
-    req.originalUrl === "/";
+    req.originalUrl.startsWith("/listings?");
+  res.locals.isHomePage =
+    req.originalUrl === "/" || req.originalUrl === "";
+  res.locals.searchQuery = res.locals.searchQuery || {};
 
   if (req.user) {
 
@@ -219,11 +225,21 @@ app.use(async (req, res, next) => {
 
 
 
-app.get("/", (req, res) => {
+app.get("/", wrapAsync(async (req, res) => {
+  const featuredListings = await listings
+    .find()
+    .sort({ createdAt: -1 })
+    .limit(8)
+    .populate("reviews");
 
-  res.render("home.ejs");
+  let wishlistedIds = [];
+  if (req.user) {
+    const rows = await Wishlist.find({ user: req.user._id }).select("listing");
+    wishlistedIds = rows.map((w) => String(w.listing));
+  }
 
-});
+  res.render("home.ejs", { featuredListings, wishlistedIds });
+}));
 
 
 
@@ -240,6 +256,8 @@ app.use("/bookings", bookingRoute);
 app.use("/notifications", notificationRoute);
 
 app.use("/push", pushRoute);
+app.use("/wishlists", wishlistRoute);
+app.use("/messages", messageRoute);
 
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
@@ -284,6 +302,7 @@ server.listen(port, () => {
 
   setInterval(() => {
     pruneExpiredNotificationData().catch(() => {});
+    pruneOldCancelledBookings().catch(() => {});
   }, 60 * 60 * 1000);
 });
 

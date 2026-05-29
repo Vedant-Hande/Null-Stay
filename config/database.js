@@ -12,6 +12,7 @@ import {
   ensureRetentionIndexes,
   pruneExpiredNotificationData,
 } from "../utils/notificationRetention.js";
+import { pruneOldCancelledBookings } from "../utils/bookingRetention.js";
 
 const connectDB = async () => {
   try {
@@ -24,6 +25,12 @@ const connectDB = async () => {
       if (pruned.notificationsDeleted || pruned.pushSubscriptionsDeleted) {
         console.log(
           `Notification retention: pruned ${pruned.notificationsDeleted} notifications, ${pruned.pushSubscriptionsDeleted} push subscriptions (older than 12h)`,
+        );
+      }
+      const bookingPruned = await pruneOldCancelledBookings();
+      if (bookingPruned.bookingsDeleted) {
+        console.log(
+          `Booking retention: pruned ${bookingPruned.bookingsDeleted} cancelled bookings (older than 15 days)`,
         );
       }
     } catch (retentionErr) {

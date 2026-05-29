@@ -4,6 +4,8 @@ import { notifyUser } from "./notifyUser.js";
 import {
   sendBookingCreatedEmails,
   sendBookingCancelledEmails,
+  sendBookingAcceptedEmails,
+  sendBookingRejectedEmails,
 } from "./bookingEmails.js";
 
 function hostId(listing) {
@@ -95,6 +97,10 @@ export async function notifyAfterBookingAccepted({
     bookingId: booking._id,
     listingId: listing?._id,
   });
+
+  sendBookingAcceptedEmails({ booking, listing }).catch((err) => {
+    console.error("[mail] booking accepted:", err.message);
+  });
 }
 
 export async function notifyAfterBookingRejected({
@@ -112,6 +118,10 @@ export async function notifyAfterBookingRejected({
     link: "/bookings/trips",
     bookingId: booking._id,
     listingId: listing?._id,
+  });
+
+  sendBookingRejectedEmails({ booking, listing }).catch((err) => {
+    console.error("[mail] booking rejected:", err.message);
   });
 }
 

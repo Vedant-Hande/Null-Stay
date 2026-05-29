@@ -92,6 +92,10 @@ const bookingSchema = new Schema(
       sparse: true,
       unique: true,
     },
+    cancelledAt: {
+      type: Date,
+      index: true,
+    },
   },
   { timestamps: true },
 );
