@@ -1,8 +1,8 @@
 <%# locals: tone ('confirmed'|'pending'|'neutral'), title, subtitle %>
-<header class="booking-page-header booking-page-header--<%= tone %> mb-10">
-  <p class="booking-page-header__kicker"><%= typeof kicker !== 'undefined' ? kicker : 'Reservation' %></p>
+<header class="booking-page-header booking-page-header--<%= tone %> padding-bottom-large margin-bottom-xl">
+  <p class="booking-page-header__kicker margin-bottom-small"><%= typeof kicker !== 'undefined' ? kicker : 'Reservation' %></p>
   <h1 class="booking-page-header__title"><%= title %></h1>
   <% if (typeof subtitle !== 'undefined' && subtitle) { %>
-    <p class="booking-page-header__subtitle"><%= subtitle %></p>
+    <p class="booking-page-header__subtitle margin-top-small"><%= subtitle %></p>
   <% } %>
 </header>

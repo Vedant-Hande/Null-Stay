@@ -1,75 +1,75 @@
 <% layout("/layouts/boilerplate") %>
 <%- include('../includes/booking/pageShellStart.ejs') %>
 
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div class="u-flex u-flex-col md:flex-row md:items-end u-justify-between gap-medium margin-bottom-xl">
   <div>
-    <p class="booking-kicker">Hosting</p>
+    <p class="booking-kicker margin-bottom-small">Hosting</p>
     <h1 class="text-3xl font-semibold tracking-tight text-gray-900">Reservations</h1>
-    <p class="text-gray-500 mt-1">Manage guest bookings across your listings</p>
+    <p class="text-gray-500 margin-top-xs">Manage guest bookings across your listings</p>
   </div>
   <a href="/listings/new"
-    class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-sm font-bold rounded-xl hover:bg-gray-50 transition">
+    class="u-inline-block gap-small padding-x-large padding-y-small border border-gray-200 text-sm font-bold rounded-xl hover:bg-gray-50 transition">
     <i class="fa-solid fa-plus"></i> Add listing
   </a>
 </div>
 
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
-  <div class="booking-stat-pill">
+<div class="u-grid grid-cols-2 md:grid-cols-3 gap-medium margin-bottom-xl">
+  <div class="booking-stat-pill padding-y-medium padding-x-large gap-xs">
     <strong class="<%= stats.pending > 0 ? 'text-amber-600' : '' %>"><%= stats.pending %></strong>
     <span>Pending requests</span>
   </div>
-  <div class="booking-stat-pill">
+  <div class="booking-stat-pill padding-y-medium padding-x-large gap-xs">
     <strong><%= stats.confirmed %></strong>
     <span>Confirmed</span>
   </div>
-  <div class="booking-stat-pill col-span-2 md:col-span-1">
+  <div class="booking-stat-pill padding-y-medium padding-x-large gap-xs col-span-2 md:col-span-1">
     <strong><%= stats.upcoming %></strong>
     <span>Upcoming stays</span>
   </div>
 </div>
 
 <% if (!hostBookings.length) { %>
-  <div class="booking-glass p-16 text-center">
-    <div class="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gray-100 flex items-center justify-center">
+  <div class="booking-glass padding-3xl u-text-center">
+    <div class="w-20 h-20 mx-auto margin-bottom-large rounded-3xl bg-gray-100 u-flex u-items-center u-justify-center">
       <i class="fa-solid fa-calendar-days text-3xl text-gray-400"></i>
     </div>
-    <h2 class="text-xl font-bold text-gray-900 mb-2">No reservations yet</h2>
-    <p class="text-gray-500 mb-6">When guests book your properties, they'll appear here.</p>
+    <h2 class="text-xl font-bold text-gray-900 margin-bottom-small">No reservations yet</h2>
+    <p class="text-gray-500 margin-bottom-large">When guests book your properties, they'll appear here.</p>
   </div>
 <% } else { %>
-  <div class="flex flex-col gap-5">
+  <div class="u-flex u-flex-col gap-large">
     <% hostBookings.forEach((b) => { %>
-      <article class="booking-glass p-5 md:p-6 <%= b.status === 'pending' ? 'border-l-[3px] border-l-[#ff385c]' : '' %>">
-        <div class="flex flex-col lg:flex-row lg:items-center gap-5">
-          <div class="flex gap-4 flex-1 min-w-0">
+      <article class="booking-glass padding-large md:p-8 <%= b.status === 'pending' ? 'border-l-[3px] border-l-[#ff385c]' : '' %>">
+        <div class="u-flex u-flex-col lg:flex-row lg:items-center gap-large">
+          <div class="u-flex gap-medium u-flex-1 min-w-0">
             <% if (b.listing?.image?.url) { %>
               <img src="<%= b.listing.image.url %>" alt="" class="w-20 h-20 rounded-xl object-cover shrink-0" />
             <% } %>
             <div class="min-w-0">
-              <div class="flex items-center gap-2 flex-wrap mb-1">
+              <div class="u-flex u-items-center gap-small u-flex-wrap margin-bottom-xs">
                 <h3 class="font-bold text-gray-900 truncate"><%= b.listing?.title || 'Listing' %></h3>
                 <%- include('../includes/booking/statusBadge.ejs', { status: b.status }) %>
               </div>
               <p class="text-sm text-gray-600">
-                <i class="fa-solid fa-user text-gray-400 mr-1"></i>
+                <i class="fa-solid fa-user text-gray-400 margin-right-xs"></i>
                 <%= b.guest?.username || 'Guest' %>
-                <span class="text-gray-300 mx-2">·</span>
+                <span class="text-gray-300 margin-x-small">·</span>
                 <%= bookingDisplay.bookingDateRange(b.checkIn, b.checkOut) %>
               </p>
-              <p class="text-sm text-gray-500 mt-1">
+              <p class="text-sm text-gray-500 margin-top-xs">
                 <%= b.guests %> guests · <%= b.nights %> nights · <%= bookingDisplay.formatInr(b.total) %>
               </p>
               <% if (b.confirmationCode) { %>
-                <p class="text-xs font-mono text-gray-400 mt-1"><%= b.confirmationCode %></p>
+                <p class="text-xs font-mono text-gray-400 margin-top-xs"><%= b.confirmationCode %></p>
               <% } %>
             </div>
           </div>
 
-          <div class="flex gap-2 shrink-0 flex-wrap">
+          <div class="u-flex gap-small shrink-0 u-flex-wrap">
             <% if (b.status === 'pending') { %>
               <form action="/bookings/<%= b._id %>/accept" method="POST">
                 <button type="submit"
-                  class="px-5 py-2.5 bg-gray-900 hover:bg-black text-white text-sm font-bold rounded-xl transition">
+                  class="padding-x-large padding-y-small bg-gray-900 hover:bg-black text-white text-sm font-bold rounded-xl transition">
                   Accept
                 </button>
               </form>
@@ -79,13 +79,13 @@
                 data-confirm-ok="Decline"
                 data-confirm-danger="true">
                 <button type="submit"
-                  class="px-5 py-2.5 border border-gray-200 text-sm font-bold rounded-xl hover:bg-gray-50 text-gray-700 transition">
+                  class="padding-x-large padding-y-small border border-gray-200 text-sm font-bold rounded-xl hover:bg-gray-50 text-gray-700 transition">
                   Decline
                 </button>
               </form>
             <% } else { %>
               <a href="/bookings/<%= b._id %>"
-                class="px-5 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-xl hover:bg-black transition">
+                class="padding-x-large padding-y-small bg-gray-900 text-white text-sm font-bold rounded-xl hover:bg-black transition">
                 View details
               </a>
             <% } %>
@@ -97,3 +97,4 @@
 <% } %>
 
 <%- include('../includes/booking/pageShellEnd.ejs') %>
+

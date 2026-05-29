@@ -1,4 +1,6 @@
 /* NullStay booking experience */
+@import url("utilities.css");
+
 .booking-page {
   font-family: "Inter", sans-serif;
 }
@@ -10,7 +12,6 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #717171;
-  margin-bottom: 0.5rem;
 }
 
 /* Reservation status — typographic, no icons */
@@ -20,7 +21,6 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   color: #222;
-  padding-left: 0.65rem;
   border-left: 3px solid #ddd;
   line-height: 1.3;
 }
@@ -42,7 +42,6 @@
 
 /* Confirmation / request page header — no icon circles */
 .booking-page-header {
-  padding-bottom: 1.5rem;
   border-bottom: 1px solid #ebebeb;
 }
 
@@ -52,7 +51,6 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #717171;
-  margin-bottom: 0.75rem;
 }
 
 .booking-page-header__title {
@@ -64,7 +62,6 @@
 }
 
 .booking-page-header__subtitle {
-  margin-top: 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   color: #717171;
@@ -143,7 +140,6 @@
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 12px;
-  padding: 1.5rem;
   box-shadow:
     0 6px 16px rgba(0, 0, 0, 0.08),
     0 0 0 1px rgba(0, 0, 0, 0.04);
@@ -153,8 +149,6 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
 }
 
 .booking-card__price {
@@ -190,8 +184,6 @@
 
 .booking-card__owner-note {
   display: flex;
-  gap: 0.75rem;
-  padding: 1rem;
   background: #f7f7f7;
   border-radius: 10px;
   font-size: 0.8125rem;
@@ -201,7 +193,6 @@
 
 .booking-card__owner-note i {
   color: #ff385c;
-  margin-top: 0.15rem;
 }
 
 .booking-card__owner-note a {
@@ -214,14 +205,12 @@
   position: relative;
   border: 1px solid #b0b0b0;
   border-radius: 8px;
-  margin-bottom: 0;
   transition: box-shadow 0.2s, border-color 0.2s;
   overflow: visible;
   z-index: 1;
 }
 
 .booking-card__fields--calendar-open {
-  margin-bottom: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-color: #ebebeb;
@@ -260,8 +249,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.15rem;
-  padding: 0.65rem 0.75rem;
   min-height: 3.5rem;
   background: transparent;
   border: none;
@@ -331,15 +318,12 @@
   right: -1px;
   top: 100%;
   z-index: 50;
-  padding-top: 4px;
 }
 
 .booking-card__guest-menu-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -355,13 +339,11 @@
 .booking-card__guest-sub {
   font-size: 0.75rem;
   color: #717171;
-  margin-top: 0.125rem;
 }
 
 .booking-card__stepper {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
 }
 
 .booking-card__stepper-btn {
@@ -398,7 +380,6 @@
 
 .booking-card__reserve {
   width: 100%;
-  padding: 0.875rem 1rem;
   border: none;
   border-radius: 8px;
   background: linear-gradient(to right, #ff385c, #e31c5f);
@@ -431,13 +412,10 @@
   text-align: center;
   font-size: 0.8125rem;
   color: #717171;
-  margin-top: 0.75rem;
   font-weight: 400;
 }
 
 .booking-card__pricing {
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
   border-top: 1px solid #ebebeb;
   animation: booking-fade-in 0.25s ease;
 }
@@ -465,8 +443,6 @@
 .booking-card__total {
   display: flex;
   justify-content: space-between;
-  margin-top: 1rem;
-  padding-top: 1rem;
   border-top: 1px solid #ebebeb;
   font-size: 1rem;
   font-weight: 600;
@@ -477,8 +453,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  margin-top: 1rem;
   font-size: 0.875rem;
   color: #717171;
   text-align: center;
@@ -528,7 +502,6 @@
   background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
   border-radius: 1rem;
   color: #fff;
-  padding: 1.25rem;
 }
 
 .booking-toast {
@@ -537,7 +510,6 @@
   left: 50%;
   transform: translateX(-50%) translateY(120%);
   z-index: 200;
-  padding: 0.85rem 1.25rem;
   background: #111827;
   color: #fff;
   border-radius: 0.75rem;
@@ -558,8 +530,6 @@
 .booking-stat-pill {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  padding: 1rem 1.25rem;
   background: #fafafa;
   border: 1px solid #f3f4f6;
   border-radius: 1rem;
@@ -592,8 +562,6 @@
   font-size: 1.05rem;
   font-weight: 700;
   color: #111827;
-  padding-top: 1rem;
-  margin-top: 0.5rem;
   border-top: 1px solid #e5e7eb;
 }
 

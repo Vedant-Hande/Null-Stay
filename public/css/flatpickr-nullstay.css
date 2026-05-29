@@ -4,8 +4,6 @@
  */
 
 #bookingCard .booking-card__calendar {
-  margin-bottom: 1rem;
-  padding: 1rem 1rem 0.75rem;
   background: #fff;
   border: 1px solid #ddd;
   border-top: 1px solid #ebebeb;
@@ -21,8 +19,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.75rem;
   border-bottom: 1px solid #ebebeb;
 }
 
