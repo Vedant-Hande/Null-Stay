@@ -34,8 +34,8 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^9.0.3",
+    "razorpay": "^2.9.6",
     "socket.io": "^4.8.3",
-    "stripe": "^22.2.0",
     "web-push": "^3.6.7"
   },
   "devDependencies": {

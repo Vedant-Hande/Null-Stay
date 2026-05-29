@@ -100,12 +100,12 @@ Want to run Null Stay locally? Follow these steps:
    DB_URL=mongodb://127.0.0.1:27017/null-stay
    SESSION_SECRET=your_session_secret
 
-   # Stripe (test keys from https://dashboard.stripe.com/test/apikeys)
-   STRIPE_SECRET_KEY=sk_test_...
-   STRIPE_PUBLISHABLE_KEY=pk_test_...
-   STRIPE_CURRENCY=inr
+   # Razorpay (keys from https://dashboard.razorpay.com/app/keys)
+   RAZORPAY_KEY_ID=rzp_test_...
+   RAZORPAY_KEY_SECRET=your_key_secret
+   RAZORPAY_CURRENCY=INR
    ```
-   Without Stripe keys, checkout uses **demo mode** (fake card form, no real charge).
+   Without Razorpay keys, checkout uses **demo mode** (fake card form, no real charge).
 
 4. **Start the development server**
    ```bash
@@ -121,7 +121,7 @@ Want to run Null Stay locally? Follow these steps:
 ## 🗺️ Roadmap & Future Enhancements
 
 We are continuously working to make Null Stay the ultimate booking platform. Upcoming features include:
-- **Stripe payments**: Checkout uses Stripe Payment Intents when API keys are configured; refunds on cancel/decline.
+- **Razorpay payments**: Checkout uses Razorpay (UPI QR, cards, netbanking) when API keys are configured; refunds on cancel/decline.
 - **Double-Booking Prevention Engine**: Real-time calendar synchronization to lock dates.
 - **Authentication & Authorization**: Role-based access for Hosts vs. Guests using Passport.js.
 - **AI-Powered "Vibe" Search**: Natural language search using vector embeddings (e.g., *"Quiet cabin in the snow"*).

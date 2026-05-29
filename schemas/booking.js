@@ -23,10 +23,16 @@ const bookingBaseFields = {
   }),
 };
 
-export const bookingCreateStripeSchema = Joi.object({
+export const bookingCreateRazorpaySchema = Joi.object({
   ...bookingBaseFields,
-  paymentIntentId: Joi.string().trim().required().messages({
+  razorpayOrderId: Joi.string().trim().required().messages({
+    "any.required": "Payment order is required",
+  }),
+  razorpayPaymentId: Joi.string().trim().required().messages({
     "any.required": "Payment is required",
+  }),
+  razorpaySignature: Joi.string().trim().required().messages({
+    "any.required": "Payment signature is required",
   }),
 });
 
@@ -58,12 +64,12 @@ export const bookingCreateDemoSchema = Joi.object({
   }),
 });
 
-export const bookingPaymentIntentSchema = Joi.object({
+export const bookingRazorpayOrderSchema = Joi.object({
   listingId: bookingBaseFields.listingId,
   checkIn: bookingBaseFields.checkIn,
   checkOut: bookingBaseFields.checkOut,
   guests: bookingBaseFields.guests,
 });
 
-/** @deprecated use bookingCreateStripeSchema or bookingCreateDemoSchema */
+/** @deprecated use bookingCreateRazorpaySchema or bookingCreateDemoSchema */
 export const bookingCreateSchema = bookingCreateDemoSchema;

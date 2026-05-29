@@ -4,7 +4,7 @@
 
   const submitBtn = document.getElementById("checkoutSubmit");
   const errorEl = document.getElementById("checkoutPaymentError");
-  const stripeEnabled = form.dataset.stripeEnabled === "true";
+  const razorpayEnabled = form.dataset.razorpayEnabled === "true";
   const submitLabel =
     form.dataset.submitLabel || "Pay and confirm";
   const submitIcon =
@@ -28,17 +28,9 @@
     if (loading) {
       submitBtn.innerHTML =
         '<span class="booking-spinner inline-block mr-2"></span> Processing…';
+    } else {
+      submitBtn.innerHTML = `<span>${submitLabel}</span>${submitIcon}`;
     }
-  }
-
-  function checkoutReturnUrl() {
-    const { listingId, checkIn, checkOut, guests } = form.dataset;
-    const params = new URLSearchParams({
-      checkIn,
-      checkOut,
-      guests,
-    });
-    return `${window.location.origin}/listings/${listingId}/checkout?${params}`;
   }
 
   function formatDemoCardInputs() {
@@ -63,58 +55,19 @@
     }
   }
 
-  async function handleStripeReturn() {
-    const params = new URLSearchParams(window.location.search);
-    const clientSecret = params.get("payment_intent_client_secret");
-    if (!clientSecret || !stripeEnabled) return false;
-
-    const publishableKey = form.dataset.stripeKey;
-    if (!publishableKey || typeof Stripe === "undefined") return false;
-
-    const stripe = Stripe(publishableKey);
-    const { paymentIntent, error } =
-      await stripe.retrievePaymentIntent(clientSecret);
-
-    if (error) {
-      showError(error.message || "Could not verify payment.");
-      return true;
-    }
-
-    if (paymentIntent.status === "succeeded") {
-      document.getElementById("paymentIntentId").value = paymentIntent.id;
-      setLoading(true);
-      form.submit();
-      return true;
-    }
-
-    if (paymentIntent.status === "processing") {
-      showError(
-        "Payment is processing. Refresh this page in a moment to confirm your booking.",
-      );
-      return true;
-    }
-
-    if (paymentIntent.status === "requires_payment_method") {
-      showError("Payment failed or expired. Please choose a method and try again.");
-      return true;
-    }
-
-    return false;
-  }
-
-  async function initStripeCheckout() {
-    const publishableKey = form.dataset.stripeKey;
-    if (!publishableKey || typeof Stripe === "undefined") {
+  async function openRazorpayCheckout() {
+    const key = form.dataset.razorpayKey;
+    if (!key || typeof Razorpay === "undefined") {
       showError("Payment system failed to load. Refresh and try again.");
-      if (submitBtn) submitBtn.disabled = true;
-      return null;
+      return;
     }
 
-    const stripe = Stripe(publishableKey);
-    let clientSecret;
+    setLoading(true);
+    clearError();
 
+    let order;
     try {
-      const res = await fetch("/bookings/payment-intent", {
+      const res = await fetch("/bookings/razorpay-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
@@ -130,92 +83,66 @@
       if (!res.ok) {
         throw new Error(data.error || "Could not start payment.");
       }
-      clientSecret = data.clientSecret;
+      order = data;
     } catch (err) {
+      setLoading(false);
       showError(err.message || "Could not start payment.");
-      if (submitBtn) submitBtn.disabled = true;
-      return null;
+      return;
     }
 
-    const elements = stripe.elements({
-      clientSecret,
-      appearance: {
-        theme: "stripe",
-        variables: {
-          colorPrimary: "#FF385C",
-          borderRadius: "12px",
+    const listingTitle = form.dataset.listingTitle || "NullStay booking";
+    const userName = form.dataset.userName || "";
+    const userEmail = form.dataset.userEmail || "";
+
+    const options = {
+      key,
+      amount: order.amount,
+      currency: order.currency,
+      name: "NullStay",
+      description: order.listingTitle || listingTitle,
+      order_id: order.orderId,
+      prefill: {
+        name: userName,
+        email: userEmail,
+      },
+      theme: { color: "#FF385C" },
+      handler(response) {
+        document.getElementById("razorpayOrderId").value =
+          response.razorpay_order_id;
+        document.getElementById("razorpayPaymentId").value =
+          response.razorpay_payment_id;
+        document.getElementById("razorpaySignature").value =
+          response.razorpay_signature;
+        setLoading(true);
+        form.submit();
+      },
+      modal: {
+        ondismiss() {
+          setLoading(false);
         },
       },
-    });
+    };
 
-    const paymentElement = elements.create("payment", {
-      layout: { type: "tabs" },
+    setLoading(false);
+    const rzp = new Razorpay(options);
+    rzp.on("payment.failed", (response) => {
+      showError(
+        response.error?.description || "Payment failed. Please try again.",
+      );
+      setLoading(false);
     });
-    paymentElement.mount("#payment-element");
-
-    return { stripe, elements };
+    rzp.open();
   }
 
-  if (!stripeEnabled) {
+  if (!razorpayEnabled) {
     formatDemoCardInputs();
     form.addEventListener("submit", () => setLoading(true));
     return;
   }
 
-  let stripeCheckout = null;
-
-  handleStripeReturn().then((handled) => {
-    if (handled) return;
-    initStripeCheckout().then((ctx) => {
-      stripeCheckout = ctx;
-    });
-  });
-
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-    clearError();
-
-    if (!stripeCheckout) {
-      showError("Payment is still loading. Please wait a moment.");
-      return;
-    }
-
-    setLoading(true);
-
-    const { stripe, elements } = stripeCheckout;
-
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      redirect: "if_required",
-      confirmParams: {
-        return_url: checkoutReturnUrl(),
-      },
-    });
-
-    if (error) {
-      setLoading(false);
-      showError(error.message || "Payment failed.");
-      submitBtn.innerHTML = `<span>${submitLabel}</span>${submitIcon}`;
-      return;
-    }
-
-    if (paymentIntent && paymentIntent.status === "succeeded") {
-      document.getElementById("paymentIntentId").value = paymentIntent.id;
-      form.submit();
-      return;
-    }
-
-    if (paymentIntent && paymentIntent.status === "processing") {
-      setLoading(false);
-      showError(
-        "Payment is processing. We'll confirm your booking once UPI completes.",
-      );
-      submitBtn.innerHTML = `<span>${submitLabel}</span>${submitIcon}`;
-      return;
-    }
-
-    setLoading(false);
-    showError("Payment was not completed.");
-    submitBtn.innerHTML = `<span>${submitLabel}</span>${submitIcon}`;
+    if (!form.reportValidity()) return;
+    openRazorpayCheckout();
   });
 })();

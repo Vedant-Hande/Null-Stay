@@ -59,7 +59,7 @@ import {
   isWebPushConfigured,
 } from "./config/webPush.js";
 import { isMailConfigured } from "./config/mail.js";
-import { isStripeConfigured, getStripeModeLabel } from "./config/stripe.js";
+import { isRazorpayConfigured, getRazorpayModeLabel } from "./config/razorpay.js";
 
 import "./config/cloudinary.js";
 
@@ -269,16 +269,16 @@ server.listen(port, () => {
     );
   }
 
-  if (isStripeConfigured()) {
-    const mode = getStripeModeLabel();
+  if (isRazorpayConfigured()) {
+    const mode = getRazorpayModeLabel();
     if (mode === "live") {
-      console.log("Stripe: LIVE — real card and UPI payments enabled");
+      console.log("Razorpay: LIVE — real UPI, card, and netbanking payments enabled");
     } else {
-      console.log("Stripe: TEST — use live keys (sk_live_/pk_live_) for real payments");
+      console.log("Razorpay: TEST — use live keys (rzp_live_) for real payments");
     }
   } else {
     console.log(
-      "Stripe: disabled — add STRIPE_SECRET_KEY and STRIPE_PUBLISHABLE_KEY to .env",
+      "Razorpay: disabled — add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET to .env",
     );
   }
 

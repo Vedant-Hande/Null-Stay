@@ -52,7 +52,7 @@ export const BOOKING_FLASH = {
   PAYMENT_DECLINED:
     "Payment declined. Please try another card or payment method.",
   PAYMENT_FAILED: "Payment could not be completed. Please try again.",
-  STRIPE_NOT_CONFIGURED:
+  RAZORPAY_NOT_CONFIGURED:
     "Online payments are not configured. Contact support or try again later.",
 };
 

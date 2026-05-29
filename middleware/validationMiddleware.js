@@ -3,10 +3,10 @@ import ExpressError from "../utils/ExpressError.js";
 import { reviewSchema } from "../schemas/review.js";
 import {
   bookingCreateDemoSchema,
-  bookingCreateStripeSchema,
-  bookingPaymentIntentSchema,
+  bookingCreateRazorpaySchema,
+  bookingRazorpayOrderSchema,
 } from "../schemas/booking.js";
-import { isStripeConfigured } from "../config/stripe.js";
+import { isRazorpayConfigured } from "../config/razorpay.js";
 
 export const validateListing = (req, res, next) => {
   const { error, value } = listingBodySchema.validate(req.body.listing, {
@@ -35,8 +35,8 @@ export const validateReview = (req, res, next) => {
 };
 
 export const validateBooking = (req, res, next) => {
-  const schema = isStripeConfigured()
-    ? bookingCreateStripeSchema
+  const schema = isRazorpayConfigured()
+    ? bookingCreateRazorpaySchema
     : bookingCreateDemoSchema;
   const { error, value } = schema.validate(req.body, {
     abortEarly: false,
@@ -51,8 +51,8 @@ export const validateBooking = (req, res, next) => {
   next();
 };
 
-export const validateBookingPaymentIntent = (req, res, next) => {
-  const { error, value } = bookingPaymentIntentSchema.validate(req.body, {
+export const validateBookingRazorpayOrder = (req, res, next) => {
+  const { error, value } = bookingRazorpayOrderSchema.validate(req.body, {
     abortEarly: false,
     convert: true,
   });

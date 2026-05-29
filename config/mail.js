@@ -42,13 +42,18 @@ export async function sendMail({ to, subject, html, text }) {
   }
 
   const transport = getTransporter();
-  const info = await transport.sendMail({
-    from: getMailFrom(),
-    to,
-    subject,
-    html,
-    text: text || html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim(),
-  });
-
-  return { ok: true, messageId: info.messageId };
+  try {
+    const info = await transport.sendMail({
+      from: getMailFrom(),
+      to,
+      subject,
+      html,
+      text: text || html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim(),
+    });
+    console.log(`[mail] sent → ${to}: ${subject}`);
+    return { ok: true, messageId: info.messageId };
+  } catch (err) {
+    console.error(`[mail] failed → ${to}: ${err.message}`);
+    throw err;
+  }
 }

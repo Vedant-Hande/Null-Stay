@@ -26,10 +26,10 @@ import {
   validateBookingDates,
 } from "../utils/bookingUtils.js";
 import {
-  getStripePublishableKey,
-  isStripeConfigured,
-  isStripeLiveMode,
-} from "../config/stripe.js";
+  getRazorpayKeyId,
+  isRazorpayConfigured,
+  isRazorpayLiveMode,
+} from "../config/razorpay.js";
 import {
   notifyAfterListingCreated,
   notifyAfterListingDeleted,
@@ -281,9 +281,9 @@ router.get(
       guests,
       totals,
       instantBook: listing.instantBook !== false,
-      stripeEnabled: isStripeConfigured(),
-      stripeLiveMode: isStripeLiveMode(),
-      stripePublishableKey: getStripePublishableKey(),
+      razorpayEnabled: isRazorpayConfigured(),
+      razorpayLiveMode: isRazorpayLiveMode(),
+      razorpayKeyId: getRazorpayKeyId(),
     });
   }),
 );
