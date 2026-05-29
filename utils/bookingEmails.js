@@ -37,13 +37,13 @@ function emailLayout({ kicker, heading, body, ctaLabel, ctaUrl, footerNote }) {
   <title>${escapeHtml(heading)}</title>
 </head>
 <body style="margin:0;padding:0;background:${BRAND.bg};font-family:Inter,Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:${BRAND.bg};padding:32px 16px;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:${BRAND.bg};padding:12px 6px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;width:100%;">
           <!-- Header -->
           <tr>
-            <td style="padding:0 4px 20px;text-align:center;">
+            <td style="padding:0 0 16px;text-align:center;">
               <a href="${appBaseUrl()}/listings" style="text-decoration:none;display:inline-block;">
                 <span style="font-size:22px;font-weight:700;color:${BRAND.rose};letter-spacing:-0.02em;">NullStay</span>
               </a>
@@ -54,20 +54,20 @@ function emailLayout({ kicker, heading, body, ctaLabel, ctaUrl, footerNote }) {
             <td style="background:${BRAND.card};border:1px solid ${BRAND.border};border-radius:20px;box-shadow:0 4px 24px -4px rgba(0,0,0,0.08);overflow:hidden;">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td style="padding:32px 28px 8px;">
+                  <td style="padding:24px 16px 8px;">
                     <p style="margin:0 0 10px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:${BRAND.textMuted};">${escapeHtml(kicker)}</p>
                     <h1 style="margin:0;font-size:26px;font-weight:600;letter-spacing:-0.03em;line-height:1.2;color:${BRAND.text};">${escapeHtml(heading)}</h1>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:16px 28px 28px;color:${BRAND.textBody};font-size:15px;line-height:1.65;">
+                  <td style="padding:12px 16px 20px;color:${BRAND.textBody};font-size:15px;line-height:1.65;">
                     ${body}
                   </td>
                 </tr>
                 ${
                   ctaUrl
                     ? `<tr>
-                  <td style="padding:0 28px 32px;">
+                  <td style="padding:0 16px 24px;">
                     <a href="${escapeHtml(ctaUrl)}" style="display:inline-block;background:${BRAND.rose};color:#ffffff;text-decoration:none;padding:14px 24px;border-radius:12px;font-size:15px;font-weight:700;box-shadow:0 8px 24px -6px rgba(255,56,92,0.55);">${escapeHtml(ctaLabel)}</a>
                   </td>
                 </tr>`
@@ -78,7 +78,7 @@ function emailLayout({ kicker, heading, body, ctaLabel, ctaUrl, footerNote }) {
           </tr>
           <!-- Footer -->
           <tr>
-            <td style="padding:24px 8px 0;text-align:center;">
+            <td style="padding:16px 0 0;text-align:center;">
               <p style="margin:0 0 8px;font-size:12px;line-height:1.5;color:${BRAND.textMuted};">
                 ${escapeHtml(footerNote || "You received this because of activity on your NullStay account.")}
               </p>
@@ -99,7 +99,7 @@ async function userEmail(userId) {
 }
 
 function detailCell(label, value) {
-  return `<td width="50%" style="padding:6px;vertical-align:top;">
+  return `<td width="50%" style="padding:4px;vertical-align:top;">
     <div style="background:#f9fafb;border:1px solid #f3f4f6;border-radius:12px;padding:14px;">
       <p style="margin:0 0 4px;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${BRAND.textMuted};">${escapeHtml(label)}</p>
       <p style="margin:0;font-size:14px;font-weight:600;color:${BRAND.text};">${escapeHtml(value)}</p>
@@ -117,7 +117,7 @@ function bookingDetailsHtml({ listing, booking, guestName, showGuest = false }) 
 
   const imageBlock = imageUrl
     ? `<div style="margin:0 0 20px;border-radius:14px;overflow:hidden;border:1px solid ${BRAND.border};">
-        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}" width="504" style="display:block;width:100%;max-width:100%;height:auto;object-fit:cover;" />
+        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}" width="100%" style="display:block;width:100%;max-width:100%;height:auto;object-fit:cover;" />
       </div>`
     : "";
 
