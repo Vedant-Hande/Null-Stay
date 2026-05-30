@@ -22,13 +22,15 @@ Restart the server after changing env vars.
 
 ## Log levels
 
-| Level | Use for |
-|-------|---------|
-| `error` | Failures, 5xx, uncaught exceptions |
-| `warn` | 4xx, skipped mail, retention issues |
-| `info` | Startup, DB connected, mail sent |
-| `http` | Request line (method, URL, status, ms) |
-| `debug` | Verbose detail (mail skipped, cache) |
+
+| Level   | Use for                                |
+| ------- | -------------------------------------- |
+| `error` | Failures, 5xx, uncaught exceptions     |
+| `warn`  | 4xx, skipped mail, retention issues    |
+| `info`  | Startup, DB connected, mail sent       |
+| `http`  | Request line (method, URL, status, ms) |
+| `debug` | Verbose detail (mail skipped, cache)   |
+
 
 Set `LOG_LEVEL=debug` to see everything; use `error` in production if you only want failures.
 
@@ -63,15 +65,17 @@ Do **not** log passwords, SMTP secrets, or full card data.
 
 ## What is already wired
 
-| Module | Logger name |
-|--------|-------------|
-| App startup | `app` |
-| HTTP requests | `http` |
-| Global errors | `error` |
-| MongoDB | `db` |
-| SMTP | `mail` |
-| Contact form | `support` |
+
+| Module          | Logger name                                    |
+| --------------- | ---------------------------------------------- |
+| App startup     | `app`                                          |
+| HTTP requests   | `http`                                         |
+| Global errors   | `error`                                        |
+| MongoDB         | `db`                                           |
+| SMTP            | `mail`                                         |
+| Contact form    | `support`                                      |
 | Process crashes | `app` (uncaughtException / unhandledRejection) |
+
 
 Files:
 
@@ -82,7 +86,7 @@ Files:
 ## Disable noise
 
 ```env
-LOG_HTTP=false
+p
 ```
 
 Stops per-request logs (still logs errors).
@@ -90,3 +94,4 @@ Stops per-request logs (still logs errors).
 ## Related
 
 - [DEBUGGING_STRATEGY.md](./DEBUGGING_STRATEGY.md) — how to use logs + terminal to find bugs fast
+

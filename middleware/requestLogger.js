@@ -6,8 +6,7 @@ const SKIP_PREFIXES = [
   "/css/",
   "/js/",
   "/img/",
-  "/socket.io/",
-  "/favicon.ico",
+  "/notifications/unread-count",
 ];
 
 function shouldSkipLog(req) {
