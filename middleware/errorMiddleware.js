@@ -12,7 +12,7 @@ export const notFound = (req, res, next) => {
 };
 
 // Global error handler
-export const errorHandler = (err, req, res) => {
+export const errorHandler = (err, req, res, next) => {
   errLog.error(`${req.method} ${req.originalUrl} → ${err.message}`, {
     statusCode: err.statusCode || err.status,
     stack: err.stack,
@@ -103,7 +103,9 @@ export const errorHandler = (err, req, res) => {
   ) {
     statusCode = 500;
     message =
-      "Sorry, there was an error loading the interface. Our engineers have been notified.";
+      process.env.NODE_ENV === "production"
+        ? "Sorry, there was an error loading the interface. Our engineers have been notified."
+        : err.message;
   }
   // Handle HTTP headers already sent errors
   if (err.code === "ERR_HTTP_HEADERS_SENT") {
@@ -126,6 +128,10 @@ export const errorHandler = (err, req, res) => {
   if (err instanceof TypeError || err instanceof ReferenceError) {
     statusCode = 500;
     message = "An unexpected internal error occurred.";
+  }
+
+  if (res.headersSent) {
+    return next(err);
   }
 
   assignSeo(res, buildPrivatePageSeo("Error"));

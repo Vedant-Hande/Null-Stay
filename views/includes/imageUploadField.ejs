@@ -1,6 +1,6 @@
-<% const fieldId=typeof uploadId !==="undefined" ? uploadId : "image" ; const isRequired=typeof required !==="undefined"
-    && required; const existingUrl=typeof currentImageUrl !==="undefined" ? currentImageUrl : "" ; const hintText=typeof
-    hint !==="undefined" ? hint : "JPG, PNG or WEBP · Max 5MB" ; const labelText=typeof label !==="undefined" ? label
+<% const fieldId=typeof uploadId !== 'undefined' ? uploadId : "image" ; const isRequired=typeof required !== 'undefined'
+    && required; const existingUrl=typeof currentImageUrl !== 'undefined' ? currentImageUrl : "" ; const hintText=typeof
+    hint !=="undefined" ? hint : "JPG, PNG or WEBP · Max 5MB" ; const labelText=typeof label !== 'undefined' ? label
     : "Cover Photo" ; %>
     <div class="image-upload-field" data-initial-url="<%= existingUrl %>">
         <p class="text-[10px] uppercase font-bold text-gray-500 mb-3 tracking-wide">

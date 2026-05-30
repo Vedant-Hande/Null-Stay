@@ -30,6 +30,10 @@
                 </p>
             <% } %>
 
+            <% if (typeof stack !== 'undefined' && stack) { %>
+                <pre class="text-left text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-xl p-4 mb-8 max-w-3xl mx-auto overflow-x-auto whitespace-pre-wrap"><%= stack %></pre>
+            <% } %>
+
             <!-- Simplified Action Buttons -->
             <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
                 <a href="/"

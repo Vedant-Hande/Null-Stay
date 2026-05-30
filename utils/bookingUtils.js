@@ -22,9 +22,9 @@ export function calculateNights(checkIn, checkOut) {
 
 export function getListingFees(listing) {
   const cleaningFee =
-    listing.cleaningFee !== null ? listing.cleaningFee : DEFAULT_CLEANING_FEE;
+    listing.cleaningFee != null ? listing.cleaningFee : DEFAULT_CLEANING_FEE;
   const serviceFee =
-    listing.serviceFee !== null ? listing.serviceFee : DEFAULT_SERVICE_FEE;
+    listing.serviceFee != null ? listing.serviceFee : DEFAULT_SERVICE_FEE;
   return { cleaningFee, serviceFee };
 }
 

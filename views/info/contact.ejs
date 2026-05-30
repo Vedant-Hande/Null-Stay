@@ -1,9 +1,9 @@
 <% layout('layouts/landing') -%>
   <% landingActive='help' ; %>
 
-    <% const formData=typeof form !==='undefined' && form ? form : {}; const selectedTopic=formData.topic || 'booking' ;
+    <% const formData=typeof form !== 'undefined' && form ? form : {}; const selectedTopic=formData.topic || 'booking' ;
       const isHostTopic=selectedTopic==='hosting' ; const messageLen=(formData.message || '' ).length; const
-      inbox=typeof supportInbox !==='undefined' ? supportInbox : 'support@nullstay.com' ; %>
+      inbox=typeof supportInbox !== 'undefined' ? supportInbox : 'support@nullstay.com' ; %>
 
       <div class="ns-contact-page">
         <div class="ns-support-contact">

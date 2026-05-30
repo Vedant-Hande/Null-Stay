@@ -24,6 +24,7 @@ import {
   rangesToDisabledDates,
   validateBookingDates,
 } from "../utils/bookingUtils.js";
+import { geocodeLocation } from "../utils/geocodeLocation.js";
 import {
   getRazorpayKeyId,
   isRazorpayConfigured,
@@ -367,11 +368,17 @@ router.get(
       req.user,
     );
 
+    const mapCoords = await geocodeLocation(
+      listing.location,
+      listing.country,
+    );
+
     assignSeo(res, buildListingDetailSeo(listingForView, avgRating));
     res.render("listings/show.ejs", {
       listing: listingForView,
       avgRating,
       fees,
+      mapCoords,
       isOwner,
       isWishlisted,
       canLeaveReview,

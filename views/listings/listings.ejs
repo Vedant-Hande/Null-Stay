@@ -1,8 +1,8 @@
 <% layout("/layouts/boilerplate") %>
 
-  <% const sq=typeof searchQuery !==="undefined" ? searchQuery : {}; const hasFilters=sq.q || sq.country || sq.minPrice
-    || sq.maxPrice || sq.guests || sq.category; const wishIds=typeof wishlistedIds !==="undefined" ? wishlistedIds : [];
-    const sp=typeof scrollPagination !==="undefined" ? scrollPagination : null; const totalCount=sp ? sp.total :
+  <% const sq=typeof searchQuery !== 'undefined' ? searchQuery : {}; const hasFilters=sq.q || sq.country || sq.minPrice
+    || sq.maxPrice || sq.guests || sq.category; const wishIds=typeof wishlistedIds !== 'undefined' ? wishlistedIds : [];
+    const sp=typeof scrollPagination !== 'undefined' ? scrollPagination : null; const totalCount=sp ? sp.total :
     allListing.length; const hasMore=sp ? sp.hasNext : false; const perPage=sp ? sp.perPage : 12; const
     searchJson=JSON.stringify({ q: sq.q || "" , country: sq.country || "" , minPrice: sq.minPrice || "" , maxPrice:
     sq.maxPrice || "" , guests: sq.guests || "" , category: sq.category || "" , }); %>

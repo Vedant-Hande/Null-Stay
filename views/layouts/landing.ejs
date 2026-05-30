@@ -66,7 +66,7 @@
         <script src="/js/landing.js"></script>
         <% if (currentUser) { %>
             <script>window.__NULLSTAY_USER_ID__ = "<%= currentUser._id %>";</script>
-            <% if (typeof webPushEnabled !==='undefined' && webPushEnabled && vapidPublicKey) { %>
+            <% if (typeof webPushEnabled !== 'undefined' && webPushEnabled && vapidPublicKey) { %>
                 <script>window.__NULLSTAY_VAPID_KEY__ = "<%= vapidPublicKey %>";</script>
                 <% } %>
                     <script src="/socket.io/socket.io.js"></script>

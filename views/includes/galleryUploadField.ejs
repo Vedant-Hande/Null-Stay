@@ -1,5 +1,5 @@
-<% const existingImages=typeof galleryImages !==="undefined" && Array.isArray(galleryImages) ? galleryImages : []; const
-    maxImages=typeof maxGallery !==="undefined" ? maxGallery : 5; %>
+<% const existingImages=typeof galleryImages !== 'undefined' && Array.isArray(galleryImages) ? galleryImages : []; const
+    maxImages=typeof maxGallery !== 'undefined' ? maxGallery : 5; %>
     <div class="gallery-upload-field" data-max="<%= maxImages %>">
         <p class="text-[10px] uppercase font-bold text-gray-500 mb-1 tracking-wide">Additional Photos</p>
         <p class="text-xs text-gray-400 mb-3">Optional · Up to <%= maxImages %> extra shots for your gallery</p>

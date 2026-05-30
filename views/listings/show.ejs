@@ -156,6 +156,37 @@
           </div>
           <% } %>
 
+        <!-- Location map -->
+        <div class="border-b border-gray-200 py-6">
+          <h2 class="text-xl font-semibold mb-1">Where you&rsquo;ll be</h2>
+          <p class="text-gray-600 mb-4">
+            <%= listing.location %>, <%= listing.country %>
+          </p>
+          <% if (mapCoords) { %>
+            <div
+              id="listingMap"
+              class="listing-map rounded-xl overflow-hidden"
+              data-lat="<%= mapCoords.lat %>"
+              data-lng="<%= mapCoords.lng %>"
+              data-title="<%= listing.title %>"
+              data-place="<%= listing.location %>, <%= listing.country %>"
+              role="region"
+              aria-label="Map showing stay location"
+            >
+              <div class="listing-map__loading">Loading map&hellip;</div>
+            </div>
+            <p class="text-xs text-gray-500 mt-3">
+              Map data &copy; <a href="https://www.openstreetmap.org/copyright" class="underline" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors
+            </p>
+          <% } else { %>
+            <div class="listing-map rounded-xl listing-map__error" role="status">
+              Map unavailable for this location. Search
+              <a href="https://www.openstreetmap.org/search?query=<%= encodeURIComponent(listing.location + ', ' + listing.country) %>" class="underline font-medium" target="_blank" rel="noopener noreferrer"><%= listing.location %>, <%= listing.country %></a>
+              on OpenStreetMap.
+            </div>
+          <% } %>
+        </div>
+
             <!-- Reviews Section -->
             <div class="border-t border-gray-200 pt-8 pb-6 mt-2">
               <div class="flex items-center gap-2 text-2xl font-semibold mb-1">
@@ -390,3 +421,19 @@
 
   <%- include('../includes/reviewsModal.ejs') %>
     <%- include('../includes/photosModal.ejs') %>
+
+  <% if (mapCoords) { %>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="/css/listing-map.css" />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="/js/listing-map.js"></script>
+  <% } %>

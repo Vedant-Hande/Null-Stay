@@ -279,7 +279,7 @@
                                 class="flex items-start gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 has-[:checked]:border-black has-[:checked]:bg-gray-50 transition mt-2">
                                 <input type="hidden" name="listing[instantBook]" value="false" />
                                 <input type="checkbox" name="listing[instantBook]" value="true"
-                                    <%=listingToEdit.instantBook !===false ? 'checked' : '' %>
+                                    <%=listingToEdit.instantBook !== false ? 'checked' : '' %>
                                 class="mt-1 w-5 h-5 accent-black rounded" />
                                 <div>
                                     <span class="text-sm font-semibold text-gray-900">Instant book</span>

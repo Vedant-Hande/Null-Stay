@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') -%>
 
-  <% const featured=typeof featuredListings !==='undefined' ? featuredListings : []; const wishIds=typeof wishlistedIds
-    !==='undefined' ? wishlistedIds : []; const mockListings=featured.length ? featured.slice(0, 4) : [ { image: {
+  <% const featured=typeof featuredListings !== 'undefined' ? featuredListings : []; const wishIds=typeof wishlistedIds
+    !=='undefined' ? wishlistedIds : []; const mockListings=featured.length ? featured.slice(0, 4) : [ { image: {
     url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400' }, location: 'Goa' , country: 'India' ,
     price: 4500 }, { image: { url: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=400' },
     location: 'Manali' , country: 'India' , price: 3200 }, { image: {

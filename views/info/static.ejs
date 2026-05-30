@@ -1,6 +1,6 @@
 <% layout('layouts/landing') -%>
 
-  <% const key=typeof pageKey !==='undefined' ? pageKey : 'generic' ; const isLegal=['terms', 'privacy'
+  <% const key=typeof pageKey !== 'undefined' ? pageKey : 'generic' ; const isLegal=['terms', 'privacy'
     , 'privacy-choices' ].includes(key); %>
 
     <div class="ns-static">
@@ -19,7 +19,7 @@
                     <h1>
                       <%= title %>
                     </h1>
-                    <% if (key !==='sitemap' ) { %>
+                    <% if (key !=='sitemap' ) { %>
                       <p class="ns-static-hero__meta">Last updated April 2026</p>
                       <% } else { %>
                         <p class="ns-static-hero__sub">Every corner of NullStay — in one place.</p>

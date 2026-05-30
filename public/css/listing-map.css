@@ -1,0 +1,49 @@
+.listing-map {
+  position: relative;
+  height: 360px;
+  width: 100%;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+.listing-map__loading,
+.listing-map__error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+  background: #f9fafb;
+  z-index: 1;
+}
+
+.listing-map__error {
+  color: #374151;
+}
+
+.listing-map .leaflet-container {
+  height: 100%;
+  width: 100%;
+  font-family: inherit;
+}
+
+.listing-map-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background: #ff385c;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  border: 2px solid #fff;
+}
+
+.listing-map-marker i {
+  font-size: 1rem;
+}

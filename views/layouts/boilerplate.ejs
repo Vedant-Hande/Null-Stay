@@ -12,13 +12,13 @@
         <link rel="stylesheet" href="/css/brand.css">
         <link rel="stylesheet" href="/css/notifications.css">
         <link rel="stylesheet" href="/css/wishlist.css">
-        <% if (typeof isHomePage !==='undefined' && isHomePage) { %>
+        <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>
             <link rel="stylesheet" href="/css/home.css">
             <% } %>
                 <!-- FontAwesome for Icons -->
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
                 <!-- Google Fonts -->
-                <% if (typeof isHomePage !==='undefined' && isHomePage) { %>
+                <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>
                     <link
                         href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
                         rel="stylesheet">
@@ -69,7 +69,7 @@
 
 
 <body
-    class="min-h-screen flex flex-col bg-white custom-scroll relative<%= typeof isHomePage !=== 'undefined' && isHomePage ? ' is-home-page' : '' %>">
+    class="min-h-screen flex flex-col bg-white custom-scroll relative<%= typeof isHomePage !== 'undefined' && isHomePage ? ' is-home-page' : '' %>">
     <div id="notificationToastStack" class="notification-toast-stack" aria-live="polite"></div>
     <%- include('../includes/desktopNotifyBanner.ejs') %>
         <!-- Search Backdrop Overlay -->
@@ -84,31 +84,31 @@
                 <div class="flex-1 px-6 py-4">
                     <label class="block text-xs font-bold text-gray-800 mb-1">Where</label>
                     <input type="text" name="q" placeholder="Search destinations"
-                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.q ? searchQuery.q : '' %>"
+                        value="<%= typeof searchQuery !== 'undefined' && searchQuery.q ? searchQuery.q : '' %>"
                         class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
                 </div>
                 <div class="flex-1 px-6 py-4">
                     <label class="block text-xs font-bold text-gray-800 mb-1">Country</label>
                     <input type="text" name="country" placeholder="Any country"
-                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.country ? searchQuery.country : '' %>"
+                        value="<%= typeof searchQuery !== 'undefined' && searchQuery.country ? searchQuery.country : '' %>"
                         class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
                 </div>
                 <div class="px-6 py-4 w-full md:w-28">
                     <label class="block text-xs font-bold text-gray-800 mb-1">Min price</label>
                     <input type="number" name="minPrice" min="0" placeholder="₹"
-                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.minPrice ? searchQuery.minPrice : '' %>"
+                        value="<%= typeof searchQuery !== 'undefined' && searchQuery.minPrice ? searchQuery.minPrice : '' %>"
                         class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
                 </div>
                 <div class="px-6 py-4 w-full md:w-28">
                     <label class="block text-xs font-bold text-gray-800 mb-1">Max price</label>
                     <input type="number" name="maxPrice" min="0" placeholder="₹"
-                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.maxPrice ? searchQuery.maxPrice : '' %>"
+                        value="<%= typeof searchQuery !== 'undefined' && searchQuery.maxPrice ? searchQuery.maxPrice : '' %>"
                         class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
                 </div>
                 <div class="px-6 py-4 w-full md:w-24">
                     <label class="block text-xs font-bold text-gray-800 mb-1">Guests</label>
                     <input type="number" name="guests" min="1" placeholder="1"
-                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.guests ? searchQuery.guests : '' %>"
+                        value="<%= typeof searchQuery !== 'undefined' && searchQuery.guests ? searchQuery.guests : '' %>"
                         class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
                 </div>
                 <div class="p-2 flex items-center justify-center">
@@ -244,7 +244,7 @@
                 </div>
 
                 <!-- Categories Bar -->
-                <% if (typeof isListingsPage !==="undefined" && isListingsPage) { %>
+                <% if (typeof isListingsPage !== 'undefined' && isListingsPage) { %>
                     <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-2">
                         <div
                             class="flex flex-row items-center justify-between overflow-x-auto gap-8 pt-1 hide-scrollbar">
@@ -296,7 +296,7 @@
 
         <!-- Main Content -->
         <main
-            class="flex-grow w-full <%= typeof isHomePage !=== 'undefined' && isHomePage ? 'p-0 max-w-none' : 'max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-8' %>">
+            class="flex-grow w-full <%= typeof isHomePage !== 'undefined' && isHomePage ? 'p-0 max-w-none' : 'max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-8' %>">
             <% if (typeof isHomePage==='undefined' || !isHomePage) { %>
                 <%- include("../includes/flash.ejs") %>
                     <% } %>
@@ -394,13 +394,13 @@
             <script src="/js/nullstay-ui.js"></script>
             <script src="/js/script.js"></script>
             <script src="/js/newListing.js"></script>
-            <% if (typeof isHomePage !==='undefined' && isHomePage) { %>
+            <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>
                 <script src="/js/home.js"></script>
                 <script src="/js/home-mocks.js"></script>
                 <% } %>
                     <% if (currentUser) { %>
                         <script>window.__NULLSTAY_USER_ID__ = "<%= currentUser._id %>";</script>
-                        <% if (typeof webPushEnabled !==='undefined' && webPushEnabled && vapidPublicKey) { %>
+                        <% if (typeof webPushEnabled !== 'undefined' && webPushEnabled && vapidPublicKey) { %>
                             <script>window.__NULLSTAY_VAPID_KEY__ = "<%= vapidPublicKey %>";</script>
                             <% } %>
                                 <script src="/socket.io/socket.io.js"></script>
