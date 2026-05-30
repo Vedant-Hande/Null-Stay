@@ -22,7 +22,7 @@ const SKIP_FILE_NAMES = new Set([
 ]);
 
 /** Top-level folders and files that count as project source. */
-const ROOT_SCAN = {
+export const ROOT_SCAN = {
   dirs: [
     "routes",
     "views",

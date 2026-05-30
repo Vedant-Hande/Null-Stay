@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= pageTitle %> | NullStay Dev</title>
+  <style>
+    :root {
+      --rose: #ff385c;
+      --rose-dim: #fff0f3;
+      --ink: #222;
+      --muted: #717171;
+      --bg: #f7f7f7;
+      --card: #fff;
+      --border: #ebebeb;
+      --ok: #059669;
+      --warn: #d97706;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .pill {
+      display: inline-block;
+      background: var(--rose-dim);
+      color: var(--rose);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.65rem; margin: 0 0 0.25rem; }
+    .sub { color: var(--muted); font-size: 0.9rem; margin: 0; }
+    .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .btn {
+      font: inherit;
+      font-size: 0.85rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn:hover { border-color: var(--rose); color: var(--rose); }
+    .btn--primary { background: var(--rose); color: #fff; border-color: var(--rose); }
+    .btn--primary:hover { opacity: 0.92; color: #fff; }
+    .section { margin-bottom: 2rem; }
+    .section h2 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 0 0 1rem;
+      font-weight: 600;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.85rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+    }
+    .card strong {
+      display: block;
+      font-size: 1.35rem;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .card strong.accent { color: var(--rose); font-size: 1.6rem; }
+    .card strong.ok { color: var(--ok); }
+    .card strong.warn { color: var(--warn); }
+    .card span.label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 0.35rem;
+    }
+    .card .meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 0.55rem 1rem; border-bottom: 1px solid var(--border); }
+    th {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      font-weight: 600;
+      background: #fafafa;
+    }
+    tr:last-child td { border-bottom: none; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.25rem; }
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      background: #f3f4f6;
+      color: var(--muted);
+    }
+    .tag.on { background: #ecfdf5; color: var(--ok); }
+    .tag.off { background: #fef3c7; color: var(--warn); }
+    .dl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.65rem;
+    }
+    .dl-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.65rem 0.85rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.88rem;
+    }
+    .dl-item span { color: var(--muted); font-size: 0.72rem; display: block; }
+    .dl-item strong { font-weight: 600; font-size: 0.9rem; }
+    .btn--sm {
+      font-size: 0.78rem;
+      padding: 0.35rem 0.65rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    footer { font-size: 0.8rem; color: var(--muted); margin-top: 1.5rem; }
+    footer a { color: var(--rose); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <p class="pill">Developer only</p>
+        <h1>NullStay dashboard</h1>
+        <p class="sub">System health · codebase summary · <%= loc.generatedAt %></p>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn--primary" onclick="location.reload()">Refresh</button>
+        <a class="btn" href="/dev<%= keyParam %>&format=json">JSON</a>
+      </div>
+    </header>
+
+    <section class="section" aria-labelledby="sys-heading">
+      <h2 id="sys-heading">System status</h2>
+      <div class="grid">
+        <article class="card">
+          <strong class="<%= server.dbOk ? 'ok' : 'warn' %>"><%= server.dbStatus %></strong>
+          <span class="label">MongoDB</span>
+          <div class="meta"><span>Listings</span><span><%= server.listingsCount %></span></div>
+        </article>
+        <article class="card">
+          <strong><%= server.appUptime %></strong>
+          <span class="label">Uptime</span>
+          <div class="meta"><span>PID</span><span><%= server.pid %></span></div>
+        </article>
+        <article class="card">
+          <strong><%= server.heapUsed %></strong>
+          <span class="label">Heap used</span>
+          <div class="meta"><span>Of total</span><span><%= server.heapTotal %> (<%= server.heapPercent %>%)</span></div>
+        </article>
+        <article class="card">
+          <strong><%= server.activeHandles %> / <%= server.activeRequests %></strong>
+          <span class="label">Handles / requests</span>
+          <div class="meta"><span>Load</span><span><%= server.loadAvg %></span></div>
+        </article>
+        <article class="card">
+          <strong><%= server.reviewsCount %></strong>
+          <span class="label">Reviews</span>
+          <div class="meta"><span>Collections</span><span><%= server.collectionsCount %></span></div>
+        </article>
+        <article class="card">
+          <strong style="font-size:1rem;"><%= server.nodeVersion %></strong>
+          <span class="label">Node · port <%= server.port %></span>
+          <div class="meta"><span>Env</span><span><%= server.env %></span></div>
+        </article>
+      </div>
+      <div class="card" style="margin-top:0.85rem;">
+        <span class="label">Integrations</span>
+        <div class="tags">
+          <span class="tag <%= server.integrations.webPush ? 'on' : 'off' %>">Web Push</span>
+          <span class="tag <%= server.integrations.email ? 'on' : 'off' %>">Email</span>
+          <span class="tag <%= server.integrations.razorpay ? 'on' : 'off' %>">
+            Razorpay<%= server.integrations.razorpayMode ? ' (' + server.integrations.razorpayMode + ')' : '' %>
+          </span>
+          <span class="tag <%= server.integrations.cache ? 'on' : 'off' %>">
+            Cache<%= server.integrations.cache ? ' · ' + server.integrations.cacheKeys + ' keys · ' + server.integrations.cacheTtl + 's TTL' : '' %>
+          </span>
+        </div>
+        <div class="meta" style="border-top:none;padding-top:0.65rem;">
+          <span>RSS <%= server.rss %></span>
+          <span><%= server.serverTime %></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="loc-heading">
+      <h2 id="loc-heading">Codebase summary</h2>
+      <div class="grid">
+        <article class="card">
+          <strong class="accent"><%= loc.totals.code.toLocaleString() %></strong>
+          <span class="label">Lines of code</span>
+        </article>
+        <article class="card">
+          <strong><%= loc.totals.files %></strong>
+          <span class="label">Files scanned</span>
+        </article>
+        <article class="card">
+          <strong><%= loc.totals.total.toLocaleString() %></strong>
+          <span class="label">Total lines</span>
+        </article>
+        <article class="card">
+          <strong><%= loc.totals.comment.toLocaleString() %></strong>
+          <span class="label">Comments</span>
+        </article>
+      </div>
+
+      <div class="panel" style="margin-top:1rem;">
+        <table>
+          <thead>
+            <tr><th>Folder</th><th>Files</th><th>Code</th><th>Total</th></tr>
+          </thead>
+          <tbody>
+            <% Object.entries(loc.byTopLevelFolder).forEach(([name, row]) => { %>
+              <tr>
+                <td><%= name %></td>
+                <td><%= row.files %></td>
+                <td><%= row.code.toLocaleString() %></td>
+                <td><%= row.total.toLocaleString() %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel" style="margin-top:0.85rem;">
+        <table>
+          <thead>
+            <tr><th>Extension</th><th>Files</th><th>Code</th><th>Total</th></tr>
+          </thead>
+          <tbody>
+            <% Object.entries(loc.byExtension).forEach(([name, row]) => { %>
+              <tr>
+                <td><%= name %></td>
+                <td><%= row.files %></td>
+                <td><%= row.code.toLocaleString() %></td>
+                <td><%= row.total.toLocaleString() %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="dl-heading">
+      <h2 id="dl-heading">Download folders</h2>
+      <p class="sub" style="margin:-0.5rem 0 1rem;">Zip project source — listings views, routes, models, and other folders.</p>
+      <div class="dl-grid">
+        <% downloads.forEach((item) => { %>
+          <div class="dl-item">
+            <div>
+              <strong><%= item.label %></strong>
+              <span><%= item.type === "file" ? "file" : "folder" %> · <%= item.path %></span>
+            </div>
+            <a
+              class="btn btn--sm"
+              href="/dev/download/<%= item.id %><%= keyParam %>"
+              download
+            >Download</a>
+          </div>
+        <% }); %>
+      </div>
+    </section>
+
+    <footer>
+      Private route — requires <code>DEV_ACCESS_KEY</code>.
+      Scans routes, views, public, utils, models, docs (not <code>node_modules</code>).
+    </footer>
+  </div>
+</body>
+</html>

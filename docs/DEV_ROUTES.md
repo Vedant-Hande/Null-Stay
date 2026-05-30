@@ -1,6 +1,6 @@
 # Developer-only routes
 
-These endpoints are **hidden from the public**: wrong or missing credentials return **404** (same as a missing page).
+Private dashboard: **system status** + **codebase LOC summary**. Wrong or missing credentials return **404**.
 
 ---
 
@@ -16,44 +16,64 @@ Restart the server.
 
 ---
 
-## Lines of code — `GET /dev/loc`
-
-Counts source under the project (routes, views, public, utils, models, docs, etc.). Excludes `node_modules`, `package-lock.json`, and similar.
+## Dashboard — `GET /dev`
 
 ### Access
 
-**Query string**
-
 ```http
-GET /dev/loc?key=YOUR_DEV_ACCESS_KEY
+GET /dev?key=YOUR_DEV_ACCESS_KEY
 ```
 
-**Header**
+Or header:
 
 ```http
-GET /dev/loc
+GET /dev
 X-Dev-Access-Key: YOUR_DEV_ACCESS_KEY
 ```
 
-### Response formats
+### Formats
 
 | URL | Output |
 |-----|--------|
-| `/dev/loc?key=...` | JSON (default) |
-| `/dev/loc?key=...&format=html` | Simple HTML dashboard |
+| `/dev?key=...` | HTML dashboard (default in browser) |
+| `/dev?key=...&format=json` | JSON (`loc` + `server`) |
 
-### JSON fields
+Legacy URLs redirect to `/dev`:
 
-- `totals.code` — non-blank, non-comment lines (main “LOC” number)
-- `totals.total` — all lines in files
-- `byTopLevelFolder` — breakdown by folder
-- `byExtension` — breakdown by `.js`, `.ejs`, `.css`, `.md`, `.json`
-- `files` — per-file detail
+- `/dev/loc?key=...`
+- `/dev/status?key=...`
+
+Public `/status` was removed; use `/dev` with your key.
 
 ---
 
-## Security notes
+## Folder downloads — `GET /dev/download/:target`
+
+Download a project folder or file as a **zip** (requires dev key).
+
+Examples:
+
+```http
+GET /dev/download/views-listings?key=YOUR_DEV_ACCESS_KEY
+GET /dev/download/routes?key=YOUR_DEV_ACCESS_KEY
+GET /dev/download/models?key=YOUR_DEV_ACCESS_KEY
+```
+
+Available targets are listed on the dashboard under **Download folders**, or in JSON at `GET /dev?key=...&format=json` → `downloads[]`.
+
+Excludes `node_modules`, `.git`, `.env`, and similar from archives.
+
+---
+
+## JSON fields
+
+- `loc` — lines of code (`totals`, `byTopLevelFolder`, `byExtension`, `files`)
+- `server` — uptime, memory, MongoDB, integrations (cache, email, Razorpay, web push)
+
+---
+
+## Security
 
 - Do **not** commit `DEV_ACCESS_KEY` to git.
-- Use a long random string (e.g. 32+ chars).
-- If `DEV_ACCESS_KEY` is unset, `/dev/*` always returns 404.
+- Use a long random string (32+ chars).
+- If unset, `/dev/*` always returns 404.
