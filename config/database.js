@@ -6,8 +6,11 @@ import { fileURLToPath } from "url";
 // This explicitly points to the .env file one folder up from /config
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, "../.env") });
 
+// Only load .env file in development
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: path.join(__dirname, "../.env") });
+}
 import {
   ensureRetentionIndexes,
   pruneExpiredNotificationData,
