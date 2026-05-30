@@ -37,6 +37,7 @@ import LocalStrategy from "passport-local";
 import { FLASH_KEYS } from "./utils/constants.js";
 
 import calculateAvgRating from "./utils/calculateAvgRating.js";
+import { isReviewAuthor } from "./middleware/authMiddleware.js";
 
 import * as bookingDisplay from "./utils/bookingDisplay.js";
 
@@ -206,6 +207,8 @@ app.use(async (req, res, next) => {
   res.locals.error = req.flash(FLASH_KEYS.ERROR);
 
   res.locals.calculateAvgRating = calculateAvgRating;
+
+  res.locals.isReviewAuthor = isReviewAuthor;
 
   res.locals.bookingDisplay = bookingDisplay;
 

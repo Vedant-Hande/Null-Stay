@@ -255,12 +255,14 @@
                             </div>
                           </div>
                         </div>
+                        <% if (currentUser && isReviewAuthor(review, currentUser)) { %>
                         <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
                           method="POST">
-                          <button type="submit" class="text-gray-400 hover:text-red-500 transition">
+                          <button type="submit" class="text-gray-400 hover:text-red-500 transition" aria-label="Delete your review">
                             <i class="fa-solid fa-trash-can text-sm"></i>
                           </button>
                         </form>
+                        <% } %>
                       </div>
 
                       <div class="flex items-center gap-2">
@@ -297,6 +299,7 @@
               <!-- Leave a review Form -->
               <div id="leave-review" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-8 scroll-mt-24">
                 <h3 class="text-lg font-semibold mb-4">Leave a Review</h3>
+                <% if (canLeaveReview) { %>
                 <form action="/listings/<%= listing._id %>/reviews" method="POST" class="flex flex-col gap-4">
                   <div class="flex flex-col gap-1">
                     <div class="flex flex-row-reverse justify-end gap-1 group">
@@ -341,6 +344,15 @@
                     </button>
                   </div>
                 </form>
+                <% } else if (!currentUser) { %>
+                  <p class="text-gray-600 text-sm mb-3">Sign in to share your experience with other guests.</p>
+                  <a href="/login" class="inline-flex px-6 py-3 bg-airbnb hover:bg-gray-800 text-white font-semibold rounded-lg transition">Log in to review</a>
+                <% } else if (reviewBlockReason === 'owner') { %>
+                  <p class="text-gray-600 text-sm">You cannot review your own listing.</p>
+                <% } else if (reviewBlockReason === 'already_reviewed') { %>
+                  <p class="text-gray-600 text-sm">You have already submitted a review for this stay.</p>
+                <% } %>
+
               </div>
 
               <% if (listing.reviews && listing.reviews.length> 0) { %>

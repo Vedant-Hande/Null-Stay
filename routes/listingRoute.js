@@ -1,11 +1,10 @@
 import express from "express";
 import wrapAsync from "../utils/wrapAsync.js";
-import { validateListing, validateReview } from "../middleware/validationMiddleware.js";
+import { validateListing } from "../middleware/validationMiddleware.js";
 import listings from "../models/listing.js";
-import Review from "../models/review.js";
 import { FLASH_KEYS, FLASH_MESSAGES, BOOKING_FLASH } from "../utils/constants.js";
 import Booking, { BOOKING_STATUSES } from "../models/booking.js";
-import { isLoggedIn, isOwner, isReviewOwner } from "../middleware/authMiddleware.js";
+import { isLoggedIn, isOwner } from "../middleware/authMiddleware.js";
 import { listingUpload } from "../middleware/uploadMiddleware.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 import {
@@ -43,9 +42,8 @@ import {
   notifyAfterListingCreated,
   notifyAfterListingDeleted,
   notifyAfterListingUpdated,
-  notifyAfterReviewCreated,
-  notifyAfterReviewDeleted,
 } from "../utils/activityNotifications.js";
+import { getReviewFormState } from "../utils/reviewEligibility.js";
 import Wishlist from "../models/wishlist.js";
 
 async function uploadCoverImage(file) {
@@ -357,74 +355,20 @@ router.get(
       );
     }
 
+    const { canLeaveReview, reason: reviewBlockReason } = getReviewFormState(
+      listing,
+      req.user,
+    );
+
     res.render("listings/show.ejs", {
       listing,
       avgRating,
       fees,
       isOwner,
       isWishlisted,
+      canLeaveReview,
+      reviewBlockReason,
     });
-  }),
-);
-
-// Review create route
-router.post(
-  "/:id/reviews",
-  isLoggedIn,
-  validateReview,
-  wrapAsync(async (req, res, next) => {
-    const { id } = req.params;
-    const listing = await listings.findById(id);
-    if (!listing) {
-      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
-      return res.redirect("/listings");
-    }
-    const reviewData = req.body.reviews;
-    if (!reviewData || !reviewData.comment || !reviewData.rating) {
-      req.flash(FLASH_KEYS.ERROR, "Review must include a rating and comment");
-      return res.redirect(`/listings/${id}`);
-    }
-
-    const newReview = new Review(reviewData);
-    newReview.owner = req.user._id;
-    await newReview.save();
-    listing.reviews.push(newReview._id);
-    await listing.save();
-
-    invalidateListingDetail(id);
-
-    req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.REVIEW.CREATE_SUCCESS);
-    res.redirect(`/listings/${id}`);
-  }),
-);
-
-// Review delete route
-router.delete(
-  "/:id/reviews/:reviewId",
-  isLoggedIn,
-  isReviewOwner,
-  wrapAsync(async (req, res, next) => {
-    const { id, reviewId } = req.params;
-    const listing = await listings.findById(id);
-    if (!listing) {
-      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.LISTING.NOT_FOUND);
-      return res.redirect("/listings");
-    }
-
-    listing.reviews = listing.reviews.filter((r) => r.toString() !== reviewId);
-    await listing.save();
-    await Review.findByIdAndDelete(reviewId);
-
-    await notifyAfterReviewDeleted({
-      app: req.app,
-      listing,
-      guestUser: req.user,
-    });
-
-    invalidateListingDetail(id);
-
-    req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.REVIEW.DELETE_SUCCESS);
-    res.redirect(`/listings/${id}`);
   }),
 );
 

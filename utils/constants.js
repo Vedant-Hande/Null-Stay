@@ -19,6 +19,10 @@ export const FLASH_MESSAGES = {
     CREATE_ERROR: "Failed to post review.",
     DELETE_ERROR: "Failed to delete review.",
     NOT_FOUND: "Review not found.",
+    UNAUTHORIZED: "You can only delete your own review.",
+    HOST_CANNOT_REVIEW: "Hosts cannot review their own listings.",
+    ALREADY_REVIEWED: "You have already reviewed this listing.",
+    LOGIN_REQUIRED: "Log in to leave a review.",
   },
   GENERAL: {
     SOMETHING_WENT_WRONG: "Something went wrong. Please try again.",

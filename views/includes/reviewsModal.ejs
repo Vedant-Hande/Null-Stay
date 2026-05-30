@@ -28,11 +28,13 @@
                                     </div>
                                 </div>
                             </div>
+                            <% if (currentUser && isReviewAuthor(review, currentUser)) { %>
                             <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="mt-0">
-                                <button type="submit" aria-label="Delete review" class="text-red-500 hover:text-black transition">
+                                <button type="submit" aria-label="Delete your review" class="text-red-500 hover:text-black transition">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </form>
+                            <% } %>
                         </div>
                         <div class="flex text-yellow-400 text-xs gap-0.5">
                             <% for (let i=0; i < review.rating; i++) { %>

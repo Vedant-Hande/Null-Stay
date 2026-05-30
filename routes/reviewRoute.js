@@ -4,11 +4,16 @@ import { validateReview } from "../middleware/validationMiddleware.js";
 import listings from "../models/listing.js";
 import Review from "../models/review.js";
 import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
-import { isLoggedIn, isReviewOwner } from "../middleware/authMiddleware.js";
+import {
+  canLeaveReview,
+  isLoggedIn,
+  isReviewOwner,
+} from "../middleware/authMiddleware.js";
 import {
   notifyAfterReviewCreated,
   notifyAfterReviewDeleted,
 } from "../utils/activityNotifications.js";
+import { invalidateListingDetail } from "../utils/listingCache.js";
 
 const router = express.Router();
 
@@ -16,6 +21,7 @@ const router = express.Router();
 router.post(
   "/listings/:id/reviews",
   isLoggedIn,
+  canLeaveReview,
   validateReview,
   wrapAsync(async (req, res, next) => {
     const { id } = req.params;
@@ -35,6 +41,8 @@ router.post(
     await newReview.save(); // Save the review to the database
     listing.reviews.push(newReview._id); // Add the review reference to the listing
     await listing.save();
+
+    invalidateListingDetail(id);
 
     await notifyAfterReviewCreated({
       app: req.app,
@@ -64,6 +72,8 @@ router.delete(
     listing.reviews = listing.reviews.filter((r) => r.toString() !== reviewId);
     await listing.save();
     await Review.findByIdAndDelete(reviewId);
+
+    invalidateListingDetail(id);
 
     await notifyAfterReviewDeleted({
       app: req.app,
