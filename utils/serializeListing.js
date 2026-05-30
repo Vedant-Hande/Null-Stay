@@ -18,7 +18,7 @@ export function averageRating(reviews = []) {
 
 export function serializeListingForApi(listing) {
   return {
-    _id: listing._id,
+    _id: String(listing._id),
     title: listing.title,
     location: listing.location,
     country: listing.country,
@@ -34,7 +34,7 @@ export function serializeListingForApi(listing) {
 /** Payload for listings grid + infinite scroll */
 export function serializeListingForGrid(listing) {
   return {
-    _id: listing._id,
+    _id: String(listing._id),
     title: listing.title,
     location: listing.location,
     country: listing.country,

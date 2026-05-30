@@ -9,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/utilities.css">
     <link rel="stylesheet" href="/css/site-footer.css">
+    <link rel="stylesheet" href="/css/brand.css">
     <link rel="stylesheet" href="/css/notifications.css">
     <link rel="stylesheet" href="/css/wishlist.css">
     <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>
@@ -120,10 +121,11 @@
 
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="/" class="flex items-center text-airbnb text-2xl font-bold">
-                        <i class="fa-brands fa-airbnb text-3xl me-2"></i>
-                        <span class="hidden lg:block">NullStay</span>
-                    </a>
+                    <%- include('../includes/brandLogo.ejs', {
+                      logoClass: 'flex items-center gap-2 text-airbnb text-2xl font-bold no-underline',
+                      logoSize: 'nav',
+                      labelClass: 'hidden lg:block'
+                    }) %>
                 </div>
 
                 <!-- Search Bar Pill -->

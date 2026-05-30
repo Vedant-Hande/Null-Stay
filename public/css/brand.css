@@ -1,0 +1,38 @@
+/* NullStay brand mark (replaces third-party logo icons) */
+
+.ns-brand-mark {
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.ns-brand-mark--sm {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.ns-brand-mark--md {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.ns-brand-mark--nav {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.ns-brand-mark--lg {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.ns-brand-mark--xl {
+  width: 3.25rem;
+  height: 3.25rem;
+}
+
+.ns-nav__logo .ns-brand-mark,
+.ns-footer .ns-nav__logo .ns-brand-mark {
+  width: 1.35rem;
+  height: 1.35rem;
+}

@@ -19,7 +19,7 @@ export function listingsSearchCacheKey(filter, page, perPage) {
 }
 
 export function listingDetailCacheKey(id) {
-  return `${CACHE_PREFIX.LISTING}${id}`;
+  return `${CACHE_PREFIX.LISTING}${String(id)}`;
 }
 
 export function featuredListingsCacheKey(limit) {
@@ -49,7 +49,11 @@ export async function getCachedListingSearch(
   const key = listingsSearchCacheKey(filter, page, perPage);
   const cached = cache.get(key);
   if (cached) {
-    return { ...cached, cacheHit: true };
+    return {
+      ...cached,
+      rows: cloneSearchRows(cached.rows),
+      cacheHit: true,
+    };
   }
 
   const total = await listingsModel.countDocuments(filter);
@@ -71,7 +75,7 @@ export async function getCachedFeaturedListings(listingsModel, limit = 8) {
   const key = featuredListingsCacheKey(limit);
   const cached = cache.get(key);
   if (cached) {
-    return { rows: cached, cacheHit: true };
+    return { rows: cloneSearchRows(cached), cacheHit: true };
   }
 
   const rows = await listingsModel
@@ -85,15 +89,43 @@ export async function getCachedFeaturedListings(listingsModel, limit = 8) {
   return { rows, cacheHit: false };
 }
 
+/** Shallow-clone listing rows without breaking MongoDB ObjectIds (structuredClone does). */
+function cloneSearchRows(rows) {
+  return rows.map((row) => ({
+    ...row,
+    reviews: Array.isArray(row.reviews)
+      ? row.reviews.map((review) => ({ ...review }))
+      : [],
+  }));
+}
+
+/** Ensure cached/lean listings always have a reviews array for show + SEO. */
+export function normalizeListingDetail(listing) {
+  if (!listing) return null;
+  const reviews = Array.isArray(listing.reviews)
+    ? listing.reviews.map((review) => ({ ...review }))
+    : [];
+  return { ...listing, reviews };
+}
+
 export async function getCachedListingDetail(listingsModel, id) {
-  const key = listingDetailCacheKey(id);
+  const listingId = String(id);
+  const key = listingDetailCacheKey(listingId);
   const cached = cache.get(key);
+
   if (cached) {
-    return { listing: cached, cacheHit: true };
+    if (String(cached._id) !== listingId) {
+      cache.del(key);
+    } else {
+      return {
+        listing: normalizeListingDetail({ ...cached }),
+        cacheHit: true,
+      };
+    }
   }
 
   const listing = await listingsModel
-    .findById(id)
+    .findById(listingId)
     .populate({
       path: "reviews",
       populate: { path: "owner" },
@@ -101,8 +133,11 @@ export async function getCachedListingDetail(listingsModel, id) {
     .populate("owner")
     .lean();
 
-  if (listing) {
-    cache.set(key, listing, cacheTtlMs);
+  if (!listing) {
+    return { listing: null, cacheHit: false };
   }
-  return { listing, cacheHit: false };
+
+  const normalized = normalizeListingDetail(listing);
+  cache.set(key, { ...normalized }, cacheTtlMs);
+  return { listing: normalized, cacheHit: false };
 }

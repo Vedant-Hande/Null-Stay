@@ -1,8 +1,8 @@
 <footer class="ns-footer">
   <div class="ns-footer__inner">
     <div class="ns-footer__brand">
-      <a href="/" class="ns-nav__logo"><i class="fa-brands fa-airbnb"></i> NullStay</a>
-      <p>Unique stays across India. Book, host, and connect — beautifully simple.</p>
+      <%- include('brandLogo.ejs') %>
+        <p>Unique stays across India. Book, host, and connect — beautifully simple.</p>
     </div>
     <div class="ns-footer__grid">
       <div class="ns-footer__col">
@@ -21,6 +21,7 @@
         <h4>Company</h4>
         <a href="/careers">Careers</a>
         <a href="/help">Help</a>
+        <a href="/contact">Contact</a>
         <a href="/terms">Terms</a>
       </div>
       <div class="ns-footer__col">
@@ -32,6 +33,7 @@
     </div>
     <div class="ns-footer__bottom">
       <span>© <%= new Date().getFullYear() %> NullStay</span>
+      <span class="ns-footer__credit">Made by <span class="ns-footer__credit-brand">NullCode</span></span>
       <span>
         <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>
       </span>

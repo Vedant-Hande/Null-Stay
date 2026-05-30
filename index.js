@@ -282,7 +282,9 @@ app.use("/wishlists", wishlistRoute);
 app.use("/messages", messageRoute);
 app.use("/dev", devRoute);
 
-app.get("/favicon.ico", (req, res) => res.status(204).end());
+app.get("/favicon.ico", (req, res) =>
+  res.redirect(302, "/img/nullstay-logo.svg"),
+);
 
 
 

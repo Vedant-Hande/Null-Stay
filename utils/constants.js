@@ -27,7 +27,14 @@ export const FLASH_MESSAGES = {
   GENERAL: {
     SOMETHING_WENT_WRONG: "Something went wrong. Please try again.",
     UNAUTHORIZED: "You are not authorized to perform this action.",
-  }
+  },
+  SUPPORT: {
+    SENT: "Your email was sent! Check your inbox for a confirmation — we’ll reply soon.",
+    SEND_FAILED:
+      "We could not send your message right now. Please email support@nullstay.com directly.",
+    NOT_CONFIGURED:
+      "Your message was saved locally — email support@nullstay.com and we will help you.",
+  },
 };
 
 export const REGEX = {

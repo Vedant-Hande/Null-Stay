@@ -1,7 +1,81 @@
 import express from "express";
 import { assignSeo, buildInfoPageSeo } from "../utils/seo.js";
+import wrapAsync from "../utils/wrapAsync.js";
+import { supportContactSchema } from "../schemas/support.js";
+import {
+  sendSupportEmails,
+  getSupportInboxDisplay,
+  isMailConfigured,
+} from "../utils/supportEmail.js";
+import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
 
 const router = express.Router();
+
+function defaultContactForm(req) {
+  return {
+    name: req.user?.username || "",
+    email: req.user?.email || "",
+    topic: "general",
+    bookingRef: "",
+    subject: "",
+    message: "",
+  };
+}
+
+function renderContact(req, res, { form, pageTitle = "Contact Support" } = {}) {
+  assignSeo(
+    res,
+    buildInfoPageSeo({
+      pageTitle,
+      metaDescription:
+        "Contact NullStay support for help with bookings, payments, hosting, and your account.",
+      path: "/contact",
+    }),
+  );
+  res.render("info/contact.ejs", {
+    pageTitle,
+    landingActive: "help",
+    form: form || defaultContactForm(req),
+    supportInbox: getSupportInboxDisplay(),
+    mailConfigured: isMailConfigured(),
+  });
+}
+
+router.get("/contact", (req, res) => {
+  renderContact(req, res);
+});
+
+router.post(
+  "/contact",
+  wrapAsync(async (req, res) => {
+    const { error, value } = supportContactSchema.validate(req.body, {
+      abortEarly: false,
+      stripUnknown: true,
+      convert: true,
+    });
+
+    if (error) {
+      const msg = error.details.map((el) => el.message).join(", ");
+      req.flash(FLASH_KEYS.ERROR, msg);
+      return renderContact(req, res, { form: { ...defaultContactForm(req), ...req.body } });
+    }
+
+    try {
+      const result = await sendSupportEmails(value);
+      if (result?.skipped) {
+        console.log("[support] email form (mail not configured):", value);
+        req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.SUPPORT.NOT_CONFIGURED);
+      } else {
+        req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.SUPPORT.SENT);
+      }
+      return res.redirect("/contact");
+    } catch (err) {
+      console.error("[support] contact form failed:", err.message);
+      req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.SUPPORT.SEND_FAILED);
+      return renderContact(req, res, { form: value });
+    }
+  }),
+);
 
 router.get("/help", (req, res) => {
   assignSeo(

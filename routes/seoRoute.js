@@ -9,6 +9,7 @@ const STATIC_SITEMAP_PATHS = [
   { path: "/", priority: "1.0", changefreq: "daily" },
   { path: "/listings", priority: "0.9", changefreq: "daily" },
   { path: "/help", priority: "0.5", changefreq: "monthly" },
+  { path: "/contact", priority: "0.5", changefreq: "monthly" },
   { path: "/hosting", priority: "0.6", changefreq: "monthly" },
   { path: "/terms", priority: "0.3", changefreq: "yearly" },
   { path: "/privacy", priority: "0.3", changefreq: "yearly" },

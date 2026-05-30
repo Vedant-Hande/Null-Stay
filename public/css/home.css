@@ -82,9 +82,6 @@ body.is-home-page #expandedSearch {
   text-decoration: none;
 }
 
-.ns-nav__logo i {
-  font-size: 1.35rem;
-}
 
 .ns-nav__links {
   display: none;

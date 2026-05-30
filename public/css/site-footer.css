@@ -35,9 +35,6 @@
   text-decoration: none;
 }
 
-.ns-footer .ns-nav__logo i {
-  font-size: 1.35rem;
-}
 
 .ns-footer__brand {
   margin-bottom: 2.5rem;
@@ -106,4 +103,14 @@
 .ns-footer__bottom a:hover {
   color: var(--ns-text);
   text-decoration: underline;
+}
+
+.ns-footer__credit {
+  font-size: inherit;
+  color: inherit;
+}
+
+.ns-footer__credit-brand {
+  font-weight: inherit;
+  color: inherit;
 }

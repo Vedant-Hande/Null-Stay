@@ -4,10 +4,7 @@
 %>
 <header class="ns-nav" id="nsNav">
   <div class="ns-nav__inner">
-    <a href="/" class="ns-nav__logo">
-      <i class="fa-brands fa-airbnb"></i>
-      NullStay
-    </a>
+    <%- include('brandLogo.ejs') %>
     <nav class="ns-nav__links" aria-label="Primary">
       <% if (navMode === "home") { %>
         <a href="#discover">Discover</a>

@@ -44,6 +44,7 @@ import {
   notifyAfterListingUpdated,
 } from "../utils/activityNotifications.js";
 import { getReviewFormState } from "../utils/reviewEligibility.js";
+import calculateAvgRating from "../utils/calculateAvgRating.js";
 import {
   assignSeo,
   buildListingDetailSeo,
@@ -344,13 +345,8 @@ router.get(
       return res.redirect("/listings");
     }
 
-    const avgRating =
-      listing.reviews.length > 0
-        ? (
-            listing.reviews.reduce((sum, r) => sum + r.rating, 0) /
-            listing.reviews.length
-          ).toFixed(2)
-        : null;
+    const reviews = listing.reviews || [];
+    const avgRating = calculateAvgRating(reviews);
     const fees = getListingFees(listing);
     const isOwner =
       req.user &&
@@ -365,14 +361,15 @@ router.get(
       );
     }
 
+    const listingForView = { ...listing, reviews };
     const { canLeaveReview, reason: reviewBlockReason } = getReviewFormState(
-      listing,
+      listingForView,
       req.user,
     );
 
-    assignSeo(res, buildListingDetailSeo(listing, avgRating));
+    assignSeo(res, buildListingDetailSeo(listingForView, avgRating));
     res.render("listings/show.ejs", {
-      listing,
+      listing: listingForView,
       avgRating,
       fees,
       isOwner,

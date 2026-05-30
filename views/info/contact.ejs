@@ -1,0 +1,187 @@
+<% layout('layouts/landing') -%>
+  <% landingActive='help' ; %>
+
+    <% const formData=typeof form !=='undefined' && form ? form : {}; const selectedTopic=formData.topic || 'booking' ;
+      const isHostTopic=selectedTopic==='hosting' ; const messageLen=(formData.message || '' ).length; const
+      inbox=typeof supportInbox !=='undefined' ? supportInbox : 'support@nullstay.com' ; %>
+
+      <div class="ns-contact-page">
+        <div class="ns-support-contact">
+          <header class="ns-support-contact__header">
+            <h1>Contact Help &amp; Support</h1>
+            <p class="ns-support-contact__lead">
+              You&rsquo;ll hear back from our team within one business day.
+            </p>
+          </header>
+
+          <form action="/contact" method="POST" class="ns-support-form" novalidate>
+            <div class="ns-support-block">
+              <p class="ns-support-label" id="contact-audience-label">
+                Which best describes you?
+              </p>
+              <div class="ns-support-choices" role="radiogroup" aria-labelledby="contact-audience-label">
+                <label class="ns-support-choice<%= isHostTopic ? '' : ' is-selected' %>">
+                  <input type="radio" value="booking" data-topic-radio <%=isHostTopic ? '' : 'checked' %>
+                  />
+                  <span class="ns-support-choice__title">Guest</span>
+                  <span class="ns-support-choice__sub">Bookings, trips &amp; payments</span>
+                </label>
+                <label class="ns-support-choice<%= isHostTopic ? ' is-selected' : '' %>">
+                  <input type="radio" value="hosting" data-topic-radio <%=isHostTopic ? 'checked' : '' %>
+                  />
+                  <span class="ns-support-choice__title">Host</span>
+                  <span class="ns-support-choice__sub">Listings &amp; reservations</span>
+                </label>
+              </div>
+              <p class="ns-support-fine">
+                Payment, account, or other issues?
+                <button type="button" class="ns-support-fine__btn" data-topic-pick="payment">Payments</button>
+                ·
+                <button type="button" class="ns-support-fine__btn" data-topic-pick="account">Account</button>
+                ·
+                <button type="button" class="ns-support-fine__btn" data-topic-pick="other">Other</button>
+              </p>
+              <input type="hidden" name="topic" id="contact-topic-hidden"
+                value="<%= ['payment','account','other','general'].includes(selectedTopic) ? selectedTopic : (isHostTopic ? 'hosting' : 'booking') %>"
+                required />
+            </div>
+
+            <div class="ns-support-block">
+              <label class="ns-support-label" for="contact-subject">
+                What can we help you with, in a few words? You can add more detail below.
+              </label>
+              <input type="text" id="contact-subject" name="subject" maxlength="120"
+                value="<%= formData.subject || '' %>" class="ns-support-input"
+                placeholder="e.g. Refund for cancelled trip" />
+            </div>
+
+            <div class="ns-support-block">
+              <label class="ns-support-label" for="contact-message">
+                Tell us more about why you&rsquo;re getting in touch. The more specific, the better!
+              </label>
+              <textarea id="contact-message" name="message" required minlength="10" maxlength="2000" rows="7"
+                class="ns-support-input ns-support-textarea"
+                placeholder="Include dates, listing name, or booking details if you can."><%= formData.message || '' %></textarea>
+              <p class="ns-support-char" id="contact-char-count" aria-live="polite">
+                <%= messageLen %> / 2000
+              </p>
+            </div>
+
+            <div class="ns-support-block">
+              <label class="ns-support-label" for="contact-booking-ref">
+                Booking or trip reference <span class="ns-support-optional">(optional)</span>
+              </label>
+              <input type="text" id="contact-booking-ref" name="bookingRef" maxlength="100"
+                value="<%= formData.bookingRef || '' %>" class="ns-support-input"
+                placeholder="Trip ID or listing name" />
+            </div>
+
+            <div class="ns-support-block ns-support-name-row">
+              <div class="ns-support-name-row__field">
+                <label class="ns-support-label" for="contact-name">Name</label>
+                <input type="text" id="contact-name" name="name" required maxlength="80" autocomplete="name"
+                  value="<%= formData.name || '' %>" class="ns-support-input" />
+              </div>
+              <div class="ns-support-name-row__field">
+                <label class="ns-support-label" for="contact-email">Email</label>
+                <input type="email" id="contact-email" name="email" required autocomplete="email"
+                  value="<%= formData.email || '' %>" class="ns-support-input" />
+              </div>
+            </div>
+
+            <button type="submit" class="ns-support-submit">Send message</button>
+          </form>
+
+          <div class="ns-support-info" aria-label="Contact information">
+            <div class="ns-support-info__col">
+              <h3>NullStay</h3>
+              <p>Unique stays across India</p>
+            </div>
+            <div class="ns-support-info__col">
+              <h3>Support</h3>
+              <p><a href="mailto:<%= inbox %>">
+                  <%= inbox %>
+                </a></p>
+            </div>
+            <div class="ns-support-info__col">
+              <h3>Self‑service</h3>
+              <p><a href="/help">Help Centre</a></p>
+            </div>
+            <div class="ns-support-info__col">
+              <h3>Response time</h3>
+              <p>Monday–Friday, usually within 24 hours</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          const form = document.querySelector(".ns-support-form");
+          if (!form) return;
+
+          const hiddenTopic = form.querySelector("#contact-topic-hidden");
+          const choices = form.querySelectorAll(".ns-support-choice");
+          const radios = form.querySelectorAll("[data-topic-radio]");
+          const fineBtns = form.querySelectorAll("[data-topic-pick]");
+          const message = form.querySelector("#contact-message");
+          const counter = form.querySelector("#contact-char-count");
+
+          const altTopics = new Set(["payment", "account", "other", "general"]);
+
+          function setGuestHost(value) {
+            radios.forEach((r) => {
+              r.checked = r.value === value;
+            });
+            hiddenTopic.value = value;
+            syncChoiceUI();
+          }
+
+          function syncChoiceUI() {
+            const v = hiddenTopic?.value;
+            const useCards = v === "booking" || v === "hosting";
+            choices.forEach((card) => {
+              const input = card.querySelector("[data-topic-radio]");
+              const on = useCards && input?.checked;
+              card.classList.toggle("is-selected", Boolean(on));
+            });
+            fineBtns.forEach((btn) => {
+              btn.classList.toggle("is-active", btn.dataset.topicPick === v);
+            });
+          }
+
+          radios.forEach((radio) => {
+            radio.addEventListener("change", () => {
+              if (radio.checked) {
+                hiddenTopic.value = radio.value;
+                syncChoiceUI();
+              }
+            });
+          });
+
+          fineBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              hiddenTopic.value = btn.dataset.topicPick;
+              radios.forEach((r) => {
+                r.checked = false;
+              });
+              syncChoiceUI();
+            });
+          });
+
+          if (hiddenTopic && altTopics.has(hiddenTopic.value)) {
+            syncChoiceUI();
+          } else {
+            setGuestHost(hiddenTopic?.value === "hosting" ? "hosting" : "booking");
+          }
+
+          if (message && counter) {
+            const update = () => {
+              counter.textContent = message.value.length + " / 2000";
+            };
+            message.addEventListener("input", update);
+            update();
+          }
+
+        })();
+      </script>
