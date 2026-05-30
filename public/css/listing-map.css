@@ -6,6 +6,17 @@
   border: 1px solid #e5e7eb;
 }
 
+.listing-map-section {
+  width: 100%;
+}
+
+.listing-map--fullwidth {
+  height: min(480px, 55vh);
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
 .listing-map__loading,
 .listing-map__error {
   position: absolute;
