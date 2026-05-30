@@ -1,4 +1,7 @@
 import nodemailer from "nodemailer";
+import { createLogger } from "./logger.js";
+
+const mailLog = createLogger("mail");
 
 let transporter = null;
 
@@ -37,7 +40,7 @@ export async function sendMail({ to, subject, html, text, replyTo }) {
   if (!to) return { skipped: true, reason: "no_recipient" };
 
   if (!isMailConfigured()) {
-    console.log(`[mail] skipped (SMTP not configured) → ${to}: ${subject}`);
+    mailLog.debug("Skipped (SMTP not configured)", { to, subject });
     return { skipped: true, reason: "not_configured" };
   }
 
@@ -54,10 +57,10 @@ export async function sendMail({ to, subject, html, text, replyTo }) {
       mailOptions.replyTo = replyTo;
     }
     const info = await transport.sendMail(mailOptions);
-    console.log(`[mail] sent → ${to}: ${subject}`);
+    mailLog.info("Sent", { to, subject, messageId: info.messageId });
     return { ok: true, messageId: info.messageId };
   } catch (err) {
-    console.error(`[mail] failed → ${to}: ${err.message}`);
+    mailLog.error("Send failed", { to, subject, error: err.message });
     throw err;
   }
 }

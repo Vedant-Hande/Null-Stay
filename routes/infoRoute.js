@@ -8,6 +8,9 @@ import {
   isMailConfigured,
 } from "../utils/supportEmail.js";
 import { FLASH_KEYS, FLASH_MESSAGES } from "../utils/constants.js";
+import { createLogger } from "../config/logger.js";
+
+const supportLog = createLogger("support");
 
 const router = express.Router();
 
@@ -63,14 +66,17 @@ router.post(
     try {
       const result = await sendSupportEmails(value);
       if (result?.skipped) {
-        console.log("[support] email form (mail not configured):", value);
+        supportLog.warn("Contact form (mail not configured)", {
+          email: value.email,
+          topic: value.topic,
+        });
         req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.SUPPORT.NOT_CONFIGURED);
       } else {
         req.flash(FLASH_KEYS.SUCCESS, FLASH_MESSAGES.SUPPORT.SENT);
       }
       return res.redirect("/contact");
     } catch (err) {
-      console.error("[support] contact form failed:", err.message);
+      supportLog.error("Contact form failed", err);
       req.flash(FLASH_KEYS.ERROR, FLASH_MESSAGES.SUPPORT.SEND_FAILED);
       return renderContact(req, res, { form: value });
     }

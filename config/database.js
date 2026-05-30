@@ -13,31 +13,30 @@ import {
   pruneExpiredNotificationData,
 } from "../utils/notificationRetention.js";
 import { pruneOldCancelledBookings } from "../utils/bookingRetention.js";
+import { createLogger } from "./logger.js";
+
+const dbLog = createLogger("db");
 
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.DB_URL);
-    console.log("DB connected");
+    dbLog.info("Connected", { url: process.env.DB_URL?.replace(/\/\/.*@/, "//***@") });
 
     try {
       await ensureRetentionIndexes();
       const pruned = await pruneExpiredNotificationData();
       if (pruned.notificationsDeleted || pruned.pushSubscriptionsDeleted) {
-        console.log(
-          `Notification retention: pruned ${pruned.notificationsDeleted} notifications, ${pruned.pushSubscriptionsDeleted} push subscriptions (older than 12h)`,
-        );
+        dbLog.info("Notification retention pruned", pruned);
       }
       const bookingPruned = await pruneOldCancelledBookings();
       if (bookingPruned.bookingsDeleted) {
-        console.log(
-          `Booking retention: pruned ${bookingPruned.bookingsDeleted} cancelled bookings (older than 15 days)`,
-        );
+        dbLog.info("Booking retention pruned", bookingPruned);
       }
     } catch (retentionErr) {
-      console.warn("Retention index setup:", retentionErr.message);
+      dbLog.warn("Retention index setup failed", { message: retentionErr.message });
     }
   } catch (err) {
-    console.log("DB connection failed", err);
+    dbLog.error("Connection failed", err);
   }
 };
 export default connectDB;

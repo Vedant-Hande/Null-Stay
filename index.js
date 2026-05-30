@@ -77,6 +77,8 @@ import { getCachedFeaturedListings } from "./utils/listingCache.js";
 import { getWishlistedIdsForUser } from "./utils/wishlistIds.js";
 import seoRoute from "./routes/seoRoute.js";
 import { assignSeo, buildHomeSeo, buildDefaultSeo } from "./utils/seo.js";
+import { logger, logStartup, registerProcessHandlers } from "./config/logger.js";
+import { requestLogger } from "./middleware/requestLogger.js";
 
 initWebPush();
 
@@ -89,10 +91,10 @@ const __dirname = path.dirname(__filename);
 
 
 if (process.env.NODE_ENV !== "production") {
-
   dotenv.config({ path: path.join(__dirname, ".env") });
-
 }
+
+registerProcessHandlers();
 
 
 
@@ -172,7 +174,7 @@ app.use(express.static(path.join(__dirname, "public"), getStaticCacheOptions()))
 
 app.use(methodOverride("_method"));
 
-
+app.use(requestLogger);
 
 app.use(sessionMiddleware);
 
@@ -295,58 +297,57 @@ app.use(errorHandler);
 
 
 server.listen(port, host, () => {
-  console.log(`server is listening on http://127.0.0.1:${port} (local)`);
+  const startupLines = [`Server listening on http://127.0.0.1:${port} (local)`];
   const lan = getLanUrls(port);
   if (lan.length) {
-    console.log("Reach this PC on your LAN (phone on same Wi‑Fi):");
-    lan.forEach((url) => console.log(`  → ${url}`));
+    startupLines.push("LAN URLs (same Wi‑Fi):");
+    lan.forEach((url) => startupLines.push(`  → ${url}`));
   }
   if (host === "0.0.0.0") {
-    console.log(
-      "Port forwarding: forward router external port → this PC's LAN IP:" + port,
-    );
-  }
-  if (isWebPushConfigured()) {
-    console.log("Web Push: enabled (VAPID keys loaded)");
-  } else {
-    console.log(
-      "Web Push: disabled — add VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_CONTACT_EMAIL to .env",
-    );
+    startupLines.push(`Port forwarding: external port → this PC LAN IP:${port}`);
   }
 
-  if (isMailConfigured()) {
-    console.log("Email: enabled (SMTP configured)");
-  } else {
-    console.log(
-      "Email: disabled — add SMTP_HOST, SMTP_USER, SMTP_PASS to .env",
-    );
-  }
+  startupLines.push(
+    isWebPushConfigured()
+      ? "Web Push: enabled"
+      : "Web Push: disabled (set VAPID_* in .env)",
+  );
+
+  startupLines.push(
+    isMailConfigured()
+      ? "Email: enabled (SMTP)"
+      : "Email: disabled (set SMTP_* in .env)",
+  );
 
   if (isRazorpayConfigured()) {
     const mode = getRazorpayModeLabel();
-    if (mode === "live") {
-      console.log("Razorpay: LIVE — real UPI, card, and netbanking payments enabled");
-    } else {
-      console.log("Razorpay: TEST — use live keys (rzp_live_) for real payments");
-    }
-  } else {
-    console.log(
-      "Razorpay: disabled — add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET to .env",
+    startupLines.push(
+      mode === "live"
+        ? "Razorpay: LIVE"
+        : "Razorpay: TEST (use rzp_live_ for real payments)",
     );
+  } else {
+    startupLines.push("Razorpay: disabled");
   }
 
-  if (isCacheEnabled) {
+  if (isCacheEnabled()) {
     const { size, maxEntries } = cache.stats();
-    console.log(
+    startupLines.push(
       `Cache: enabled (TTL ${process.env.CACHE_TTL_SECONDS || 60}s, ${size}/${maxEntries} keys)`,
     );
   } else {
-    console.log("Cache: disabled (set CACHE_ENABLED=true to enable)");
+    startupLines.push("Cache: disabled");
   }
 
+  logStartup(startupLines);
+
   setInterval(() => {
-    pruneExpiredNotificationData().catch(() => {});
-    pruneOldCancelledBookings().catch(() => {});
+    pruneExpiredNotificationData().catch((err) =>
+      logger.warn("Notification retention failed", err),
+    );
+    pruneOldCancelledBookings().catch((err) =>
+      logger.warn("Booking retention failed", err),
+    );
   }, 60 * 60 * 1000);
 });
 

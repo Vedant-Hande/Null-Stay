@@ -1,6 +1,9 @@
 import ExpressError from "../utils/ExpressError.js";
 import { FLASH_KEYS } from "../utils/constants.js";
 import { assignSeo, buildPrivatePageSeo } from "../utils/seo.js";
+import { createLogger } from "../config/logger.js";
+
+const errLog = createLogger("error");
 
 // 404 handler with a more descriptive message
 export const notFound = (req, res, next) => {
@@ -10,8 +13,11 @@ export const notFound = (req, res, next) => {
 
 // Global error handler
 export const errorHandler = (err, req, res, next) => {
-  // Log the original error for debugging
-  console.error(err.stack);
+  errLog.error(`${req.method} ${req.originalUrl} → ${err.message}`, {
+    statusCode: err.statusCode || err.status,
+    stack: err.stack,
+    user: req.user?._id?.toString(),
+  });
 
   // Set default status code and message
   let statusCode = err.statusCode || err.status || 500;

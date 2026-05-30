@@ -1,4 +1,7 @@
 import { sendMail, isMailConfigured } from "../config/mail.js";
+import { createLogger } from "../config/logger.js";
+
+const supportLog = createLogger("support");
 
 const TOPIC_LABELS = {
   general: "General question",
@@ -116,7 +119,7 @@ export async function sendSupportEmails(payload) {
   try {
     await sendSupportConfirmationEmail(payload);
   } catch (err) {
-    console.error("[support] confirmation email failed:", err.message);
+    supportLog.warn("Confirmation email failed", { error: err.message });
   }
 
   return { ok: true };

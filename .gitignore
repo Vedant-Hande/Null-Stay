@@ -3,4 +3,5 @@ node_modules/
 eslint.config.js
 .vscode/
 data/
+logs/*.log
 .DS_Store
