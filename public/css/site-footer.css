@@ -1,0 +1,109 @@
+/* Site-wide NullStay footer (home, static, listings, etc.) */
+
+.ns-footer {
+  --ns-border: #ebebeb;
+  --ns-text: #222222;
+  --ns-muted: #717171;
+  --ns-rose: #ff385c;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: auto;
+  padding: 0;
+  border-top: 1px solid var(--ns-border);
+  background: #f7f7f7;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.ns-footer__inner {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 3rem clamp(1.25rem, 5vw, 4rem) 2rem;
+  box-sizing: border-box;
+}
+
+.ns-footer .ns-nav__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ns-rose);
+  text-decoration: none;
+}
+
+.ns-footer .ns-nav__logo i {
+  font-size: 1.35rem;
+}
+
+.ns-footer__brand {
+  margin-bottom: 2.5rem;
+  max-width: 22rem;
+}
+
+.ns-footer__brand p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ns-muted);
+  margin-top: 0.75rem;
+}
+
+.ns-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 2.5rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .ns-footer__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem 3rem;
+  }
+}
+
+.ns-footer__col h4 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ns-text);
+  margin-bottom: 1rem;
+}
+
+.ns-footer__col a {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--ns-muted);
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s;
+}
+
+.ns-footer__col a:hover {
+  color: var(--ns-text);
+  text-decoration: underline;
+}
+
+.ns-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--ns-border);
+  font-size: 0.75rem;
+  color: var(--ns-muted);
+}
+
+.ns-footer__bottom a {
+  color: var(--ns-muted);
+  text-decoration: none;
+}
+
+.ns-footer__bottom a:hover {
+  color: var(--ns-text);
+  text-decoration: underline;
+}
