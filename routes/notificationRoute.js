@@ -4,6 +4,7 @@ import { isLoggedIn } from "../middleware/authMiddleware.js";
 import Notification from "../models/notification.js";
 import { getUnreadCount, serializeNotification } from "../utils/notifyUser.js";
 import { recentNotificationFilter } from "../utils/notificationRetention.js";
+import { assignSeo, buildPrivatePageSeo } from "../utils/seo.js";
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ router.get(
       .sort({ createdAt: -1 })
       .limit(50);
 
+    assignSeo(res, buildPrivatePageSeo("Notifications"));
     res.render("notifications/index.ejs", { notifications });
   }),
 );

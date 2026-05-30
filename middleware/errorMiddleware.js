@@ -1,5 +1,6 @@
 import ExpressError from "../utils/ExpressError.js";
 import { FLASH_KEYS } from "../utils/constants.js";
+import { assignSeo, buildPrivatePageSeo } from "../utils/seo.js";
 
 // 404 handler with a more descriptive message
 export const notFound = (req, res, next) => {
@@ -121,7 +122,7 @@ export const errorHandler = (err, req, res, next) => {
     message = "An unexpected internal error occurred.";
   }
 
-  // Render the error page using the boilerplate layout
+  assignSeo(res, buildPrivatePageSeo("Error"));
   res.status(statusCode).render("listings/error.ejs", {
     statusCode,
     message,

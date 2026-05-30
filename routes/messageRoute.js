@@ -7,6 +7,7 @@ import listings from "../models/listing.js";
 import { FLASH_KEYS } from "../utils/constants.js";
 import { getIO } from "../config/socket.js";
 import { sendNewMessageEmail } from "../utils/messageEmails.js";
+import { assignSeo, buildPrivatePageSeo } from "../utils/seo.js";
 
 const router = express.Router();
 
@@ -53,6 +54,7 @@ router.get(
   isLoggedIn,
   wrapAsync(async (req, res) => {
     const threads = await buildInbox(req.user._id);
+    assignSeo(res, buildPrivatePageSeo("Messages"));
     res.render("messages/index.ejs", { threads });
   }),
 );
@@ -90,6 +92,7 @@ router.get(
       { readAt: new Date() },
     );
 
+    assignSeo(res, buildPrivatePageSeo("Message thread"));
     res.render("messages/show.ejs", {
       other,
       listing,

@@ -1,0 +1,29 @@
+<% const meta = typeof seo !== 'undefined' && seo ? seo : { title: 'NullStay', description: '', canonical: '', image: '', noindex: false, robots: 'index, follow', ogType: 'website' }; %>
+<title><%= meta.title %></title>
+<meta name="description" content="<%= meta.description %>" />
+<% if (meta.canonical) { %>
+<link rel="canonical" href="<%= meta.canonical %>" />
+<% } %>
+<meta name="robots" content="<%= meta.robots %>" />
+
+<meta property="og:site_name" content="<%= meta.siteName || 'NullStay' %>" />
+<meta property="og:title" content="<%= meta.pageTitle || meta.title %>" />
+<meta property="og:description" content="<%= meta.description %>" />
+<% if (meta.canonical) { %>
+<meta property="og:url" content="<%= meta.canonical %>" />
+<% } %>
+<meta property="og:type" content="<%= meta.ogType || 'website' %>" />
+<% if (meta.image) { %>
+<meta property="og:image" content="<%= meta.image %>" />
+<% } %>
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="<%= meta.pageTitle || meta.title %>" />
+<meta name="twitter:description" content="<%= meta.description %>" />
+<% if (meta.image) { %>
+<meta name="twitter:image" content="<%= meta.image %>" />
+<% } %>
+
+<% if (meta.jsonLd) { %>
+<script type="application/ld+json"><%- JSON.stringify(meta.jsonLd) %></script>
+<% } %>

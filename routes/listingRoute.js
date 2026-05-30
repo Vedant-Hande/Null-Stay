@@ -44,6 +44,12 @@ import {
   notifyAfterListingUpdated,
 } from "../utils/activityNotifications.js";
 import { getReviewFormState } from "../utils/reviewEligibility.js";
+import {
+  assignSeo,
+  buildListingDetailSeo,
+  buildListingsIndexSeo,
+  buildPrivatePageSeo,
+} from "../utils/seo.js";
 import Wishlist from "../models/wishlist.js";
 
 async function uploadCoverImage(file) {
@@ -100,6 +106,7 @@ router.get(
 
     const wishlistedIds = await getWishlistedIdsForUser(req.user?._id);
 
+    assignSeo(res, buildListingsIndexSeo(req.query));
     res.render("listings/listings.ejs", {
       allListing,
       searchQuery: req.query,
@@ -111,6 +118,7 @@ router.get(
 
 // new listing route
 router.get("/new", isLoggedIn, (req, res) => {
+  assignSeo(res, buildPrivatePageSeo("New listing"));
   res.render("listings/newListing.ejs");
 });
 
@@ -160,6 +168,7 @@ router.get(
   wrapAsync(async (req, res, next) => {
     const { id } = req.params;
     const listingToEdit = await listings.findById(id);
+    assignSeo(res, buildPrivatePageSeo("Edit listing"));
     res.render("listings/editListing.ejs", { listingToEdit });
   }),
 );
@@ -309,6 +318,7 @@ router.get(
     const totals = calculateBookingTotals(listing, dateResult.nights);
     const fees = getListingFees(listing);
 
+    assignSeo(res, buildPrivatePageSeo("Checkout"));
     res.render("bookings/checkout.ejs", {
       listing,
       checkIn,
@@ -360,6 +370,7 @@ router.get(
       req.user,
     );
 
+    assignSeo(res, buildListingDetailSeo(listing, avgRating));
     res.render("listings/show.ejs", {
       listing,
       avgRating,

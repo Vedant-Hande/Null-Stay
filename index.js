@@ -75,6 +75,8 @@ import cache, { isCacheEnabled } from "./config/cache.js";
 import { getStaticCacheOptions } from "./middleware/staticCache.js";
 import { getCachedFeaturedListings } from "./utils/listingCache.js";
 import { getWishlistedIdsForUser } from "./utils/wishlistIds.js";
+import seoRoute from "./routes/seoRoute.js";
+import { assignSeo, buildHomeSeo, buildDefaultSeo } from "./utils/seo.js";
 
 initWebPush();
 
@@ -227,6 +229,7 @@ app.use(async (req, res, next) => {
   res.locals.isHomePage =
     req.originalUrl === "/" || req.originalUrl === "";
   res.locals.searchQuery = res.locals.searchQuery || {};
+  res.locals.seo = buildDefaultSeo(req);
 
   if (req.user) {
 
@@ -255,10 +258,11 @@ app.get("/", wrapAsync(async (req, res) => {
   );
   const wishlistedIds = await getWishlistedIdsForUser(req.user?._id);
 
+  assignSeo(res, buildHomeSeo());
   res.render("home.ejs", { featuredListings, wishlistedIds });
 }));
 
-
+app.use("/", seoRoute);
 
 app.use("/api/listings", apiListingRoute);
 app.use("/listings", listingRoute);

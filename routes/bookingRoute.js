@@ -17,6 +17,7 @@ import Booking, { BOOKING_STATUSES } from "../models/booking.js";
 import listings from "../models/listing.js";
 
 import { FLASH_KEYS, BOOKING_FLASH } from "../utils/constants.js";
+import { assignSeo, buildPrivatePageSeo } from "../utils/seo.js";
 
 import { hasDateOverlap } from "../utils/bookingUtils.js";
 
@@ -275,6 +276,7 @@ router.get(
 
 
 
+    assignSeo(res, buildPrivatePageSeo("Your trips"));
     res.render("bookings/trips.ejs", { trips, filter, counts });
 
   }),
@@ -337,6 +339,7 @@ router.get(
 
 
 
+    assignSeo(res, buildPrivatePageSeo("Host reservations"));
     res.render("bookings/host.ejs", { hostBookings, stats });
 
   }),
@@ -395,6 +398,7 @@ router.get(
 
 
 
+    assignSeo(res, buildPrivatePageSeo("Booking details"));
     res.render("bookings/show.ejs", { booking, isGuest, isHost });
 
   }),

@@ -4,6 +4,7 @@ import { isLoggedIn } from "../middleware/authMiddleware.js";
 import Wishlist from "../models/wishlist.js";
 import listings from "../models/listing.js";
 import { FLASH_KEYS } from "../utils/constants.js";
+import { assignSeo, buildPrivatePageSeo } from "../utils/seo.js";
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ router.get(
       .sort({ createdAt: -1 });
 
     const wishlistListings = items.map((w) => w.listing).filter(Boolean);
+    assignSeo(res, buildPrivatePageSeo("Wishlist"));
     res.render("wishlists/index.ejs", { wishlistListings });
   }),
 );

@@ -6,10 +6,12 @@ import { FLASH_KEYS } from "../utils/constants.js";
 import { saveRedirectUrl, isLoggedIn } from "../middleware/authMiddleware.js";
 import listings from "../models/listing.js";
 import Review from "../models/review.js";
+import { assignSeo, buildPrivatePageSeo } from "../utils/seo.js";
 
 const router = express.Router();
 
 router.get("/signup", (req, res) => {
+  assignSeo(res, buildPrivatePageSeo("Sign up"));
   res.render("users/signup.ejs");
 });
 
@@ -39,6 +41,7 @@ router.get("/login", (req, res) => {
   if (req.query.redirect && typeof req.query.redirect === "string") {
     req.session.redirectUrl = req.query.redirect;
   }
+  assignSeo(res, buildPrivatePageSeo("Log in"));
   res.render("users/login.ejs");
 });
 
@@ -83,6 +86,7 @@ router.get(
 
     const averageRating = listingCountWithRatings > 0 ? (totalRatingSum / listingCountWithRatings).toFixed(1) : "N/A";
 
+    assignSeo(res, buildPrivatePageSeo("Analytics"));
     res.render("users/analytics.ejs", {
       userListings,
       reviewsSubmitted,
@@ -99,6 +103,7 @@ router.get(
     const userListings = await listings.find({ owner: req.user._id });
     const reviewsSubmitted = await Review.find({ owner: req.user._id });
 
+    assignSeo(res, buildPrivatePageSeo("Account"));
     res.render("users/account.ejs", {
       user: req.user,
       listingsCount: userListings.length,
