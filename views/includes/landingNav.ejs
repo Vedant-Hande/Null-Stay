@@ -1,30 +1,28 @@
-<%
-  const navMode = typeof landingNavMode !== "undefined" ? landingNavMode : "site";
-  const active = typeof landingActive !== "undefined" ? landingActive : "";
-%>
-<header class="ns-nav" id="nsNav">
-  <div class="ns-nav__inner">
-    <%- include('brandLogo.ejs') %>
-    <nav class="ns-nav__links" aria-label="Primary">
-      <% if (navMode === "home") { %>
-        <a href="#discover">Discover</a>
-        <a href="#book">Book</a>
-        <a href="#host">Host</a>
-      <% } else { %>
-        <a href="/listings" class="<%= active === 'discover' ? 'is-active' : '' %>">Discover</a>
-        <a href="/listings" class="<%= active === 'book' ? 'is-active' : '' %>">Book</a>
-        <a href="/hosting" class="<%= active === 'host' ? 'is-active' : '' %>">Host</a>
-      <% } %>
-      <a href="/help" class="<%= active === 'help' ? 'is-active' : '' %>">Help</a>
-    </nav>
-    <div class="ns-nav__actions">
-      <% if (currentUser) { %>
-        <a href="/bookings/trips" class="ns-btn-ghost">Trips</a>
-        <a href="/listings" class="ns-btn-white">Explore stays</a>
-      <% } else { %>
-        <a href="/login" class="ns-btn-ghost">Sign in</a>
-        <a href="/signup" class="ns-btn-white">Get started</a>
-      <% } %>
+<% const navMode=typeof landingNavMode !==="undefined" ? landingNavMode : "site" ; const active=typeof landingActive
+  !==="undefined" ? landingActive : "" ; %>
+  <header class="ns-nav" id="nsNav">
+    <div class="ns-nav__inner">
+      <%- include('brandLogo.ejs') %>
+        <nav class="ns-nav__links" aria-label="Primary">
+          <% if (navMode==="home" ) { %>
+            <a href="#discover">Discover</a>
+            <a href="#book">Book</a>
+            <a href="#host">Host</a>
+            <% } else { %>
+              <a href="/listings" class="<%= active === 'discover' ? 'is-active' : '' %>">Discover</a>
+              <a href="/listings" class="<%= active === 'book' ? 'is-active' : '' %>">Book</a>
+              <a href="/hosting" class="<%= active === 'host' ? 'is-active' : '' %>">Host</a>
+              <% } %>
+                <a href="/help" class="<%= active === 'help' ? 'is-active' : '' %>">Help</a>
+        </nav>
+        <div class="ns-nav__actions">
+          <% if (currentUser) { %>
+            <a href="/bookings/trips" class="ns-btn-ghost">Trips</a>
+            <a href="/listings" class="ns-btn-white">Explore stays</a>
+            <% } else { %>
+              <a href="/login" class="ns-btn-ghost">Sign in</a>
+              <a href="/signup" class="ns-btn-white">Get started</a>
+              <% } %>
+        </div>
     </div>
-  </div>
-</header>
+  </header>

@@ -32,7 +32,11 @@ export const isOwner = async (req, res, next) => {
     return res.redirect("/listings");
   }
 
-  if (!listing.owner || (!listing.owner.equals(req.user._id) && listing.owner.toString() !== req.user._id.toString())) {
+  if (
+    !listing.owner ||
+    (!listing.owner.equals(req.user._id) &&
+      listing.owner.toString() !== req.user._id.toString())
+  ) {
     req.flash(FLASH_KEYS.ERROR, "You do not have permission to do that");
     return res.redirect(`/listings/${id}`);
   }
@@ -88,7 +92,5 @@ export const canLeaveReview = async (req, res, next) => {
 export function isReviewAuthor(review, user) {
   if (!review?.owner || !user) return false;
   const ownerId = review.owner._id ?? review.owner;
-  return (
-    ownerId.equals(user._id) || ownerId.toString() === user._id.toString()
-  );
+  return ownerId.equals(user._id) || ownerId.toString() === user._id.toString();
 }

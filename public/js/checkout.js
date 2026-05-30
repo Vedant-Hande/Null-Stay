@@ -8,7 +8,7 @@
   const submitLabel =
     form.dataset.submitLabel || "Pay and confirm";
   const submitIcon =
-    '<i class="fa-solid fa-arrow-right text-sm"></i>';
+    "<i class=\"fa-solid fa-arrow-right text-sm\"></i>";
 
   function showError(message) {
     if (!errorEl) return;
@@ -27,7 +27,7 @@
     submitBtn.disabled = loading;
     if (loading) {
       submitBtn.innerHTML =
-        '<span class="booking-spinner inline-block mr-2"></span> Processing…';
+        "<span class=\"booking-spinner inline-block mr-2\"></span> Processing…";
     } else {
       submitBtn.innerHTML = `<span>${submitLabel}</span>${submitIcon}`;
     }
@@ -39,7 +39,7 @@
 
     if (cardNumber) {
       cardNumber.addEventListener("input", (e) => {
-        let v = e.target.value.replace(/\D/g, "").slice(0, 16);
+        const v = e.target.value.replace(/\D/g, "").slice(0, 16);
         e.target.value = v.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
       });
     }

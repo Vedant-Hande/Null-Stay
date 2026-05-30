@@ -1,4 +1,3 @@
-import Review from "../models/review.js";
 import Listing from "../models/listing.js";
 import connectDB from "../config/database.js";
 

@@ -1,47 +1,55 @@
-<% if (typeof pagination !== 'undefined' && pagination && pagination.totalPages > 1) { %>
-<nav class="listing-pagination mt-10 pt-8 border-t border-gray-200" aria-label="Listings pages">
-  <p class="text-sm text-gray-600 text-center mb-4">
-    Showing <span class="font-semibold text-gray-900"><%= pagination.rangeStart %>–<%= pagination.rangeEnd %></span>
-    of <span class="font-semibold text-gray-900"><%= pagination.total %></span> listing<%= pagination.total === 1 ? '' : 's' %>
-    <span class="text-gray-400">·</span>
-    Page <%= pagination.page %> of <%= pagination.totalPages %>
-  </p>
-  <div class="flex flex-wrap items-center justify-center gap-2">
-    <% if (pagination.prevUrl) { %>
-      <a href="<%= pagination.prevUrl %>" class="listing-pagination__btn" rel="prev">
-        <i class="fa-solid fa-chevron-left text-xs" aria-hidden="true"></i>
-        Previous
-      </a>
-    <% } else { %>
-      <span class="listing-pagination__btn listing-pagination__btn--disabled" aria-disabled="true">
-        <i class="fa-solid fa-chevron-left text-xs" aria-hidden="true"></i>
-        Previous
+<% if (typeof pagination !==='undefined' && pagination && pagination.totalPages> 1) { %>
+  <nav class="listing-pagination mt-10 pt-8 border-t border-gray-200" aria-label="Listings pages">
+    <p class="text-sm text-gray-600 text-center mb-4">
+      Showing <span class="font-semibold text-gray-900">
+        <%= pagination.rangeStart %>–<%= pagination.rangeEnd %>
       </span>
-    <% } %>
-
-    <div class="flex flex-wrap items-center justify-center gap-1 px-1">
-      <% pagination.pageItems.forEach(item => { %>
-        <% if (item.ellipsis) { %>
-          <span class="listing-pagination__ellipsis" aria-hidden="true">…</span>
-        <% } else if (item.current) { %>
-          <span class="listing-pagination__num listing-pagination__num--current" aria-current="page"><%= item.page %></span>
+      of <span class="font-semibold text-gray-900">
+        <%= pagination.total %>
+      </span> listing<%= pagination.total===1 ? '' : 's' %>
+        <span class="text-gray-400">·</span>
+        Page <%= pagination.page %> of <%= pagination.totalPages %>
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-2">
+      <% if (pagination.prevUrl) { %>
+        <a href="<%= pagination.prevUrl %>" class="listing-pagination__btn" rel="prev">
+          <i class="fa-solid fa-chevron-left text-xs" aria-hidden="true"></i>
+          Previous
+        </a>
         <% } else { %>
-          <a href="<%= item.url %>" class="listing-pagination__num"><%= item.page %></a>
-        <% } %>
-      <% }) %>
-    </div>
+          <span class="listing-pagination__btn listing-pagination__btn--disabled" aria-disabled="true">
+            <i class="fa-solid fa-chevron-left text-xs" aria-hidden="true"></i>
+            Previous
+          </span>
+          <% } %>
 
-    <% if (pagination.nextUrl) { %>
-      <a href="<%= pagination.nextUrl %>" class="listing-pagination__btn" rel="next">
-        Next
-        <i class="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i>
-      </a>
-    <% } else { %>
-      <span class="listing-pagination__btn listing-pagination__btn--disabled" aria-disabled="true">
-        Next
-        <i class="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i>
-      </span>
-    <% } %>
-  </div>
-</nav>
-<% } %>
+            <div class="flex flex-wrap items-center justify-center gap-1 px-1">
+              <% pagination.pageItems.forEach(item=> { %>
+                <% if (item.ellipsis) { %>
+                  <span class="listing-pagination__ellipsis" aria-hidden="true">…</span>
+                  <% } else if (item.current) { %>
+                    <span class="listing-pagination__num listing-pagination__num--current" aria-current="page">
+                      <%= item.page %>
+                    </span>
+                    <% } else { %>
+                      <a href="<%= item.url %>" class="listing-pagination__num">
+                        <%= item.page %>
+                      </a>
+                      <% } %>
+                        <% }) %>
+            </div>
+
+            <% if (pagination.nextUrl) { %>
+              <a href="<%= pagination.nextUrl %>" class="listing-pagination__btn" rel="next">
+                Next
+                <i class="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i>
+              </a>
+              <% } else { %>
+                <span class="listing-pagination__btn listing-pagination__btn--disabled" aria-disabled="true">
+                  Next
+                  <i class="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i>
+                </span>
+                <% } %>
+    </div>
+  </nav>
+  <% } %>

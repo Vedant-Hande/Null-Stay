@@ -12,7 +12,7 @@ export const notFound = (req, res, next) => {
 };
 
 // Global error handler
-export const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res) => {
   errLog.error(`${req.method} ${req.originalUrl} → ${err.message}`, {
     statusCode: err.statusCode || err.status,
     stack: err.stack,

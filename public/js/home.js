@@ -30,7 +30,7 @@
     fades.forEach((el) => el.classList.add("is-in"));
   }
 
-  const tabLinks = document.querySelectorAll('.ns-tabs a[href^="#"]');
+  const tabLinks = document.querySelectorAll(".ns-tabs a[href^=\"#\"]");
   const sections = ["discover", "book", "message", "host"]
     .map((id) => document.getElementById(id))
     .filter(Boolean);

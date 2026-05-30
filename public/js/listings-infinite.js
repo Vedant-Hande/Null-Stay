@@ -12,7 +12,9 @@
 
   let searchParams = {};
   try {
-    searchParams = JSON.parse(decodeURIComponent(grid.dataset.search || "%7B%7D"));
+    searchParams = JSON.parse(
+      decodeURIComponent(grid.dataset.search || "%7B%7D"),
+    );
   } catch {
     searchParams = {};
   }
@@ -21,7 +23,7 @@
     "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
 
   function formatPrice(price) {
-    if (price == null) return "N/A";
+    if (price === null) return "N/A";
     return Number(price).toLocaleString("en-IN");
   }
 
@@ -86,7 +88,7 @@
 
     if (type === "loading") {
       statusEl.innerHTML =
-        '<span class="listings-scroll-spinner" aria-hidden="true"></span> Loading more stays…';
+        "<span class=\"listings-scroll-spinner\" aria-hidden=\"true\"></span> Loading more stays…";
       statusEl.classList.remove("hidden");
     } else if (type === "end") {
       statusEl.textContent = "You’ve seen all listings";
@@ -110,7 +112,7 @@
     const nextPage = currentPage + 1;
     const qs = new URLSearchParams();
     Object.entries(searchParams).forEach(([k, v]) => {
-      if (v != null && String(v).trim() !== "") qs.set(k, String(v).trim());
+      if (v !== null && String(v).trim() !== "") qs.set(k, String(v).trim());
     });
     qs.set("page", String(nextPage));
     qs.set("format", "grid");

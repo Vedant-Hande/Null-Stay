@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const formHasOversizedImages = () => {
         const fileInputs = form.querySelectorAll(
-            'input[type="file"].image-upload-input, input[type="file"].gallery-upload-input',
+            "input[type=\"file\"].image-upload-input, input[type=\"file\"].gallery-upload-input",
         );
         for (const input of fileInputs) {
             for (const file of input.files || []) {

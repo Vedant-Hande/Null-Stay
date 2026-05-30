@@ -132,7 +132,7 @@
 
     if (!recentCache.length) {
       listEl.innerHTML =
-        '<li class="px-4 py-8 text-center text-sm text-gray-400">No notifications yet</li>';
+        "<li class=\"px-4 py-8 text-center text-sm text-gray-400\">No notifications yet</li>";
       if (markAllBtn) markAllBtn.classList.add("hidden");
       return;
     }
@@ -189,7 +189,7 @@
     } catch {
       if (listEl) {
         listEl.innerHTML =
-          '<li class="px-4 py-6 text-center text-sm text-rose-600">Could not load notifications</li>';
+          "<li class=\"px-4 py-6 text-center text-sm text-rose-600\">Could not load notifications</li>";
       }
     }
   }

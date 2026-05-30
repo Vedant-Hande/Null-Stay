@@ -1,18 +1,12 @@
-<%
-  const _href = typeof logoHref !== "undefined" ? logoHref : "/";
-  const _class = typeof logoClass !== "undefined" ? logoClass : "ns-nav__logo";
-  const _size = typeof logoSize !== "undefined" ? logoSize : "md";
-  const _showText = typeof showLabel !== "undefined" ? showLabel : true;
-  const _label = typeof logoLabel !== "undefined" ? logoLabel : "NullStay";
-%>
-<a href="<%= _href %>" class="<%= _class %>" aria-label="<%= _label %> home">
-  <img
-    src="/img/nullstay-logo.svg"
-    alt=""
-    class="ns-brand-mark ns-brand-mark--<%= _size %>"
-    width="28"
-    height="28"
-    decoding="async"
-  />
-  <% if (_showText) { %><span class="<%= typeof labelClass !== 'undefined' ? labelClass : '' %>"><%= _label %></span><% } %>
-</a>
+<% const _href=typeof logoHref !==="undefined" ? logoHref : "/" ; const _class=typeof logoClass !==="undefined" ?
+  logoClass : "ns-nav__logo" ; const _size=typeof logoSize !==="undefined" ? logoSize : "md" ; const _showText=typeof
+  showLabel !==="undefined" ? showLabel : true; const _label=typeof logoLabel !==="undefined" ? logoLabel : "NullStay" ;
+  %>
+  <a href="<%= _href %>" class="<%= _class %>" aria-label="<%= _label %> home">
+    <img src="/img/nullstay-logo.svg" alt="" class="ns-brand-mark ns-brand-mark--<%= _size %>" width="28" height="28"
+      decoding="async" />
+    <% if (_showText) { %><span class="<%= typeof labelClass !=== 'undefined' ? labelClass : '' %>">
+        <%= _label %>
+      </span>
+      <% } %>
+  </a>

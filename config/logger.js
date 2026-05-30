@@ -15,9 +15,9 @@ const LEVELS = {
 
 const LEVEL_STYLES = {
   error: "\x1b[31m",
-  warn:  "\x1b[33m",
-  info:  "\x1b[36m",
-  http:  "\x1b[35m",
+  warn: "\x1b[33m",
+  info: "\x1b[36m",
+  http: "\x1b[35m",
   debug: "\x1b[90m",
   reset: "\x1b[0m",
 };
@@ -29,7 +29,7 @@ function resolveLogLevel() {
 
 function isFileLoggingEnabled() {
   if (process.env.LOG_TO_FILE === "false") return false;
-  if (process.env.LOG_TO_FILE === "true")  return true;
+  if (process.env.LOG_TO_FILE === "true") return true;
   return process.env.NODE_ENV === "production";
 }
 
@@ -47,16 +47,16 @@ function ensureLogDir() {
 function logFilePath(type) {
   const day = new Date().toISOString().slice(0, 10);
   const names = {
-    error:  `error-${day}.log`,   // errors only
-    access: `access-${day}.log`,  // HTTP requests only
-    app:    `app-${day}.log`,     // info / warn / debug
+    error: `error-${day}.log`, // errors only
+    access: `access-${day}.log`, // HTTP requests only
+    app: `app-${day}.log`, // info / warn / debug
   };
   return path.join(LOG_DIR, names[type]);
 }
 
 function fileTypeForLevel(level) {
   if (level === "error") return "error";
-  if (level === "http")  return "access";
+  if (level === "http") return "access";
   return "app";
 }
 // ──────────────────────────────────────────────────────────────────────────
@@ -71,8 +71,11 @@ function serializeMeta(meta) {
     return { name: meta.name, message: meta.message, stack: meta.stack };
   }
   if (typeof meta === "object") {
-    try   { return JSON.parse(JSON.stringify(meta)); }
-    catch { return String(meta); }
+    try {
+      return JSON.parse(JSON.stringify(meta));
+    } catch {
+      return String(meta);
+    }
   }
   return meta;
 }
@@ -94,8 +97,10 @@ function writeToFile(payload) {
 }
 
 function writeToConsole(level, module, message, meta) {
-  const ts    = new Date().toISOString();
-  const tag   = module ? `[${module}]` : "";
+  if (level !== "error") return; // ← add this
+
+  const timestamp = new Date().toISOString();
+  const tag = module ? `[${module}]` : "";
   const style = LEVEL_STYLES[level] || "";
   const reset = LEVEL_STYLES.reset;
   const metaStr =
@@ -103,13 +108,8 @@ function writeToConsole(level, module, message, meta) {
       ? ` ${typeof meta === "string" ? meta : JSON.stringify(serializeMeta(meta))}`
       : "";
 
-  const line = `${ts} ${level.toUpperCase()} ${tag} ${message}${metaStr}`;
-
-  if (level === "error") {
-    process.stderr.write(`${style}${line}${reset}\n`);
-  } else {
-    process.stdout.write(`${style}${line}${reset}\n`);
-  }
+  const line = `${timestamp} ${level.toUpperCase()} ${tag} ${message}${metaStr}`;
+  process.stderr.write(`${style}${line}${reset}\n`);
 }
 
 function log(level, module, message, meta) {
@@ -123,16 +123,16 @@ function log(level, module, message, meta) {
     ...(meta !== undefined ? { meta: serializeMeta(meta) } : {}),
   };
 
-  // writeToConsole(level, module, message, meta); // ← re-enabled
+  writeToConsole(level, module, message, meta); // ← re-enabled
   writeToFile(payload);
 }
 
 export function createLogger(module) {
   return {
     error: (message, meta) => log("error", module, message, meta),
-    warn:  (message, meta) => log("warn",  module, message, meta),
-    info:  (message, meta) => log("info",  module, message, meta),
-    http:  (message, meta) => log("http",  module, message, meta),
+    warn: (message, meta) => log("warn", module, message, meta),
+    info: (message, meta) => log("info", module, message, meta),
+    http: (message, meta) => log("http", module, message, meta),
     debug: (message, meta) => log("debug", module, message, meta),
   };
 }
@@ -159,12 +159,11 @@ export function registerProcessHandlers() {
   });
 }
 
-
 // ── Log cleanup ────────────────────────────────────────────────────────────
 const LOG_MAX_AGE_MS =
   process.env.NODE_ENV === "production"
-    ? 24 * 60 * 60 * 1000   // 24 hrs in production
-    :  2 * 60 * 60 * 1000;  //  2 hrs in development
+    ? 24 * 60 * 60 * 1000 // 24 hrs in production
+    : 2 * 60 * 60 * 1000; //  2 hrs in development
 
 function deleteOldLogs() {
   if (!fs.existsSync(LOG_DIR)) return;
@@ -184,12 +183,16 @@ function deleteOldLogs() {
           deleted++;
         }
       } catch (err) {
-        process.stderr.write(`[logger] could not delete ${file}: ${err.message}\n`);
+        process.stderr.write(
+          `[logger] could not delete ${file}: ${err.message}\n`,
+        );
       }
     }
 
     if (deleted > 0) {
-      logger.info(`Log cleanup: removed ${deleted} file(s) older than ${LOG_MAX_AGE_MS / 3_600_000}h`);
+      logger.info(
+        `Log cleanup: removed ${deleted} file(s) older than ${LOG_MAX_AGE_MS / 3_600_000}h`,
+      );
     }
   } catch (err) {
     process.stderr.write(`[logger] cleanup scan failed: ${err.message}\n`);
@@ -197,11 +200,11 @@ function deleteOldLogs() {
 }
 
 export function scheduleLogCleanup() {
-  deleteOldLogs();                              // run once on startup
-  setInterval(deleteOldLogs, LOG_MAX_AGE_MS);  // then repeat on the same interval
+  deleteOldLogs(); // run once on startup
+  setInterval(deleteOldLogs, LOG_MAX_AGE_MS); // then repeat on the same interval
   logger.info(
     `Log cleanup scheduled every ${LOG_MAX_AGE_MS / 3_600_000}h ` +
-    `(${process.env.NODE_ENV === "production" ? "production" : "development"})`
+      `(${process.env.NODE_ENV === "production" ? "production" : "development"})`,
   );
 }
 // ──────────────────────────────────────────────────────────────────────────

@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
       submitBtn.disabled = true;
       submitBtn.classList.add("opacity-70", "pointer-events-none");
       submitBtn.innerHTML =
-        '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+        "<i class=\"fa-solid fa-spinner fa-spin\"></i> Saving...";
     },
     true,
   );

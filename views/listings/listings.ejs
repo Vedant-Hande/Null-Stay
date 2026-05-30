@@ -1,117 +1,127 @@
 <% layout("/layouts/boilerplate") %>
 
-<%
-  const sq = typeof searchQuery !== "undefined" ? searchQuery : {};
-  const hasFilters = sq.q || sq.country || sq.minPrice || sq.maxPrice || sq.guests || sq.category;
-  const wishIds = typeof wishlistedIds !== "undefined" ? wishlistedIds : [];
-  const sp = typeof scrollPagination !== "undefined" ? scrollPagination : null;
-  const totalCount = sp ? sp.total : allListing.length;
-  const hasMore = sp ? sp.hasNext : false;
-  const perPage = sp ? sp.perPage : 12;
-  const searchJson = JSON.stringify({
-    q: sq.q || "",
-    country: sq.country || "",
-    minPrice: sq.minPrice || "",
-    maxPrice: sq.maxPrice || "",
-    guests: sq.guests || "",
-    category: sq.category || "",
-  });
-%>
+  <% const sq=typeof searchQuery !==="undefined" ? searchQuery : {}; const hasFilters=sq.q || sq.country || sq.minPrice
+    || sq.maxPrice || sq.guests || sq.category; const wishIds=typeof wishlistedIds !==="undefined" ? wishlistedIds : [];
+    const sp=typeof scrollPagination !==="undefined" ? scrollPagination : null; const totalCount=sp ? sp.total :
+    allListing.length; const hasMore=sp ? sp.hasNext : false; const perPage=sp ? sp.perPage : 12; const
+    searchJson=JSON.stringify({ q: sq.q || "" , country: sq.country || "" , minPrice: sq.minPrice || "" , maxPrice:
+    sq.maxPrice || "" , guests: sq.guests || "" , category: sq.category || "" , }); %>
 
-<link rel="stylesheet" href="/css/pagination.css">
+    <link rel="stylesheet" href="/css/pagination.css">
 
-<% if (hasFilters) { %>
-  <div class="mb-6 flex flex-wrap items-center gap-3 text-sm">
-    <span class="font-semibold text-gray-900"><%= totalCount %> result<%= totalCount === 1 ? "" : "s" %></span>
-    <% if (sq.q) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700">“<%= sq.q %>”</span><% } %>
-    <% if (sq.country) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700"><%= sq.country %></span><% } %>
-    <% if (sq.category) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700 capitalize"><%= sq.category %></span><% } %>
-    <% if (sq.guests) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700"><%= sq.guests %>+ guests</span><% } %>
-    <% if (sq.minPrice || sq.maxPrice) { %>
-      <span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700">
-        ₹<%= sq.minPrice || "0" %> – <%= sq.maxPrice || "∞" %>
-      </span>
-    <% } %>
-    <a href="/listings" class="text-airbnb font-medium hover:underline">Clear all</a>
-  </div>
-<% } else if (totalCount > 0) { %>
-  <div class="mb-6 text-sm text-gray-600">
-    <span class="font-semibold text-gray-900"><%= totalCount %></span> listing<%= totalCount === 1 ? "" : "s" %> available
-    <% if (hasMore) { %><span class="text-gray-400"> · scroll for more</span><% } %>
-  </div>
-<% } %>
-
-<% if (totalCount > 0) { %>
-  <div
-    id="listingsGrid"
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
-    data-has-more="<%= hasMore ? 'true' : 'false' %>"
-    data-total="<%= totalCount %>"
-    data-per-page="<%= perPage %>"
-    data-logged-in="<%= currentUser ? 'true' : 'false' %>"
-    data-search="<%= encodeURIComponent(searchJson) %>"
-  >
-    <% for (let listing of allListing) { %>
-      <% const saved = wishIds.includes(String(listing._id)); %>
-      <div class="col-span-1 group relative">
-        <a href="/listings/<%= listing._id %>" class="block cursor-pointer">
-          <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3">
-            <img
-              src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' %>"
-              alt="<%= listing.title %>"
-              class="object-cover h-full w-full group-hover:scale-105 transition duration-300"
-              loading="lazy" />
-          </div>
-          <div class="flex flex-col">
-            <div class="flex flex-row justify-between items-start gap-2">
-              <div class="font-semibold text-base text-gray-900 truncate pr-2 flex-1 min-w-0">
-                <%= listing.location %>, <%= listing.country %>
-              </div>
-              <% const avg = calculateAvgRating(listing.reviews); %>
-              <% if (avg) { %>
-                <div class="flex flex-row items-center gap-1 font-light text-sm text-gray-900 shrink-0 whitespace-nowrap">
-                  <i class="fa-solid fa-star text-xs"></i>
-                  <span><%= avg %></span>
-                </div>
-              <% } %>
-            </div>
-            <div class="font-light text-neutral-500 text-sm truncate"><%= listing.title %></div>
-            <div class="font-light text-neutral-500 text-sm">Added recently</div>
-            <div class="flex flex-row items-center gap-1 mt-1 text-gray-900">
-              <div class="font-semibold">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %></div>
-              <div class="font-light text-sm">night</div>
-            </div>
-          </div>
-        </a>
-        <% if (currentUser) { %>
-          <button type="button" data-wishlist-toggle data-listing-id="<%= listing._id %>"
-            class="wishlist-heart wishlist-heart--overlay absolute top-3 right-3 z-10 <%= saved ? 'is-saved' : '' %>"
-            aria-pressed="<%= saved ? 'true' : 'false' %>"
-            aria-label="<%= saved ? 'Remove from wishlist' : 'Save to wishlist' %>">
-            <span class="wishlist-heart__ring" aria-hidden="true"></span>
-            <i class="wishlist-heart__icon fa-heart <%= saved ? 'fa-solid' : 'fa-regular' %>" aria-hidden="true"></i>
-          </button>
-        <% } %>
-      </div>
-    <% } %>
-  </div>
-
-  <div id="listingsScrollSentinel" class="listings-scroll-sentinel" aria-hidden="true"></div>
-  <div id="listingsScrollStatus" class="listings-scroll-status hidden" aria-live="polite"></div>
-
-  <script src="/js/listings-infinite.js"></script>
-<% } %>
-
-<% if (totalCount === 0) { %>
-  <div class="h-[50vh] flex flex-col items-center justify-center text-neutral-500 text-center">
-    <i class="fa-solid fa-house-circle-exclamation text-6xl mb-4 text-gray-300"></i>
     <% if (hasFilters) { %>
-      <h2 class="text-2xl font-semibold text-gray-900">No listings match your search</h2>
-      <p class="mt-2 text-lg font-light">Try different filters or browse all properties.</p>
-      <a href="/listings" class="mt-6 inline-flex items-center gap-2 bg-airbnb text-white px-5 py-3 rounded-xl font-semibold">View all listings</a>
-    <% } else { %>
-      <h2 class="text-2xl font-semibold text-gray-900">No properties found</h2>
-      <p class="mt-2 text-lg font-light">Be the first to add a property to the marketplace.</p>
-    <% } %>
-  </div>
-<% } %>
+      <div class="mb-6 flex flex-wrap items-center gap-3 text-sm">
+        <span class="font-semibold text-gray-900">
+          <%= totalCount %> result<%= totalCount===1 ? "" : "s" %>
+        </span>
+        <% if (sq.q) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700">“<%= sq.q %>”</span>
+          <% } %>
+            <% if (sq.country) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700">
+                <%= sq.country %>
+              </span>
+              <% } %>
+                <% if (sq.category) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700 capitalize">
+                    <%= sq.category %>
+                  </span>
+                  <% } %>
+                    <% if (sq.guests) { %><span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700">
+                        <%= sq.guests %>+ guests
+                      </span>
+                      <% } %>
+                        <% if (sq.minPrice || sq.maxPrice) { %>
+                          <span class="px-3 py-1 bg-gray-100 rounded-full text-gray-700">
+                            ₹<%= sq.minPrice || "0" %> – <%= sq.maxPrice || "∞" %>
+                          </span>
+                          <% } %>
+                            <a href="/listings" class="text-airbnb font-medium hover:underline">Clear all</a>
+      </div>
+      <% } else if (totalCount> 0) { %>
+        <div class="mb-6 text-sm text-gray-600">
+          <span class="font-semibold text-gray-900">
+            <%= totalCount %>
+          </span> listing<%= totalCount===1 ? "" : "s" %> available
+            <% if (hasMore) { %><span class="text-gray-400"> · scroll for more</span>
+              <% } %>
+        </div>
+        <% } %>
+
+          <% if (totalCount> 0) { %>
+            <div id="listingsGrid"
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+              data-has-more="<%= hasMore ? 'true' : 'false' %>" data-total="<%= totalCount %>"
+              data-per-page="<%= perPage %>" data-logged-in="<%= currentUser ? 'true' : 'false' %>"
+              data-search="<%= encodeURIComponent(searchJson) %>">
+              <% for (let listing of allListing) { %>
+                <% const saved=wishIds.includes(String(listing._id)); %>
+                  <div class="col-span-1 group relative">
+                    <a href="/listings/<%= listing._id %>" class="block cursor-pointer">
+                      <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3">
+                        <img
+                          src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' %>"
+                          alt="<%= listing.title %>"
+                          class="object-cover h-full w-full group-hover:scale-105 transition duration-300"
+                          loading="lazy" />
+                      </div>
+                      <div class="flex flex-col">
+                        <div class="flex flex-row justify-between items-start gap-2">
+                          <div class="font-semibold text-base text-gray-900 truncate pr-2 flex-1 min-w-0">
+                            <%= listing.location %>, <%= listing.country %>
+                          </div>
+                          <% const avg=calculateAvgRating(listing.reviews); %>
+                            <% if (avg) { %>
+                              <div
+                                class="flex flex-row items-center gap-1 font-light text-sm text-gray-900 shrink-0 whitespace-nowrap">
+                                <i class="fa-solid fa-star text-xs"></i>
+                                <span>
+                                  <%= avg %>
+                                </span>
+                              </div>
+                              <% } %>
+                        </div>
+                        <div class="font-light text-neutral-500 text-sm truncate">
+                          <%= listing.title %>
+                        </div>
+                        <div class="font-light text-neutral-500 text-sm">Added recently</div>
+                        <div class="flex flex-row items-center gap-1 mt-1 text-gray-900">
+                          <div class="font-semibold">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN")
+                              : "N/A" %>
+                          </div>
+                          <div class="font-light text-sm">night</div>
+                        </div>
+                      </div>
+                    </a>
+                    <% if (currentUser) { %>
+                      <button type="button" data-wishlist-toggle data-listing-id="<%= listing._id %>"
+                        class="wishlist-heart wishlist-heart--overlay absolute top-3 right-3 z-10 <%= saved ? 'is-saved' : '' %>"
+                        aria-pressed="<%= saved ? 'true' : 'false' %>"
+                        aria-label="<%= saved ? 'Remove from wishlist' : 'Save to wishlist' %>">
+                        <span class="wishlist-heart__ring" aria-hidden="true"></span>
+                        <i class="wishlist-heart__icon fa-heart <%= saved ? 'fa-solid' : 'fa-regular' %>"
+                          aria-hidden="true"></i>
+                      </button>
+                      <% } %>
+                  </div>
+                  <% } %>
+            </div>
+
+            <div id="listingsScrollSentinel" class="listings-scroll-sentinel" aria-hidden="true"></div>
+            <div id="listingsScrollStatus" class="listings-scroll-status hidden" aria-live="polite"></div>
+
+            <script src="/js/listings-infinite.js"></script>
+            <% } %>
+
+              <% if (totalCount===0) { %>
+                <div class="h-[50vh] flex flex-col items-center justify-center text-neutral-500 text-center">
+                  <i class="fa-solid fa-house-circle-exclamation text-6xl mb-4 text-gray-300"></i>
+                  <% if (hasFilters) { %>
+                    <h2 class="text-2xl font-semibold text-gray-900">No listings match your search</h2>
+                    <p class="mt-2 text-lg font-light">Try different filters or browse all properties.</p>
+                    <a href="/listings"
+                      class="mt-6 inline-flex items-center gap-2 bg-airbnb text-white px-5 py-3 rounded-xl font-semibold">View
+                      all listings</a>
+                    <% } else { %>
+                      <h2 class="text-2xl font-semibold text-gray-900">No properties found</h2>
+                      <p class="mt-2 text-lg font-light">Be the first to add a property to the marketplace.</p>
+                      <% } %>
+                </div>
+                <% } %>

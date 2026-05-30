@@ -2,14 +2,17 @@
 <div id="photosModal" class="fixed inset-0 z-[110] bg-white hidden flex flex-col">
     <!-- Top Nav -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-10">
-        <button type="button" onclick="closePhotosModal()" class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center text-xl transition">
+        <button type="button" onclick="closePhotosModal()"
+            class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center text-xl transition">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
         <div class="flex gap-4">
-            <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition font-medium text-sm underline">
+            <button
+                class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition font-medium text-sm underline">
                 <i class="fa-solid fa-arrow-up-from-bracket"></i> Share
             </button>
-            <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition font-medium text-sm underline">
+            <button
+                class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition font-medium text-sm underline">
                 <i class="fa-regular fa-heart"></i> Save
             </button>
         </div>
@@ -26,14 +29,15 @@
 
             <% if (listing.images && listing.images.length) { %>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <% listing.images.forEach((img, index) => { %>
-                        <div class="rounded-xl overflow-hidden h-64 md:h-80 shadow-sm border border-gray-200 <%= index === listing.images.length - 1 && listing.images.length % 2 !== 0 ? 'md:col-span-2 md:h-96' : '' %>">
+                    <% listing.images.forEach((img, index)=> { %>
+                        <div
+                            class="rounded-xl overflow-hidden h-64 md:h-80 shadow-sm border border-gray-200 <%= index === listing.images.length - 1 && listing.images.length % 2 !=== 0 ? 'md:col-span-2 md:h-96' : '' %>">
                             <img src="<%= img.url %>" alt="<%= listing.title %> photo <%= index + 1 %>"
                                 class="w-full h-full object-cover hover:scale-105 transition duration-500">
                         </div>
-                    <% }) %>
+                        <% }) %>
                 </div>
-            <% } %>
+                <% } %>
         </div>
     </div>
 </div>

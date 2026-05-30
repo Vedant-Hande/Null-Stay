@@ -61,7 +61,7 @@ function initGalleryUpload(field) {
       removeBtn.type = "button";
       removeBtn.className =
         "absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white hover:bg-red-600 transition";
-      removeBtn.innerHTML = '<i class="fa-solid fa-xmark text-xs"></i>';
+      removeBtn.innerHTML = "<i class=\"fa-solid fa-xmark text-xs\"></i>";
       removeBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         selectedFiles.splice(index, 1);

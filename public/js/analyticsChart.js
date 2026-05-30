@@ -5,17 +5,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const ratings = window.chartData.ratings || [];
   const reviews = window.chartData.reviews || [];
 
-  const ratingsCtx = document.getElementById('ratingsChart');
+  const ratingsCtx = document.getElementById("ratingsChart");
   if (ratingsCtx) {
     new Chart(ratingsCtx, {
-      type: 'bar',
+      type: "bar",
       data: {
         labels: titles,
         datasets: [{
-          label: 'Average Rating',
+          label: "Average Rating",
           data: ratings,
-          backgroundColor: 'rgba(255, 56, 92, 0.75)',
-          borderColor: 'rgba(255, 56, 92, 1)',
+          backgroundColor: "rgba(255, 56, 92, 0.75)",
+          borderColor: "rgba(255, 56, 92, 1)",
           borderWidth: 1.5,
           borderRadius: 12,
           maxBarThickness: 34
@@ -29,11 +29,11 @@ document.addEventListener("DOMContentLoaded", function () {
             beginAtZero: true,
             max: 5,
             grid: {
-              color: 'rgba(0, 0, 0, 0.04)'
+              color: "rgba(0, 0, 0, 0.04)"
             },
             ticks: {
               stepSize: 1,
-              font: { size: 11, weight: '500' }
+              font: { size: 11, weight: "500" }
             }
           },
           x: {
@@ -48,17 +48,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  const reviewsCtx = document.getElementById('reviewsChart');
+  const reviewsCtx = document.getElementById("reviewsChart");
   if (reviewsCtx) {
     new Chart(reviewsCtx, {
-      type: 'bar',
+      type: "bar",
       data: {
         labels: titles,
         datasets: [{
-          label: 'Total Reviews',
+          label: "Total Reviews",
           data: reviews,
-          backgroundColor: 'rgba(37, 99, 235, 0.75)',
-          borderColor: 'rgba(37, 99, 235, 1)',
+          backgroundColor: "rgba(37, 99, 235, 0.75)",
+          borderColor: "rgba(37, 99, 235, 1)",
           borderWidth: 1.5,
           borderRadius: 12,
           maxBarThickness: 34
@@ -71,11 +71,11 @@ document.addEventListener("DOMContentLoaded", function () {
           y: {
             beginAtZero: true,
             grid: {
-              color: 'rgba(0, 0, 0, 0.04)'
+              color: "rgba(0, 0, 0, 0.04)"
             },
             ticks: {
               precision: 0,
-              font: { size: 11, weight: '500' }
+              font: { size: 11, weight: "500" }
             }
           },
           x: {

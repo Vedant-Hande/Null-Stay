@@ -81,16 +81,21 @@ export function buildListingsIndexSeo(query = {}) {
   if (query.category) parts.push(query.category);
   if (query.minPrice || query.maxPrice) {
     parts.push(
-      [query.minPrice && `from ₹${query.minPrice}`, query.maxPrice && `to ₹${query.maxPrice}`]
+      [
+        query.minPrice && `from ₹${query.minPrice}`,
+        query.maxPrice && `to ₹${query.maxPrice}`,
+      ]
         .filter(Boolean)
         .join(" "),
     );
   }
 
   const filterHint = parts.length ? ` ${parts.join(" · ")}` : "";
-  const hasFilters = Object.keys(query).some((k) =>
-    ["q", "country", "category", "minPrice", "maxPrice", "guests"].includes(k) &&
-    query[k],
+  const hasFilters = Object.keys(query).some(
+    (k) =>
+      ["q", "country", "category", "minPrice", "maxPrice", "guests"].includes(
+        k,
+      ) && query[k],
   );
 
   return buildSeo({
@@ -98,19 +103,23 @@ export function buildListingsIndexSeo(query = {}) {
     description: parts.length
       ? `Browse vacation rentals${filterHint} on NullStay. Compare prices, amenities, and book your next trip.`
       : "Browse vacation rentals and unique stays on NullStay. Filter by location, price, category, and guests.",
-    path: hasFilters ? `/listings?${new URLSearchParams(query).toString()}` : "/listings",
+    path: hasFilters
+      ? `/listings?${new URLSearchParams(query).toString()}`
+      : "/listings",
   });
 }
 
 export function buildListingDetailSeo(listing, avgRating = null) {
-  const location = [listing.location, listing.country].filter(Boolean).join(", ");
+  const location = [listing.location, listing.country]
+    .filter(Boolean)
+    .join(", ");
   const desc = listing.desc
     ? truncate(listing.desc, 140)
     : `Book ${listing.title}${location ? ` in ${location}` : ""} on NullStay.`;
   const image =
     listing.image?.url || listing.images?.[0]?.url || DEFAULT_OG_IMAGE;
 
-  let jsonLd = {
+  const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     name: listing.title,
@@ -127,7 +136,7 @@ export function buildListingDetailSeo(listing, avgRating = null) {
     };
   }
 
-  if (listing.price != null) {
+  if (listing.price !== null) {
     jsonLd.priceRange = `₹${listing.price}+`;
   }
 

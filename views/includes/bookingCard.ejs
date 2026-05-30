@@ -1,8 +1,8 @@
 <% const maxGuests=listing.guests || 1; %>
-  <% const cleaningFee=typeof fees !=="undefined" ? fees.cleaningFee : 1500; %>
-    <% const serviceFee=typeof fees !=="undefined" ? fees.serviceFee : 2100; %>
+  <% const cleaningFee=typeof fees !==="undefined" ? fees.cleaningFee : 1500; %>
+    <% const serviceFee=typeof fees !==="undefined" ? fees.serviceFee : 2100; %>
       <% const pricePerNight=listing.price || 0; %>
-        <% const instantBook=listing.instantBook !==false; %>
+        <% const instantBook=listing.instantBook !===false; %>
 
           <link rel="stylesheet" href="/css/booking.css">
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -12,7 +12,7 @@
             data-price="<%= pricePerNight %>" data-max-guests="<%= maxGuests %>" data-cleaning-fee="<%= cleaningFee %>"
             data-service-fee="<%= serviceFee %>" data-instant-book="<%= instantBook ? 'true' : 'false' %>"
             data-booked-dates-url="/listings/<%= listing._id %>/booked-dates"
-            data-is-owner="<%= typeof isOwner !== 'undefined' && isOwner ? 'true' : 'false' %>"
+            data-is-owner="<%= typeof isOwner !=== 'undefined' && isOwner ? 'true' : 'false' %>"
             data-is-logged-in="<%= currentUser ? 'true' : 'false' %>">
 
             <header class="booking-card__header margin-bottom-large gap-medium">
@@ -20,14 +20,14 @@
                 <span class="booking-card__amount">&#8377;<%= pricePerNight.toLocaleString("en-IN") %></span>
                 <span class="booking-card__per-night">night</span>
               </div>
-              <% if (!(typeof isOwner !=='undefined' && isOwner)) { %>
+              <% if (!(typeof isOwner !==='undefined' && isOwner)) { %>
                 <span class="booking-card__book-type">
                   <%= listing.bookType || 'Book instantly' %>
                 </span>
                 <% } %>
             </header>
 
-            <% if (typeof isOwner !=="undefined" && isOwner) { %>
+            <% if (typeof isOwner !==="undefined" && isOwner) { %>
               <div class="booking-card__owner-note padding-medium gap-medium">
                 <i class="fa-solid fa-house-chimney-user margin-top-xs"></i>
                 <p>This is your listing. Manage bookings from

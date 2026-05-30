@@ -53,8 +53,18 @@
     let guestsOpen = false;
 
     const MONTHS_SHORT = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
 
     if (reserveBtnText) {
@@ -118,8 +128,14 @@
         }
       }
 
-      checkInCell?.classList.toggle("booking-card__cell--filled", Boolean(inVal));
-      checkOutCell?.classList.toggle("booking-card__cell--filled", Boolean(outVal));
+      checkInCell?.classList.toggle(
+        "booking-card__cell--filled",
+        Boolean(inVal),
+      );
+      checkOutCell?.classList.toggle(
+        "booking-card__cell--filled",
+        Boolean(outVal),
+      );
     }
 
     function updatePricing() {
@@ -133,9 +149,10 @@
         priceBreakdown?.classList.add("hidden");
         bookingHint?.classList.remove("hidden");
         if (bookingHintText) {
-          bookingHintText.textContent = inVal && !outVal
-            ? "Select check-out date"
-            : "Select dates to see pricing";
+          bookingHintText.textContent =
+            inVal && !outVal
+              ? "Select check-out date"
+              : "Select dates to see pricing";
         }
         if (reserveBtn) reserveBtn.disabled = true;
         return;
@@ -146,8 +163,12 @@
 
       if (nightsLine) {
         nightsLine.textContent =
-          "₹ " + price.toLocaleString("en-IN") + " × " + nights +
-          " night" + (nights > 1 ? "s" : "");
+          "₹ " +
+          price.toLocaleString("en-IN") +
+          " × " +
+          nights +
+          " night" +
+          (nights > 1 ? "s" : "");
       }
       if (subtotalAmount) subtotalAmount.textContent = formatInr(subtotal);
       if (totalAmount) totalAmount.textContent = formatInr(total);
@@ -227,8 +248,13 @@
           weekdays: {
             shorthand: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
             longhand: [
-              "Sunday", "Monday", "Tuesday", "Wednesday",
-              "Thursday", "Friday", "Saturday",
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
             ],
           },
         },

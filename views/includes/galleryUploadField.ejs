@@ -1,53 +1,48 @@
-<%
-  const existingImages = typeof galleryImages !== "undefined" && Array.isArray(galleryImages)
-    ? galleryImages
-    : [];
-  const maxImages = typeof maxGallery !== "undefined" ? maxGallery : 5;
-%>
-<div class="gallery-upload-field" data-max="<%= maxImages %>">
-    <p class="text-[10px] uppercase font-bold text-gray-500 mb-1 tracking-wide">Additional Photos</p>
-    <p class="text-xs text-gray-400 mb-3">Optional · Up to <%= maxImages %> extra shots for your gallery</p>
+<% const existingImages=typeof galleryImages !==="undefined" && Array.isArray(galleryImages) ? galleryImages : []; const
+    maxImages=typeof maxGallery !==="undefined" ? maxGallery : 5; %>
+    <div class="gallery-upload-field" data-max="<%= maxImages %>">
+        <p class="text-[10px] uppercase font-bold text-gray-500 mb-1 tracking-wide">Additional Photos</p>
+        <p class="text-xs text-gray-400 mb-3">Optional · Up to <%= maxImages %> extra shots for your gallery</p>
 
-    <input type="file" id="subImages" name="subImages" accept="image/jpeg,image/png,image/webp,image/gif" multiple
-        class="gallery-upload-input sr-only">
+        <input type="file" id="subImages" name="subImages" accept="image/jpeg,image/png,image/webp,image/gif" multiple
+            class="gallery-upload-input sr-only">
 
-    <div
-        class="gallery-upload-dropzone flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/80 px-6 py-8 text-center transition cursor-pointer hover:border-gray-400 hover:bg-white"
-        role="button" tabindex="0" aria-label="Upload additional photos">
-        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-600">
-            <i class="fa-solid fa-images text-lg"></i>
-        </div>
-        <p class="text-sm text-gray-700">
-            <span class="font-semibold text-gray-900">Add gallery photos</span>
-            <span class="text-gray-500"> · click or drag</span>
-        </p>
-        <p class="text-xs text-gray-400">Select multiple files · max 5 MB each</p>
-    </div>
-
-    <p class="gallery-size-error hidden text-xs text-red-600 mt-2 font-medium" role="alert"></p>
-
-    <% if (existingImages.length) { %>
-        <div class="mt-4">
-            <p class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-wide">Current gallery</p>
-            <div class="existing-gallery-grid grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <% existingImages.forEach((img) => { %>
-                    <div class="existing-gallery-item relative group rounded-xl overflow-hidden border border-gray-200 shadow-sm"
-                        data-filename="<%= img.filename %>">
-                        <img src="<%= img.url %>" alt="Gallery photo" class="h-28 w-full object-cover">
-                        <button type="button"
-                            class="gallery-remove-existing absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition hover:bg-red-600"
-                            title="Remove photo" aria-label="Remove photo">
-                            <i class="fa-solid fa-xmark text-xs"></i>
-                        </button>
-                    </div>
-                <% }) %>
+        <div class="gallery-upload-dropzone flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/80 px-6 py-8 text-center transition cursor-pointer hover:border-gray-400 hover:bg-white"
+            role="button" tabindex="0" aria-label="Upload additional photos">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-600">
+                <i class="fa-solid fa-images text-lg"></i>
             </div>
-            <p class="mt-2 text-xs text-gray-400">Click × to remove. Upload below to add more.</p>
+            <p class="text-sm text-gray-700">
+                <span class="font-semibold text-gray-900">Add gallery photos</span>
+                <span class="text-gray-500"> · click or drag</span>
+            </p>
+            <p class="text-xs text-gray-400">Select multiple files · max 5 MB each</p>
         </div>
-    <% } %>
 
-    <div class="gallery-new-preview mt-4 hidden">
-        <p class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-wide">New photos to upload</p>
-        <div class="gallery-new-grid grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+        <p class="gallery-size-error hidden text-xs text-red-600 mt-2 font-medium" role="alert"></p>
+
+        <% if (existingImages.length) { %>
+            <div class="mt-4">
+                <p class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-wide">Current gallery</p>
+                <div class="existing-gallery-grid grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <% existingImages.forEach((img)=> { %>
+                        <div class="existing-gallery-item relative group rounded-xl overflow-hidden border border-gray-200 shadow-sm"
+                            data-filename="<%= img.filename %>">
+                            <img src="<%= img.url %>" alt="Gallery photo" class="h-28 w-full object-cover">
+                            <button type="button"
+                                class="gallery-remove-existing absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition hover:bg-red-600"
+                                title="Remove photo" aria-label="Remove photo">
+                                <i class="fa-solid fa-xmark text-xs"></i>
+                            </button>
+                        </div>
+                        <% }) %>
+                </div>
+                <p class="mt-2 text-xs text-gray-400">Click × to remove. Upload below to add more.</p>
+            </div>
+            <% } %>
+
+                <div class="gallery-new-preview mt-4 hidden">
+                    <p class="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-wide">New photos to upload</p>
+                    <div class="gallery-new-grid grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+                </div>
     </div>
-</div>

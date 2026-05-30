@@ -41,11 +41,18 @@ export function getPaginationMeta(total, page, perPage = LISTINGS_PER_PAGE) {
  */
 export function buildPageUrl(basePath, query = {}, page = 1) {
   const params = new URLSearchParams();
-  const allowed = ["q", "country", "minPrice", "maxPrice", "guests", "category"];
+  const allowed = [
+    "q",
+    "country",
+    "minPrice",
+    "maxPrice",
+    "guests",
+    "category",
+  ];
 
   for (const key of allowed) {
     const val = query[key];
-    if (val != null && String(val).trim() !== "") {
+    if (val !== null && String(val).trim() !== "") {
       params.set(key, String(val).trim());
     }
   }
@@ -86,15 +93,17 @@ export function getPageNumberItems(current, totalPages) {
  * Attach `prevUrl`, `nextUrl`, and `pageItems` for EJS templates.
  */
 export function enrichPagination(pagination, query, basePath = "/listings") {
-  const pageItems = getPageNumberItems(pagination.page, pagination.totalPages).map(
-    (p) =>
-      p === null
-        ? { ellipsis: true }
-        : {
-            page: p,
-            current: p === pagination.page,
-            url: buildPageUrl(basePath, query, p),
-          },
+  const pageItems = getPageNumberItems(
+    pagination.page,
+    pagination.totalPages,
+  ).map((p) =>
+    p === null
+      ? { ellipsis: true }
+      : {
+          page: p,
+          current: p === pagination.page,
+          url: buildPageUrl(basePath, query, p),
+        },
   );
 
   return {

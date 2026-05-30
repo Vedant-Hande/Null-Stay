@@ -28,16 +28,22 @@
     const nightly = listing.price || 0;
     const subtotal = nightly * NIGHTS;
     const cleaning =
-      listing.cleaningFee != null ? listing.cleaningFee : DEFAULT_CLEANING;
+      listing.cleaningFee !== null ? listing.cleaningFee : DEFAULT_CLEANING;
     const service =
-      listing.serviceFee != null ? listing.serviceFee : DEFAULT_SERVICE;
-    return { nightly, subtotal, cleaning, service, total: subtotal + cleaning + service };
+      listing.serviceFee !== null ? listing.serviceFee : DEFAULT_SERVICE;
+    return {
+      nightly,
+      subtotal,
+      cleaning,
+      service,
+      total: subtotal + cleaning + service,
+    };
   }
 
   async function fetchListings(params) {
     const qs = new URLSearchParams();
     Object.entries(params).forEach(([k, v]) => {
-      if (v != null && String(v).trim() !== "") qs.set(k, String(v).trim());
+      if (v !== null && String(v).trim() !== "") qs.set(k, String(v).trim());
     });
     const res = await fetch(`/api/listings/search?${qs}`);
     if (!res.ok) throw new Error("Search failed");
@@ -75,7 +81,9 @@
 
   function parseMedia(el) {
     try {
-      return JSON.parse(decodeURIComponent(el.getAttribute("data-media") || "%5B%5D"));
+      return JSON.parse(
+        decodeURIComponent(el.getAttribute("data-media") || "%5B%5D"),
+      );
     } catch {
       return [];
     }
@@ -111,7 +119,8 @@
     stopToursIn(body);
     body.className = `ns-mock__body ns-mock__body--cols-${cols}`;
     if (!listings.length) {
-      body.innerHTML = `<div class="ns-mock-empty">No stays found. Try another search.</div>`;
+      body.innerHTML =
+        "<div class=\"ns-mock-empty\">No stays found. Try another search.</div>";
       return;
     }
     body.innerHTML = listings.map(listingCardHtml).join("");
@@ -122,7 +131,8 @@
     const body = mockEl.querySelector("[data-ns-mock-body]");
     if (!body || !listing) {
       if (body) {
-        body.innerHTML = `<div class="ns-mock-empty">Search a stay to preview checkout</div>`;
+        body.innerHTML =
+          "<div class=\"ns-mock-empty\">Search a stay to preview checkout</div>";
       }
       return;
     }
@@ -150,7 +160,8 @@
     const searchInput = mockEl.querySelector(".ns-mock__search");
     if (!listing) {
       if (body) {
-        body.innerHTML = `<div class="ns-mock-empty">Search a villa or city to start chatting</div>`;
+        body.innerHTML =
+          "<div class=\"ns-mock-empty\">Search a villa or city to start chatting</div>";
       }
       if (searchInput) searchInput.placeholder = "Messages — search a stay…";
       return;
@@ -174,7 +185,8 @@
     const body = mockEl.querySelector("[data-ns-mock-body]");
     if (!listing) {
       if (body) {
-        body.innerHTML = `<div class="ns-mock-empty">Search a listing to see host requests</div>`;
+        body.innerHTML =
+          "<div class=\"ns-mock-empty\">Search a listing to see host requests</div>";
       }
       return;
     }
@@ -220,7 +232,12 @@
 
       if (type === "listings") {
         renderListingsMock(mockEl, list, mockEl.dataset.cols || "4");
-        setStatus(mockEl, list.length ? `${list.length} stay${list.length === 1 ? "" : "s"} found` : "");
+        setStatus(
+          mockEl,
+          list.length
+            ? `${list.length} stay${list.length === 1 ? "" : "s"} found`
+            : "",
+        );
       } else if (type === "checkout") {
         renderCheckoutMock(mockEl, list[0] || null);
         setStatus(mockEl, list[0] ? `Checkout for ${list[0].title}` : "");
@@ -266,7 +283,9 @@
     document.querySelectorAll("[data-ns-mock]").forEach(bindMock);
 
     const heroQ = document.getElementById("hero-q");
-    const heroMock = document.querySelector('[data-ns-mock="listings"][data-mock-id="hero"]');
+    const heroMock = document.querySelector(
+      "[data-ns-mock=\"listings\"][data-mock-id=\"hero\"]",
+    );
     if (heroQ && heroMock) {
       const heroInput = heroMock.querySelector(".ns-mock__search");
       const syncFromHero = debounce(() => {

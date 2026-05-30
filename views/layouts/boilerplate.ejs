@@ -5,385 +5,409 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%- include('../includes/seoHead.ejs') %>
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/css/utilities.css">
-    <link rel="stylesheet" href="/css/site-footer.css">
-    <link rel="stylesheet" href="/css/brand.css">
-    <link rel="stylesheet" href="/css/notifications.css">
-    <link rel="stylesheet" href="/css/wishlist.css">
-    <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>
-    <link rel="stylesheet" href="/css/home.css">
-    <% } %>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Google Fonts -->
-    <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <% } else { %>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <% } %>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            color: #222222;
-            overflow-x: clip;
-        }
+        <!-- Tailwind CSS via CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="/css/utilities.css">
+        <link rel="stylesheet" href="/css/site-footer.css">
+        <link rel="stylesheet" href="/css/brand.css">
+        <link rel="stylesheet" href="/css/notifications.css">
+        <link rel="stylesheet" href="/css/wishlist.css">
+        <% if (typeof isHomePage !==='undefined' && isHomePage) { %>
+            <link rel="stylesheet" href="/css/home.css">
+            <% } %>
+                <!-- FontAwesome for Icons -->
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+                <!-- Google Fonts -->
+                <% if (typeof isHomePage !==='undefined' && isHomePage) { %>
+                    <link
+                        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+                        rel="stylesheet">
+                    <% } else { %>
+                        <link
+                            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+                            rel="stylesheet">
+                        <% } %>
+                            <style>
+                                body {
+                                    font-family: 'Inter', sans-serif;
+                                    color: #222222;
+                                    overflow-x: clip;
+                                }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
+                                /* Custom Scrollbar */
+                                ::-webkit-scrollbar {
+                                    width: 10px;
+                                }
 
-        ::-webkit-scrollbar-track {
-            background: #f9fafb;
-        }
+                                ::-webkit-scrollbar-track {
+                                    background: #f9fafb;
+                                }
 
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-            border: 2px solid #f9fafb;
-        }
+                                ::-webkit-scrollbar-thumb {
+                                    background: #cbd5e1;
+                                    border-radius: 10px;
+                                    border: 2px solid #f9fafb;
+                                }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        airbnb: '#ff385c',
-                    }
-                }
-            }
-        }
-    </script>
+                                ::-webkit-scrollbar-thumb:hover {
+                                    background: #94a3b8;
+                                }
+                            </style>
+                            <script>
+                                tailwind.config = {
+                                    theme: {
+                                        extend: {
+                                            colors: {
+                                                airbnb: '#ff385c',
+                                            }
+                                        }
+                                    }
+                                }
+                            </script>
 </head>
 
 
 
-<body class="min-h-screen flex flex-col bg-white custom-scroll relative<%= typeof isHomePage !== 'undefined' && isHomePage ? ' is-home-page' : '' %>">
+<body
+    class="min-h-screen flex flex-col bg-white custom-scroll relative<%= typeof isHomePage !=== 'undefined' && isHomePage ? ' is-home-page' : '' %>">
     <div id="notificationToastStack" class="notification-toast-stack" aria-live="polite"></div>
     <%- include('../includes/desktopNotifyBanner.ejs') %>
-    <!-- Search Backdrop Overlay -->
-    <div id="searchBackdrop" class="fixed inset-0 bg-black/40 z-[60] hidden transition-opacity duration-300 opacity-0">
-    </div>
-    <!-- Expanded Search Panel -->
-    <div id="expandedSearch"
-        class="fixed top-24 left-1/2 -translate-x-1/2 z-[70] w-[95%] max-w-[850px] hidden opacity-0 scale-95 transition-all duration-300">
-        <form action="/listings" method="GET"
-            class="bg-white rounded-[32px] shadow-[0_6px_20px_rgba(0,0,0,0.2)] border border-gray-200 p-2 flex flex-col md:flex-row items-stretch md:items-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
-            <div class="flex-1 px-6 py-4">
-                <label class="block text-xs font-bold text-gray-800 mb-1">Where</label>
-                <input type="text" name="q" placeholder="Search destinations"
-                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.q ? searchQuery.q : '' %>"
-                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
-            </div>
-            <div class="flex-1 px-6 py-4">
-                <label class="block text-xs font-bold text-gray-800 mb-1">Country</label>
-                <input type="text" name="country" placeholder="Any country"
-                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.country ? searchQuery.country : '' %>"
-                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
-            </div>
-            <div class="px-6 py-4 w-full md:w-28">
-                <label class="block text-xs font-bold text-gray-800 mb-1">Min price</label>
-                <input type="number" name="minPrice" min="0" placeholder="₹"
-                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.minPrice ? searchQuery.minPrice : '' %>"
-                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
-            </div>
-            <div class="px-6 py-4 w-full md:w-28">
-                <label class="block text-xs font-bold text-gray-800 mb-1">Max price</label>
-                <input type="number" name="maxPrice" min="0" placeholder="₹"
-                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.maxPrice ? searchQuery.maxPrice : '' %>"
-                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
-            </div>
-            <div class="px-6 py-4 w-full md:w-24">
-                <label class="block text-xs font-bold text-gray-800 mb-1">Guests</label>
-                <input type="number" name="guests" min="1" placeholder="1"
-                    value="<%= typeof searchQuery !== 'undefined' && searchQuery.guests ? searchQuery.guests : '' %>"
-                    class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
-            </div>
-            <div class="p-2 flex items-center justify-center">
-                <button type="submit"
-                    class="bg-airbnb hover:bg-rose-600 text-white rounded-full p-4 flex items-center justify-center transition shadow-md">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </div>
-        </form>
-    </div>
-    <!-- Navbar -->
-    <div class="site-chrome">
-    <nav class="sticky top-0 bg-white z-50 border-b border-gray-200">
-        <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-            <div class="flex flex-row items-center justify-between py-3 gap-3 md:gap-0">
-
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <%- include('../includes/brandLogo.ejs', {
-                      logoClass: 'flex items-center gap-2 text-airbnb text-2xl font-bold no-underline',
-                      logoSize: 'nav',
-                      labelClass: 'hidden lg:block'
-                    }) %>
+        <!-- Search Backdrop Overlay -->
+        <div id="searchBackdrop"
+            class="fixed inset-0 bg-black/40 z-[60] hidden transition-opacity duration-300 opacity-0">
+        </div>
+        <!-- Expanded Search Panel -->
+        <div id="expandedSearch"
+            class="fixed top-24 left-1/2 -translate-x-1/2 z-[70] w-[95%] max-w-[850px] hidden opacity-0 scale-95 transition-all duration-300">
+            <form action="/listings" method="GET"
+                class="bg-white rounded-[32px] shadow-[0_6px_20px_rgba(0,0,0,0.2)] border border-gray-200 p-2 flex flex-col md:flex-row items-stretch md:items-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                <div class="flex-1 px-6 py-4">
+                    <label class="block text-xs font-bold text-gray-800 mb-1">Where</label>
+                    <input type="text" name="q" placeholder="Search destinations"
+                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.q ? searchQuery.q : '' %>"
+                        class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
                 </div>
+                <div class="flex-1 px-6 py-4">
+                    <label class="block text-xs font-bold text-gray-800 mb-1">Country</label>
+                    <input type="text" name="country" placeholder="Any country"
+                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.country ? searchQuery.country : '' %>"
+                        class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
+                </div>
+                <div class="px-6 py-4 w-full md:w-28">
+                    <label class="block text-xs font-bold text-gray-800 mb-1">Min price</label>
+                    <input type="number" name="minPrice" min="0" placeholder="₹"
+                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.minPrice ? searchQuery.minPrice : '' %>"
+                        class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
+                </div>
+                <div class="px-6 py-4 w-full md:w-28">
+                    <label class="block text-xs font-bold text-gray-800 mb-1">Max price</label>
+                    <input type="number" name="maxPrice" min="0" placeholder="₹"
+                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.maxPrice ? searchQuery.maxPrice : '' %>"
+                        class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
+                </div>
+                <div class="px-6 py-4 w-full md:w-24">
+                    <label class="block text-xs font-bold text-gray-800 mb-1">Guests</label>
+                    <input type="number" name="guests" min="1" placeholder="1"
+                        value="<%= typeof searchQuery !=== 'undefined' && searchQuery.guests ? searchQuery.guests : '' %>"
+                        class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
+                </div>
+                <div class="p-2 flex items-center justify-center">
+                    <button type="submit"
+                        class="bg-airbnb hover:bg-rose-600 text-white rounded-full p-4 flex items-center justify-center transition shadow-md">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- Navbar -->
+        <div class="site-chrome">
+            <nav class="sticky top-0 bg-white z-50 border-b border-gray-200">
+                <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+                    <div class="flex flex-row items-center justify-between py-3 gap-3 md:gap-0">
 
-                <!-- Search Bar Pill -->
-                <div id="searchPill"
-                    class="border border-gray-300 w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer z-[70] bg-white">
-                    <div class="flex flex-row items-center justify-between">
-                        <div class="text-sm font-semibold px-6">Anywhere</div>
-                        <div
-                            class="hidden sm:block text-sm font-semibold px-6 border-x border-gray-300 flex-1 text-center">
-                            Any week</div>
-                        <div class="text-sm pl-6 pr-2 text-gray-500 flex flex-row items-center gap-3">
-                            <div class="hidden sm:block">Add guests</div>
-                            <div class="p-2 bg-airbnb rounded-full text-white w-8 h-8 flex items-center justify-center">
-                                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                        <!-- Logo -->
+                        <div class="flex items-center">
+                            <%- include('../includes/brandLogo.ejs', {
+                                logoClass: 'flex items-center gap-2 text-airbnb text-2xl font-bold no-underline' ,
+                                logoSize: 'nav' , labelClass: 'hidden lg:block' }) %>
+                        </div>
+
+                        <!-- Search Bar Pill -->
+                        <div id="searchPill"
+                            class="border border-gray-300 w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer z-[70] bg-white">
+                            <div class="flex flex-row items-center justify-between">
+                                <div class="text-sm font-semibold px-6">Anywhere</div>
+                                <div
+                                    class="hidden sm:block text-sm font-semibold px-6 border-x border-gray-300 flex-1 text-center">
+                                    Any week</div>
+                                <div class="text-sm pl-6 pr-2 text-gray-500 flex flex-row items-center gap-3">
+                                    <div class="hidden sm:block">Add guests</div>
+                                    <div
+                                        class="p-2 bg-airbnb rounded-full text-white w-8 h-8 flex items-center justify-center">
+                                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
 
 
-                <!-- Right Menu -->
-                <div class="flex flex-row items-center gap-1 md:gap-3">
+                        <!-- Right Menu -->
+                        <div class="flex flex-row items-center gap-1 md:gap-3">
 
-                    <div
-                        class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
-                        <a href="/listings">Properties</a>
-                    </div>
-                    <div
-                        class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
-                        <a href="/listings/new">+ Add your property</a>
-                    </div>
-                    <% if (!currentUser) { %>
-                        <div
-                            class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
-                            <a href="/login">Log in</a>
-                        </div>
-                        <% } else { %>
-                            <%- include('../includes/notificationPanel.ejs') %>
-                            <% } %>
+                            <div
+                                class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
+                                <a href="/listings">Properties</a>
+                            </div>
+                            <div
+                                class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
+                                <a href="/listings/new">+ Add your property</a>
+                            </div>
+                            <% if (!currentUser) { %>
+                                <div
+                                    class="text-sm font-semibold py-3 px-3 sm:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer hidden sm:block">
+                                    <a href="/login">Log in</a>
+                                </div>
+                                <% } else { %>
+                                    <%- include('../includes/notificationPanel.ejs') %>
+                                        <% } %>
 
-                            <div class="relative">
-                                <div id="userMenuBtn"
-                                    class="p-2 px-4 border border-gray-300 rounded-full flex flex-row items-center gap-3 hover:shadow-md transition cursor-pointer bg-white">
-                                    <i class="fa-solid fa-bars text-sm"></i>
-                                    <% if (currentUser && currentUser.username) { %>
-                                        <div
-                                            class="bg-airbnb rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center text-xs font-bold uppercase">
-                                            <%= currentUser.username.charAt(0) %>
-                                        </div>
-                                        <% } else { %>
-                                            <div
-                                                class="bg-gray-500 rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center">
-                                                <i class="fa-solid fa-user text-xs"></i>
+                                            <div class="relative">
+                                                <div id="userMenuBtn"
+                                                    class="p-2 px-4 border border-gray-300 rounded-full flex flex-row items-center gap-3 hover:shadow-md transition cursor-pointer bg-white">
+                                                    <i class="fa-solid fa-bars text-sm"></i>
+                                                    <% if (currentUser && currentUser.username) { %>
+                                                        <div
+                                                            class="bg-airbnb rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center text-xs font-bold uppercase">
+                                                            <%= currentUser.username.charAt(0) %>
+                                                        </div>
+                                                        <% } else { %>
+                                                            <div
+                                                                class="bg-gray-500 rounded-full text-white overflow-hidden w-7 h-7 flex items-center justify-center">
+                                                                <i class="fa-solid fa-user text-xs"></i>
+                                                            </div>
+                                                            <% } %>
+                                                </div>
+
+                                                <!-- Dropdown Menu -->
+                                                <div id="userDropdown"
+                                                    class="absolute right-0 top-14 w-60 bg-white rounded-xl shadow-[0_8px_28px_rgba(0,0,0,0.15)] border border-gray-100 flex flex-col z-50 py-2 transition-all duration-200 transform origin-top-right opacity-0 scale-95 pointer-events-none">
+                                                    <% if (!currentUser) { %>
+                                                        <a href="/signup"
+                                                            class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Sign
+                                                            up</a>
+                                                        <a href="/login"
+                                                            class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log
+                                                            in</a>
+                                                        <div class="border-t border-gray-200 my-1"></div>
+                                                        <a href="#"
+                                                            class="px-4 py-3 hover:bg-gray-50 text-sm transition">Help
+                                                            Center</a>
+                                                        <% } else { %>
+                                                            <a href="/messages"
+                                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Messages</a>
+                                                            <a href="/notifications"
+                                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition flex items-center justify-between gap-2">
+                                                                <span>Notifications</span>
+                                                                <% if (unreadNotificationCount> 0) { %>
+                                                                    <span
+                                                                        class="text-xs font-bold bg-airbnb text-white px-2 py-0.5 rounded-full">
+                                                                        <%= unreadNotificationCount> 99 ? '99+' :
+                                                                            unreadNotificationCount %>
+                                                                    </span>
+                                                                    <% } %>
+                                                            </a>
+                                                            <a href="/bookings/trips"
+                                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Trips</a>
+                                                            <a href="/wishlists"
+                                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Wishlists</a>
+                                                            <div class="border-t border-gray-200 my-1"></div>
+                                                            <a href="/listings/new"
+                                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Manage
+                                                                listings</a>
+                                                            <a href="/bookings/host"
+                                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Reservations</a>
+                                                            <a href="/user/account"
+                                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Account</a>
+                                                            <a href="/user/analytics"
+                                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Analytics</a>
+                                                            <div class="border-t border-gray-200 my-1"></div>
+                                                            <a href="/logout"
+                                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log
+                                                                out</a>
+                                                            <% } %>
+                                                </div>
                                             </div>
-                                            <% } %>
-                                </div>
+                        </div>
 
-                                <!-- Dropdown Menu -->
-                                <div id="userDropdown"
-                                    class="absolute right-0 top-14 w-60 bg-white rounded-xl shadow-[0_8px_28px_rgba(0,0,0,0.15)] border border-gray-100 flex flex-col z-50 py-2 transition-all duration-200 transform origin-top-right opacity-0 scale-95 pointer-events-none">
-                                    <% if (!currentUser) { %>
-                                        <a href="/signup"
-                                            class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Sign
-                                            up</a>
-                                        <a href="/login" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log
-                                            in</a>
-                                        <div class="border-t border-gray-200 my-1"></div>
-                                        <a href="#" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Help
-                                            Center</a>
-                                        <% } else { %>
-                                            <a href="/messages"
-                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Messages</a>
-                                            <a href="/notifications"
-                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition flex items-center justify-between gap-2">
-                                                <span>Notifications</span>
-                                                <% if (unreadNotificationCount > 0) { %>
-                                                    <span class="text-xs font-bold bg-airbnb text-white px-2 py-0.5 rounded-full"><%= unreadNotificationCount > 99 ? '99+' : unreadNotificationCount %></span>
-                                                <% } %>
-                                            </a>
-                                            <a href="/bookings/trips"
-                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Trips</a>
-                                            <a href="/wishlists"
-                                                class="px-4 py-3 hover:bg-gray-50 font-semibold text-sm transition">Wishlists</a>
-                                            <div class="border-t border-gray-200 my-1"></div>
-                                            <a href="/listings/new"
-                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Manage
-                                                listings</a>
-                                            <a href="/bookings/host"
-                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Reservations</a>
-                                            <a href="/user/account"
-                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Account</a>
-                                            <a href="/user/analytics"
-                                                class="px-4 py-3 hover:bg-gray-50 text-sm transition">Analytics</a>
-                                            <div class="border-t border-gray-200 my-1"></div>
-                                            <a href="/logout" class="px-4 py-3 hover:bg-gray-50 text-sm transition">Log
-                                                out</a>
-                                            <% } %>
-                                </div>
-                            </div>
+                    </div>
                 </div>
 
+                <!-- Categories Bar -->
+                <% if (typeof isListingsPage !==="undefined" && isListingsPage) { %>
+                    <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-2">
+                        <div
+                            class="flex flex-row items-center justify-between overflow-x-auto gap-8 pt-1 hide-scrollbar">
+                            <a href="/listings?category=pools"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'pools' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-water text-lg"></i>
+                                <div class="text-xs font-medium">Amazing pools</div>
+                            </a>
+                            <a href="/listings?category=beachfront"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'beachfront' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-umbrella-beach text-lg"></i>
+                                <div class="text-xs font-medium">Beachfront</div>
+                            </a>
+                            <a href="/listings?category=castles"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'castles' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-brands fa-fort-awesome text-lg"></i>
+                                <div class="text-xs font-medium">Castles</div>
+                            </a>
+                            <a href="/listings?category=treehouses"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'treehouses' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-tree text-lg"></i>
+                                <div class="text-xs font-medium">Treehouses</div>
+                            </a>
+                            <a href="/listings?category=cabins"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'cabins' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-house-user text-lg"></i>
+                                <div class="text-xs font-medium">Cabins</div>
+                            </a>
+                            <a href="/listings?category=cities"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'cities' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-city text-lg"></i>
+                                <div class="text-xs font-medium">Iconic cities</div>
+                            </a>
+                        </div>
+                        <style>
+                            .hide-scrollbar::-webkit-scrollbar {
+                                display: none;
+                            }
+
+                            .hide-scrollbar {
+                                -ms-overflow-style: none;
+                                scrollbar-width: none;
+                            }
+                        </style>
+                    </div>
+                    <% } %>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <main
+            class="flex-grow w-full <%= typeof isHomePage !=== 'undefined' && isHomePage ? 'p-0 max-w-none' : 'max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-8' %>">
+            <% if (typeof isHomePage==='undefined' || !isHomePage) { %>
+                <%- include("../includes/flash.ejs") %>
+                    <% } %>
+                        <%- body %>
+        </main>
+        <!-- Global confirm dialog (replaces browser confirm) -->
+        <div id="nullstayConfirmModal"
+            class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm z-[9998] hidden flex items-center justify-center p-4 select-none">
+            <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-gray-100 transform transition duration-300 scale-95 opacity-0"
+                id="nullstayConfirmModalContent">
+                <h3 id="nullstayConfirmTitle" class="text-xl font-semibold text-gray-900 tracking-tight">Are you sure?
+                </h3>
+                <p id="nullstayConfirmMessage" class="text-sm text-gray-500 font-normal mt-2 leading-relaxed"></p>
+                <div class="flex items-center gap-3 mt-6">
+                    <button type="button" id="nullstayConfirmCancel"
+                        class="flex-1 py-3 text-sm font-bold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition duration-200">
+                        Cancel
+                    </button>
+                    <button type="button" id="nullstayConfirmOk"
+                        class="flex-1 py-3 text-sm font-bold text-white bg-gray-900 hover:bg-black rounded-xl shadow-md transition duration-200">
+                        Confirm
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- Categories Bar -->
-        <% if (typeof isListingsPage !== "undefined" && isListingsPage) { %>
-        <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-2">
-            <div class="flex flex-row items-center justify-between overflow-x-auto gap-8 pt-1 hide-scrollbar">
-                <a href="/listings?category=pools"
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'pools' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
-                    <i class="fa-solid fa-water text-lg"></i>
-                    <div class="text-xs font-medium">Amazing pools</div>
-                </a>
-                <a href="/listings?category=beachfront"
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'beachfront' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
-                    <i class="fa-solid fa-umbrella-beach text-lg"></i>
-                    <div class="text-xs font-medium">Beachfront</div>
-                </a>
-                <a href="/listings?category=castles"
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'castles' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
-                    <i class="fa-brands fa-fort-awesome text-lg"></i>
-                    <div class="text-xs font-medium">Castles</div>
-                </a>
-                <a href="/listings?category=treehouses"
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'treehouses' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
-                    <i class="fa-solid fa-tree text-lg"></i>
-                    <div class="text-xs font-medium">Treehouses</div>
-                </a>
-                <a href="/listings?category=cabins"
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'cabins' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
-                    <i class="fa-solid fa-house-user text-lg"></i>
-                    <div class="text-xs font-medium">Cabins</div>
-                </a>
-                <a href="/listings?category=cities"
-                    class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'cities' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
-                    <i class="fa-solid fa-city text-lg"></i>
-                    <div class="text-xs font-medium">Iconic cities</div>
-                </a>
+        <!-- Beautiful Premium Delete Confirmation Modal -->
+        <div id="deleteConfirmModal"
+            class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4 select-none">
+            <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-gray-100 transform transition duration-300 scale-95 opacity-0"
+                id="deleteConfirmModalContent">
+                <!-- Icon -->
+                <div
+                    class="w-14 h-14 bg-rose-50 border border-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-xl mb-5 shadow-sm">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <!-- Title and Description -->
+                <h3 class="text-xl font-bold text-gray-900 tracking-tight">Delete Listing</h3>
+                <p class="text-xs text-gray-500 font-normal mt-1 leading-relaxed">
+                    Are you sure you want to permanently delete this property? This action cannot be undone.
+                </p>
+                <!-- Actions -->
+                <div class="flex items-center gap-3 mt-6">
+                    <button type="button" onclick="closeDeleteModal()"
+                        class="flex-1 py-3 text-sm font-bold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition duration-200">
+                        Cancel
+                    </button>
+                    <button type="button" id="confirmDeleteBtn"
+                        class="flex-1 py-3 text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md hover:shadow-lg transition duration-200">
+                        Delete
+                    </button>
+                </div>
             </div>
-            <style>
-                .hide-scrollbar::-webkit-scrollbar {
-                    display: none;
+        </div>
+
+        <script>
+            let formToSubmit = null;
+            function openDeleteModal(event, form) {
+                if (event) event.preventDefault();
+                formToSubmit = form;
+                const modal = document.getElementById('deleteConfirmModal');
+                const content = document.getElementById('deleteConfirmModalContent');
+                if (modal && content) {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        content.classList.remove('scale-95', 'opacity-0');
+                        content.classList.add('scale-100', 'opacity-100');
+                    }, 10);
                 }
+            }
 
-                .hide-scrollbar {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
+            function closeDeleteModal() {
+                const modal = document.getElementById('deleteConfirmModal');
+                const content = document.getElementById('deleteConfirmModalContent');
+                if (modal && content) {
+                    content.classList.remove('scale-100', 'opacity-100');
+                    content.classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        formToSubmit = null;
+                    }, 200);
                 }
-            </style>
-        </div>
-        <% } %>
-    </nav>
-    </div>
-
-    <!-- Main Content -->
-    <main class="flex-grow w-full <%= typeof isHomePage !== 'undefined' && isHomePage ? 'p-0 max-w-none' : 'max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-8' %>">
-        <% if (typeof isHomePage === 'undefined' || !isHomePage) { %>
-        <%- include("../includes/flash.ejs") %>
-        <% } %>
-        <%- body %>
-    </main>
-    <!-- Global confirm dialog (replaces browser confirm) -->
-    <div id="nullstayConfirmModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm z-[9998] hidden flex items-center justify-center p-4 select-none">
-        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-gray-100 transform transition duration-300 scale-95 opacity-0" id="nullstayConfirmModalContent">
-            <h3 id="nullstayConfirmTitle" class="text-xl font-semibold text-gray-900 tracking-tight">Are you sure?</h3>
-            <p id="nullstayConfirmMessage" class="text-sm text-gray-500 font-normal mt-2 leading-relaxed"></p>
-            <div class="flex items-center gap-3 mt-6">
-                <button type="button" id="nullstayConfirmCancel" class="flex-1 py-3 text-sm font-bold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition duration-200">
-                    Cancel
-                </button>
-                <button type="button" id="nullstayConfirmOk" class="flex-1 py-3 text-sm font-bold text-white bg-gray-900 hover:bg-black rounded-xl shadow-md transition duration-200">
-                    Confirm
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Beautiful Premium Delete Confirmation Modal -->
-    <div id="deleteConfirmModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4 select-none">
-        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-gray-100 transform transition duration-300 scale-95 opacity-0" id="deleteConfirmModalContent">
-            <!-- Icon -->
-            <div class="w-14 h-14 bg-rose-50 border border-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-xl mb-5 shadow-sm">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <!-- Title and Description -->
-            <h3 class="text-xl font-bold text-gray-900 tracking-tight">Delete Listing</h3>
-            <p class="text-xs text-gray-500 font-normal mt-1 leading-relaxed">
-                Are you sure you want to permanently delete this property? This action cannot be undone.
-            </p>
-            <!-- Actions -->
-            <div class="flex items-center gap-3 mt-6">
-                <button type="button" onclick="closeDeleteModal()" class="flex-1 py-3 text-sm font-bold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition duration-200">
-                    Cancel
-                </button>
-                <button type="button" id="confirmDeleteBtn" class="flex-1 py-3 text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md hover:shadow-lg transition duration-200">
-                    Delete
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let formToSubmit = null;
-        function openDeleteModal(event, form) {
-            if (event) event.preventDefault();
-            formToSubmit = form;
-            const modal = document.getElementById('deleteConfirmModal');
-            const content = document.getElementById('deleteConfirmModalContent');
-            if (modal && content) {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    content.classList.remove('scale-95', 'opacity-0');
-                    content.classList.add('scale-100', 'opacity-100');
-                }, 10);
             }
-        }
 
-        function closeDeleteModal() {
-            const modal = document.getElementById('deleteConfirmModal');
-            const content = document.getElementById('deleteConfirmModalContent');
-            if (modal && content) {
-                content.classList.remove('scale-100', 'opacity-100');
-                content.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    formToSubmit = null;
-                }, 200);
-            }
-        }
+            document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
+                if (formToSubmit) {
+                    formToSubmit.submit();
+                }
+            });
+        </script>
 
-        document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
-            if (formToSubmit) {
-                formToSubmit.submit();
-            }
-        });
-    </script>
+        <%- include('../includes/landingFooter.ejs') %>
 
-    <%- include('../includes/landingFooter.ejs') %>
-
-    <link rel="stylesheet" href="/css/ui-dialog.css">
-    <script src="/js/nullstay-ui.js"></script>
-    <script src="/js/script.js"></script>
-    <script src="/js/newListing.js"></script>
-    <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>
-    <script src="/js/home.js"></script>
-    <script src="/js/home-mocks.js"></script>
-    <% } %>
-    <% if (currentUser) { %>
-    <script>window.__NULLSTAY_USER_ID__ = "<%= currentUser._id %>";</script>
-    <% if (typeof webPushEnabled !== 'undefined' && webPushEnabled && vapidPublicKey) { %>
-    <script>window.__NULLSTAY_VAPID_KEY__ = "<%= vapidPublicKey %>";</script>
-    <% } %>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/notifications.js"></script>
-    <script src="/js/messages.js"></script>
-    <script src="/js/wishlist.js"></script>
-    <% } %>
+            <link rel="stylesheet" href="/css/ui-dialog.css">
+            <script src="/js/nullstay-ui.js"></script>
+            <script src="/js/script.js"></script>
+            <script src="/js/newListing.js"></script>
+            <% if (typeof isHomePage !==='undefined' && isHomePage) { %>
+                <script src="/js/home.js"></script>
+                <script src="/js/home-mocks.js"></script>
+                <% } %>
+                    <% if (currentUser) { %>
+                        <script>window.__NULLSTAY_USER_ID__ = "<%= currentUser._id %>";</script>
+                        <% if (typeof webPushEnabled !==='undefined' && webPushEnabled && vapidPublicKey) { %>
+                            <script>window.__NULLSTAY_VAPID_KEY__ = "<%= vapidPublicKey %>";</script>
+                            <% } %>
+                                <script src="/socket.io/socket.io.js"></script>
+                                <script src="/js/notifications.js"></script>
+                                <script src="/js/messages.js"></script>
+                                <script src="/js/wishlist.js"></script>
+                                <% } %>
 </body>
 
 </html>
