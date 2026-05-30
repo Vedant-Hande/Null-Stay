@@ -156,37 +156,6 @@
           </div>
           <% } %>
 
-        <!-- Location map -->
-        <div class="border-b border-gray-200 py-6">
-          <h2 class="text-xl font-semibold mb-1">Where you&rsquo;ll be</h2>
-          <p class="text-gray-600 mb-4">
-            <%= listing.location %>, <%= listing.country %>
-          </p>
-          <% if (mapCoords) { %>
-            <div
-              id="listingMap"
-              class="listing-map rounded-xl overflow-hidden"
-              data-lat="<%= mapCoords.lat %>"
-              data-lng="<%= mapCoords.lng %>"
-              data-title="<%= listing.title %>"
-              data-place="<%= listing.location %>, <%= listing.country %>"
-              role="region"
-              aria-label="Map showing stay location"
-            >
-              <div class="listing-map__loading">Loading map&hellip;</div>
-            </div>
-            <p class="text-xs text-gray-500 mt-3">
-              Map data &copy; <a href="https://www.openstreetmap.org/copyright" class="underline" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors
-            </p>
-          <% } else { %>
-            <div class="listing-map rounded-xl listing-map__error" role="status">
-              Map unavailable for this location. Search
-              <a href="https://www.openstreetmap.org/search?query=<%= encodeURIComponent(listing.location + ', ' + listing.country) %>" class="underline font-medium" target="_blank" rel="noopener noreferrer"><%= listing.location %>, <%= listing.country %></a>
-              on OpenStreetMap.
-            </div>
-          <% } %>
-        </div>
-
             <!-- Reviews Section -->
             <div class="border-t border-gray-200 pt-8 pb-6 mt-2">
               <div class="flex items-center gap-2 text-2xl font-semibold mb-1">
@@ -418,6 +387,42 @@
       </div>
     </div>
   </div>
+
+  <!-- Location map (full width, below reviews) -->
+  <section class="listing-map-section border-t border-gray-200 pt-10 mt-4">
+    <div class="max-w-[1120px] mx-auto px-4 sm:px-0 mb-5">
+      <h2 class="text-xl font-semibold mb-1">Where you&rsquo;ll be</h2>
+      <p class="text-gray-600">
+        <%= listing.location %>, <%= listing.country %>
+      </p>
+    </div>
+    <% if (mapCoords) { %>
+      <div
+        id="listingMap"
+        class="listing-map listing-map--fullwidth overflow-hidden"
+        data-lat="<%= mapCoords.lat %>"
+        data-lng="<%= mapCoords.lng %>"
+        data-title="<%= listing.title %>"
+        data-place="<%= listing.location %>, <%= listing.country %>"
+        role="region"
+        aria-label="Satellite map showing stay location"
+      >
+        <div class="listing-map__loading">Loading map&hellip;</div>
+      </div>
+      <p class="text-xs text-gray-500 mt-3 max-w-[1120px] mx-auto px-4 sm:px-0 pb-8">
+        Imagery &copy; <a href="https://www.esri.com/" class="underline" target="_blank" rel="noopener noreferrer">Esri</a>,
+        Maxar, Earthstar Geographics, and the GIS User Community
+      </p>
+    <% } else { %>
+      <div class="max-w-[1120px] mx-auto px-4 sm:px-0 pb-8">
+        <div class="listing-map listing-map--fullwidth rounded-xl listing-map__error" role="status">
+          Map unavailable for this location. Search
+          <a href="https://www.openstreetmap.org/search?query=<%= encodeURIComponent(listing.location + ', ' + listing.country) %>" class="underline font-medium" target="_blank" rel="noopener noreferrer"><%= listing.location %>, <%= listing.country %></a>
+          on OpenStreetMap.
+        </div>
+      </div>
+    <% } %>
+  </section>
 
   <%- include('../includes/reviewsModal.ejs') %>
     <%- include('../includes/photosModal.ejs') %>
