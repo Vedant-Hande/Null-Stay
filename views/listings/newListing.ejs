@@ -101,42 +101,7 @@
                                     %>
                         </div>
 
-                        <!-- Group: Location -->
-                        <div class="flex flex-col gap-5">
-                            <h3
-                                class="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">
-                                Location</h3>
-
-                            <div class="flex flex-col sm:flex-row gap-5">
-                                <div
-                                    class="flex-1 border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
-                                    <div class="relative px-4 py-2">
-                                        <label for="country"
-                                            class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Country</label>
-                                        <input type="text" id="country" name="listing[country]" required maxlength="50"
-                                            class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 font-medium"
-                                            placeholder="e.g. India">
-                                        <div class="invalid-feedback">Country is required.</div>
-                                        <div class="valid-feedback">Looks good!</div>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="flex-1 border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
-                                    <div class="relative px-4 py-2">
-                                        <label for="location"
-                                            class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Location
-                                            (City, State)</label>
-                                        <input type="text" id="location" name="listing[location]" required
-                                            maxlength="100"
-                                            class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent placeholder-gray-300 font-medium"
-                                            placeholder="e.g. Goa">
-                                        <div class="invalid-feedback">Location is required.</div>
-                                        <div class="valid-feedback">Looks good!</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <%- include("../includes/localStaysFormFields.ejs") %>
                     </div>
 
                     <!-- Step 2: Capacity & Amenities -->
@@ -205,9 +170,10 @@
                                 class="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">
                                 Amenities</h3>
 
+                            <%- include("../includes/localStaysSuitableFor.ejs") %>
+
                             <div class="grid grid-cols-2 gap-4">
-                                <% const amenitiesList=['Wifi', 'Kitchen' , 'Free Parking' , 'Pool' , 'Air Conditioning'
-                                    , 'TV' , 'Heating' , 'Washer' ]; %>
+                                <% const amenitiesList = (typeof localStays !== 'undefined' && localStays.LOCAL_AMENITIES) ? localStays.LOCAL_AMENITIES : ['Wifi', 'Kitchen', 'AC']; %>
                                     <% amenitiesList.forEach(amenity=> { %>
                                         <label
                                             class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-gray-400 transition group has-[:checked]:border-black has-[:checked]:bg-gray-50 shadow-sm">
@@ -233,9 +199,22 @@
                             <div
                                 class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
                                 <div class="relative px-4 py-2">
+                                    <label for="priceUnit"
+                                        class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Rent period</label>
+                                    <select id="priceUnit" name="listing[priceUnit]" required
+                                        class="w-full pt-5 pb-1 outline-none text-gray-900 bg-transparent font-medium">
+                                        <% (localStays.PRICE_UNITS || [{id:'month',label:'Per month'},{id:'night',label:'Per night'}]).forEach((u) => { %>
+                                            <option value="<%= u.id %>" <%= u.id === 'month' ? 'selected' : '' %>><%= u.label %></option>
+                                        <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div
+                                class="border border-gray-300 hover:border-gray-500 rounded-xl overflow-hidden focus-within:border-black focus-within:ring-1 focus-within:ring-black transition shadow-sm bg-gray-50/50">
+                                <div class="relative px-4 py-2">
                                     <label for="price"
-                                        class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Price (per
-                                        night)</label>
+                                        class="absolute text-[10px] uppercase font-bold text-gray-500 top-2">Rent amount (₹)</label>
                                     <div class="flex items-center">
                                         <span class="pt-5 pb-1 text-gray-900 font-medium mr-1">&#8377;</span>
                                         <input type="number" id="price" name="listing[price]" required min="100"
@@ -246,6 +225,12 @@
                                         <div class="valid-feedback ml-2">Looks good!</div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-xl px-4 py-3 bg-white mt-2">
+                                <label for="deposit" class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Security deposit (optional, ₹)</label>
+                                <input type="number" id="deposit" name="listing[deposit]" min="0" placeholder="e.g. 5000"
+                                    class="w-full outline-none text-gray-900 font-medium text-sm" />
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
@@ -306,3 +291,4 @@
     <script src="/js/imageUpload.js"></script>
     <script src="/js/galleryUpload.js"></script>
     <script src="/js/listingFormLoading.js"></script>
+    <script src="/js/listingCityAreas.js"></script>

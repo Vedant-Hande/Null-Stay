@@ -66,9 +66,9 @@ export function buildSeo({
 
 export function buildHomeSeo() {
   return buildSeo({
-    title: "Vacation rentals and unique stays",
+    title: "Rooms, PG & flats for rent in Pune, Nashik & more",
     description:
-      "NullStay — book unique homes and stays across India. Search by location, price, and guests. Instant book or request to stay.",
+      "NullStay — find PG, rooms, and flats in Indian cities. Search by city and area, compare rent, message owners, and book with UPI.",
     path: "/",
     type: "website",
   });
@@ -77,6 +77,8 @@ export function buildHomeSeo() {
 export function buildListingsIndexSeo(query = {}) {
   const parts = [];
   if (query.q) parts.push(`"${query.q}"`);
+  if (query.city) parts.push(query.city);
+  if (query.propertyType) parts.push(query.propertyType);
   if (query.country) parts.push(query.country);
   if (query.category) parts.push(query.category);
   if (query.minPrice || query.maxPrice) {
@@ -93,7 +95,7 @@ export function buildListingsIndexSeo(query = {}) {
   const filterHint = parts.length ? ` ${parts.join(" · ")}` : "";
   const hasFilters = Object.keys(query).some(
     (k) =>
-      ["q", "country", "category", "minPrice", "maxPrice", "guests"].includes(
+      ["q", "city", "area", "propertyType", "suitableFor", "country", "category", "minPrice", "maxPrice", "guests", "priceUnit"].includes(
         k,
       ) && query[k],
   );
@@ -101,8 +103,8 @@ export function buildListingsIndexSeo(query = {}) {
   return buildSeo({
     title: parts.length ? `Stays${filterHint}` : "Explore stays",
     description: parts.length
-      ? `Browse vacation rentals${filterHint} on NullStay. Compare prices, amenities, and book your next trip.`
-      : "Browse vacation rentals and unique stays on NullStay. Filter by location, price, category, and guests.",
+      ? `Browse rooms and flats${filterHint} on NullStay. Compare rent and contact owners.`
+      : "Browse PG, rooms, and flats for rent on NullStay. Filter by city, area, property type, and price.",
     path: hasFilters
       ? `/listings?${new URLSearchParams(query).toString()}`
       : "/listings",

@@ -140,6 +140,9 @@ router.post(
 
     const result = await uploadToCloudinary(mainFile.buffer);
     const newListing = new listings(req.body.listing);
+    if (newListing.city) {
+      newListing.city = String(newListing.city).trim().toLowerCase();
+    }
     newListing.image = { url: result.secure_url, filename: result.public_id };
     newListing.owner = req.user._id;
     newListing.images = [];
@@ -193,6 +196,9 @@ router.put(
     const listingData = { ...req.body.listing };
     delete listingData.image;
     delete listingData.images;
+    if (listingData.city) {
+      listingData.city = String(listingData.city).trim().toLowerCase();
+    }
     Object.assign(listing, listingData);
 
     const mainFile = req.files?.image?.[0];
@@ -369,7 +375,7 @@ router.get(
     );
 
     const mapCoords = await geocodeLocation(
-      listing.location,
+      [listing.area, listing.location, listing.city].filter(Boolean).join(", "),
       listing.country,
     );
 

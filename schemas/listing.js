@@ -1,4 +1,13 @@
 import Joi from "joi";
+import { PROPERTY_TYPE_IDS } from "../utils/localStaysConfig.js";
+
+const arrayOrSingleString = Joi.alternatives()
+  .try(Joi.array().items(Joi.string()), Joi.string())
+  .custom((value) => {
+    if (Array.isArray(value)) return value;
+    if (value === undefined || value === null || value === "") return [];
+    return [value];
+  });
 
 const listingFields = {
   title: Joi.string().required().max(50).messages({
@@ -10,10 +19,19 @@ const listingFields = {
     "any.required": "Please enter a description",
     "string.empty": "Description cannot be empty",
   }),
+  city: Joi.string().max(50).allow("", null).optional(),
+  area: Joi.string().allow("", null).max(80).optional(),
+  propertyType: Joi.string()
+    .valid(...PROPERTY_TYPE_IDS, "flat", "other")
+    .default("private_room"),
+  priceUnit: Joi.string().valid("night", "month").default("month"),
+  suitableFor: arrayOrSingleString.default([]),
+  deposit: Joi.number().min(0).allow("", null).empty("").optional(),
+  houseRules: Joi.string().allow("", null).max(500).optional(),
   location: Joi.string().required().max(100).messages({
-    "any.required": "Please enter a location",
+    "any.required": "Please enter a location / locality",
   }),
-  country: Joi.string().required().max(50).messages({
+  country: Joi.string().required().max(50).default("India").messages({
     "any.required": "Please enter a country",
   }),
   price: Joi.number().required().min(100).messages({
@@ -37,14 +55,7 @@ const listingFields = {
   bedrooms: Joi.number().required().min(1),
   beds: Joi.number().required().min(1),
   baths: Joi.number().required().min(1),
-  amenities: Joi.alternatives()
-    .try(Joi.array().items(Joi.string()), Joi.string())
-    .default([])
-    .custom((value) => {
-      if (Array.isArray(value)) return value;
-      if (value === undefined || value === null || value === "") return [];
-      return [value];
-    }),
+  amenities: arrayOrSingleString.default([]),
 };
 
 /** Validates req.body.listing (multipart-safe; image file handled separately) */

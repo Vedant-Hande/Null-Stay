@@ -55,6 +55,11 @@ router.get(
       perPage,
       query: {
         q: req.query.q || "",
+        city: req.query.city || "",
+        area: req.query.area || "",
+        propertyType: req.query.propertyType || "",
+        suitableFor: req.query.suitableFor || "",
+        priceUnit: req.query.priceUnit || "",
         category: req.query.category || "",
         country: req.query.country || "",
         guests: req.query.guests || "",
