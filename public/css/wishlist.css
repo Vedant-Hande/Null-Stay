@@ -1,0 +1,200 @@
+/* Wishlist heart — NullStay rose #ff385c */
+
+.wishlist-heart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.wishlist-heart:focus-visible {
+  outline: 2px solid #ff385c;
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+
+.wishlist-heart:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.wishlist-heart:disabled,
+.wishlist-heart[data-wishlist-busy="1"] {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* ── Overlay on listing cards ── */
+.wishlist-heart--overlay {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.wishlist-heart--overlay:hover {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.wishlist-heart--overlay .wishlist-heart__icon {
+  font-size: 1.05rem;
+  color: #222;
+  transition: color 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.wishlist-heart--overlay.is-saved {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.wishlist-heart--overlay.is-saved .wishlist-heart__icon {
+  color: #ff385c;
+}
+
+.wishlist-heart--overlay.is-saved:hover .wishlist-heart__icon {
+  color: #e31c5f;
+}
+
+/* ── Pill on listing show page ── */
+.wishlist-heart--pill {
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #222;
+  text-decoration: none;
+  border: 1px solid #ebebeb;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.wishlist-heart--pill:hover {
+  background: #f7f7f7;
+  border-color: #ddd;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.wishlist-heart--pill .wishlist-heart__icon {
+  font-size: 1rem;
+  color: #717171;
+  transition: color 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.wishlist-heart--pill.is-saved {
+  color: #ff385c;
+  border-color: rgba(255, 56, 92, 0.35);
+  background: linear-gradient(135deg, #fff5f7 0%, #fff 100%);
+}
+
+.wishlist-heart--pill.is-saved .wishlist-heart__icon {
+  color: #ff385c;
+}
+
+.wishlist-heart__label {
+  transition: color 0.2s ease;
+}
+
+/* ── Like pop animation ── */
+@keyframes wishlist-pop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.35);
+  }
+  65% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.wishlist-heart.is-liked .wishlist-heart__icon {
+  animation: wishlist-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Burst particles on like ── */
+.wishlist-heart__burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.wishlist-heart__particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 9999px;
+  background: #ff385c;
+  opacity: 0;
+  animation: wishlist-particle 0.55s ease-out forwards;
+}
+
+@keyframes wishlist-particle {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) scale(0.2);
+  }
+}
+
+/* ── Ring pulse on like ── */
+.wishlist-heart__ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 2px solid #ff385c;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wishlist-heart.is-liked .wishlist-heart__ring {
+  animation: wishlist-ring 0.5s ease-out forwards;
+}
+
+@keyframes wishlist-ring {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wishlist-heart,
+  .wishlist-heart__icon,
+  .wishlist-heart.is-liked .wishlist-heart__icon,
+  .wishlist-heart.is-liked .wishlist-heart__ring,
+  .wishlist-heart__particle {
+    animation: none !important;
+    transition: none !important;
+  }
+}

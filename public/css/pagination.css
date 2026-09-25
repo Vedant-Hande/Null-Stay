@@ -1,0 +1,43 @@
+/* Infinite scroll — listings page */
+
+.listings-scroll-sentinel {
+  height: 1px;
+  width: 100%;
+}
+
+.listings-scroll-status {
+  text-align: center;
+  padding: 2rem 1rem 3rem;
+  font-size: 0.875rem;
+  color: #717171;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.listings-scroll-status--error {
+  color: #ff385c;
+}
+
+.listings-scroll-spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #ebebeb;
+  border-top-color: #ff385c;
+  border-radius: 9999px;
+  animation: listings-spin 0.7s linear infinite;
+}
+
+@keyframes listings-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listings-scroll-spinner {
+    animation: none;
+    border-top-color: #ebebeb;
+  }
+}

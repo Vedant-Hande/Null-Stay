@@ -1,0 +1,82 @@
+<% layout('layouts/landing') -%>
+<% landingActive = 'host'; %>
+
+<div class="ns-host-page">
+  <section class="ns-host-hero" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400')">
+    <div class="ns-host-hero__content">
+      <span class="ns-eyebrow"><i class="fa-solid fa-house-chimney"></i> For hosts</span>
+      <h1>Turn your space into someone’s dream trip</h1>
+      <p>List in minutes. Set prices in rupees. Get paid when guests book — with UPI-ready checkout built for India.</p>
+      <a href="<%= currentUser ? '/listings/new' : '/signup' %>" class="ns-btn-lg-white">
+        <i class="fa-solid fa-plus"></i> List your property
+      </a>
+    </div>
+  </section>
+
+  <div class="ns-host-stats">
+    <div class="ns-host-stat">
+      <strong>₹</strong>
+      <span>Rupee pricing</span>
+    </div>
+    <div class="ns-host-stat">
+      <strong>UPI</strong>
+      <span>Guest checkout</span>
+    </div>
+    <div class="ns-host-stat">
+      <strong>24/7</strong>
+      <span>Dashboard access</span>
+    </div>
+  </div>
+
+  <section class="ns-host-steps">
+    <span class="ns-eyebrow" style="display: block; text-align: center; margin-bottom: 0.5rem;">How it works</span>
+    <h2>Hosting in three steps</h2>
+    <div class="ns-host-steps__grid">
+      <div class="ns-host-step">
+        <span class="ns-host-step__num">1</span>
+        <div class="ns-host-step__icon"><i class="fa-solid fa-camera"></i></div>
+        <h3>Create your listing</h3>
+        <p>Add photos, description, amenities, and nightly price in ₹.</p>
+      </div>
+      <div class="ns-host-step">
+        <span class="ns-host-step__num">2</span>
+        <div class="ns-host-step__icon"><i class="fa-solid fa-inbox"></i></div>
+        <h3>Accept guests</h3>
+        <p>Review requests from your host dashboard — accept or decline each booking.</p>
+      </div>
+      <div class="ns-host-step">
+        <span class="ns-host-step__num">3</span>
+        <div class="ns-host-step__icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+        <h3>Welcome travelers</h3>
+        <p>Message guests, share check-in details, and build great reviews.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="ns-host-benefits">
+    <div class="ns-host-benefit">
+      <div class="ns-host-benefit__icon"><i class="fa-solid fa-sliders"></i></div>
+      <h3>You’re in control</h3>
+      <p>Set your price, house rules, and who you welcome. No automatic bookings unless you choose.</p>
+    </div>
+    <div class="ns-host-benefit">
+      <div class="ns-host-benefit__icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <h3>Secure payments</h3>
+      <p>Guests pay through Razorpay. You get clear booking confirmations and guest details.</p>
+    </div>
+    <div class="ns-host-benefit">
+      <div class="ns-host-benefit__icon"><i class="fa-solid fa-chart-line"></i></div>
+      <h3>Grow your income</h3>
+      <p>From spare rooms to full villas — earn from space that would otherwise sit empty.</p>
+    </div>
+  </div>
+
+  <section class="ns-static-cta">
+    <h3>Ready to host on NullStay?</h3>
+    <p>Join hosts listing beach houses, mountain cabins, and city apartments across India.</p>
+    <div class="ns-static-cta__actions">
+      <a href="<%= currentUser ? '/listings/new' : '/signup' %>" class="ns-btn-lg-white">Create your listing</a>
+      <a href="/help" class="ns-btn-lg-outline">Hosting FAQ</a>
+    </div>
+  </section>
+</div>

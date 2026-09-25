@@ -1,0 +1,41 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="mb-8">
+  <p class="booking-kicker mb-2">Saved</p>
+  <h1 class="text-3xl font-semibold tracking-tight text-gray-900">Wishlists</h1>
+  <p class="text-gray-600 mt-2">Listings you've saved for later.</p>
+</div>
+
+<% if (wishlistListings.length) { %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    <% for (let listing of wishlistListings) { %>
+      <div class="col-span-1 group relative" data-wishlist-card>
+        <a href="/listings/<%= listing._id %>" class="block">
+          <div class="aspect-square w-full relative overflow-hidden rounded-xl mb-3">
+            <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80' %>"
+              alt="<%= listing.title %>" class="object-cover h-full w-full group-hover:scale-105 transition duration-300" />
+          </div>
+          <div class="font-semibold text-base text-gray-900 truncate"><%= listing.location %>, <%= listing.country %></div>
+          <div class="font-light text-neutral-500 text-sm truncate"><%= listing.title %></div>
+          <div class="font-semibold mt-1">&#8377; <%= listing.price.toLocaleString("en-IN") %> <span class="font-light text-sm">night</span></div>
+        </a>
+        <button type="button" data-wishlist-toggle data-listing-id="<%= listing._id %>"
+          data-wishlist-remove-card="1"
+          class="wishlist-heart wishlist-heart--overlay is-saved absolute top-3 right-3 z-10"
+          aria-pressed="true" aria-label="Remove from wishlist">
+          <span class="wishlist-heart__ring" aria-hidden="true"></span>
+          <i class="wishlist-heart__icon fa-solid fa-heart" aria-hidden="true"></i>
+        </button>
+      </div>
+    <% } %>
+  </div>
+<% } else { %>
+  <div class="h-[40vh] flex flex-col items-center justify-center text-center text-gray-500">
+    <span class="wishlist-heart wishlist-heart--overlay is-saved mb-4 pointer-events-none" style="width:3.5rem;height:3.5rem;">
+      <i class="wishlist-heart__icon fa-solid fa-heart" style="font-size:1.35rem;" aria-hidden="true"></i>
+    </span>
+    <h2 class="text-xl font-semibold text-gray-900">No saved listings yet</h2>
+    <p class="mt-2">Tap the heart on any listing to save it here.</p>
+    <a href="/listings" class="mt-6 inline-flex items-center gap-2 bg-airbnb text-white px-5 py-3 rounded-xl font-semibold">Browse listings</a>
+  </div>
+<% } %>

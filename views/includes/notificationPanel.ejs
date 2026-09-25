@@ -1,0 +1,31 @@
+<div class="relative" id="notificationPanelRoot">
+  <button type="button" id="notificationBellBtn"
+    class="notification-bell-btn flex p-3 rounded-full hover:bg-neutral-100 transition relative"
+    aria-label="Notifications" aria-expanded="false" aria-controls="notificationDropdown">
+    <i class="fa-regular fa-bell text-lg"></i>
+    <span id="notificationBadge"
+      class="notification-badge <%= unreadNotificationCount > 0 ? '' : 'hidden' %>"><%= unreadNotificationCount > 99 ? '99+' : unreadNotificationCount %></span>
+  </button>
+
+  <div id="notificationDropdown"
+    class="notification-dropdown absolute right-0 top-12 w-[min(22rem,calc(100vw-2rem))] bg-white rounded-xl shadow-[0_8px_28px_rgba(0,0,0,0.15)] border border-gray-100 z-[80] opacity-0 pointer-events-none transition-all duration-200 origin-top-right transform scale-95"
+    role="region" aria-label="Recent notifications">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+      <span class="font-semibold text-sm text-gray-900">Notifications</span>
+      <a href="/notifications" class="text-xs font-semibold text-airbnb hover:text-rose-600">See all</a>
+    </div>
+    <ul id="notificationDropdownList" class="max-h-80 overflow-y-auto py-1">
+      <li class="px-4 py-8 text-center text-sm text-gray-400" id="notificationDropdownLoading">Loading…</li>
+    </ul>
+    <div class="border-t border-gray-100 px-4 py-2 flex items-center justify-between gap-2">
+      <button type="button" id="notificationMarkAllBtn"
+        class="text-xs font-semibold text-gray-500 hover:text-gray-900 transition hidden">
+        Mark all read
+      </button>
+      <button type="button" id="notificationEnableDesktopBtn"
+        class="text-xs font-semibold text-airbnb hover:text-rose-600 transition ml-auto hidden">
+        Enable desktop alerts
+      </button>
+    </div>
+  </div>
+</div>

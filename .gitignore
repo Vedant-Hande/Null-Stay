@@ -1,2 +1,7 @@
 node_modules/
 .env
+eslint.config.js
+.vscode/
+data/
+logs/*.log
+.DS_Store

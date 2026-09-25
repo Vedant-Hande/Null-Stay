@@ -1,0 +1,44 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="max-w-2xl mx-auto">
+  <a href="/messages" class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 mb-6">
+    <i class="fa-solid fa-arrow-left"></i> All messages
+  </a>
+
+  <div class="booking-glass p-5 mb-4 flex items-center gap-4">
+    <% if (listing?.image?.url) { %>
+      <img src="<%= listing.image.url %>" alt="" class="w-16 h-16 rounded-xl object-cover" />
+    <% } %>
+    <div>
+      <p class="font-semibold text-gray-900"><%= other.username %></p>
+      <p class="text-sm text-gray-500"><%= listing?.title %></p>
+    </div>
+  </div>
+
+  <div id="messageThread" class="booking-glass p-4 min-h-[320px] max-h-[50vh] overflow-y-auto flex flex-col gap-3 mb-4">
+    <% if (messages.length === 0) { %>
+      <p class="text-sm text-gray-400 text-center py-8">No messages yet. Say hello!</p>
+    <% } %>
+    <% for (const msg of messages) { %>
+      <% const mine = msg.sender._id.equals(currentUser._id) %>
+      <div class="flex <%= mine ? 'justify-end' : 'justify-start' %>">
+        <div class="max-w-[80%] px-4 py-2.5 rounded-2xl text-sm <%= mine ? 'bg-airbnb text-white rounded-br-md' : 'bg-gray-100 text-gray-900 rounded-bl-md' %>">
+          <%= msg.body %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+  <form action="/messages/<%= recipientId %>/<%= listingId %>" method="POST" class="flex gap-2">
+    <input type="text" name="body" required maxlength="2000" placeholder="Write a message…"
+      class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:ring-2 focus:ring-gray-100 outline-none text-sm" />
+    <button type="submit" class="bg-airbnb hover:bg-rose-600 text-white px-5 py-3 rounded-xl font-semibold shrink-0">
+      Send
+    </button>
+  </form>
+</div>
+
+<script>
+  const thread = document.getElementById("messageThread");
+  if (thread) thread.scrollTop = thread.scrollHeight;
+</script>

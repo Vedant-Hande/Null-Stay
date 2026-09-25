@@ -1,0 +1,24 @@
+<% if (currentUser) { %>
+<div id="desktopNotifyBanner"
+  class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[190] max-w-md w-[calc(100%-2rem)] bg-gray-900 text-white rounded-2xl shadow-2xl px-5 py-4 flex items-start gap-4">
+  <div class="shrink-0 w-10 h-10 rounded-full bg-airbnb flex items-center justify-center">
+    <i class="fa-solid fa-bell text-white"></i>
+  </div>
+  <div class="flex-1 min-w-0">
+    <p class="font-semibold text-sm">Desktop notifications</p>
+    <p class="text-xs text-gray-300 mt-1 leading-relaxed">
+      Real push alerts like WhatsApp — booking updates even when this tab is closed (browser must stay running).
+    </p>
+    <div class="flex flex-wrap gap-2 mt-3">
+      <button type="button" id="desktopNotifyBannerEnable"
+        class="text-xs font-bold bg-white text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
+        Turn on
+      </button>
+      <button type="button" id="desktopNotifyBannerDismiss"
+        class="text-xs font-semibold text-gray-400 px-3 py-2 rounded-lg hover:text-white transition">
+        Not now
+      </button>
+    </div>
+  </div>
+</div>
+<% } %>

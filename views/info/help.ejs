@@ -1,0 +1,103 @@
+<% layout('layouts/landing') -%>
+<% landingActive = 'help'; %>
+
+<div class="ns-static">
+  <header class="ns-static-hero">
+    <div class="ns-static-hero__glow" aria-hidden="true"></div>
+    <div class="ns-static-hero__inner">
+      <span class="ns-eyebrow"><i class="fa-solid fa-life-ring"></i> Support</span>
+      <h1>How can we <em>help?</em></h1>
+      <p class="ns-static-hero__sub">Everything you need to book stays, manage trips, host your property, and pay securely on NullStay.</p>
+      <div class="ns-static-hero__actions">
+        <a href="/listings" class="ns-btn-lg-white"><i class="fa-solid fa-compass"></i> Explore stays</a>
+        <a href="/contact" class="ns-btn-lg-outline">Contact support</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="ns-static-chips">
+    <span class="ns-static-chip"><i class="fa-solid fa-bolt"></i> UPI checkout</span>
+    <span class="ns-static-chip"><i class="fa-solid fa-comments"></i> Host messaging</span>
+    <span class="ns-static-chip"><i class="fa-solid fa-calendar"></i> Trip dashboard</span>
+    <span class="ns-static-chip"><i class="fa-solid fa-heart"></i> Wishlists</span>
+  </div>
+
+  <div class="ns-help-search-wrap">
+    <form class="ns-help-search" action="/listings" method="GET" role="search">
+      <input type="text" name="q" placeholder="Search destinations — Goa, Manali, Jaipur…" aria-label="Search stays" />
+      <button type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+    </form>
+  </div>
+
+  <div class="ns-help-grid">
+    <a href="/listings" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-compass"></i></div>
+      <h3>Find a stay</h3>
+      <p>Search by city, price, guests, and category — beachfront, cabins, pools, and more.</p>
+      <span class="ns-help-card__link">Browse listings <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="/bookings/trips" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-suitcase"></i></div>
+      <h3>Your trips</h3>
+      <p>Track bookings, see host responses, and manage upcoming getaways.</p>
+      <span class="ns-help-card__link">View trips <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="/hosting" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-house-chimney"></i></div>
+      <h3>Become a host</h3>
+      <p>List your space, set rupee pricing, and accept guests from one dashboard.</p>
+      <span class="ns-help-card__link">Start hosting <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="/listings?category=beachfront" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-umbrella-beach"></i></div>
+      <h3>Beachfront stays</h3>
+      <p>Coastal villas and sea-view homes across India’s best beaches.</p>
+      <span class="ns-help-card__link">See beachfront <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="<%= currentUser ? '/messages' : '/login' %>" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-comments"></i></div>
+      <h3>Message a host</h3>
+      <p>Ask about check-in, amenities, or parking before you book.</p>
+      <span class="ns-help-card__link">Open messages <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="/help" class="ns-help-card">
+      <div class="ns-help-card__icon"><i class="fa-solid fa-credit-card"></i></div>
+      <h3>Payments</h3>
+      <p>Pay with UPI, cards, or netbanking through secure Razorpay checkout.</p>
+      <span class="ns-help-card__link">Learn more below <i class="fa-solid fa-arrow-down"></i></span>
+    </a>
+  </div>
+
+  <section class="ns-help-faq">
+    <div class="ns-help-faq__head">
+      <span class="ns-eyebrow">FAQ</span>
+      <h2>Quick answers</h2>
+      <p>Common questions from guests and hosts.</p>
+    </div>
+    <details class="ns-faq__item">
+      <summary>How do I book a stay?</summary>
+      <p>Search listings, pick your dates, and pay at checkout. Your host confirms the request — you’ll get email and in-app updates.</p>
+    </details>
+    <details class="ns-faq__item">
+      <summary>Can I pay with UPI?</summary>
+      <p>Yes. Checkout supports UPI QR, debit/credit cards, and netbanking via Razorpay.</p>
+    </details>
+    <details class="ns-faq__item">
+      <summary>How do I list my property?</summary>
+      <p>Sign up, tap “List your space,” add photos and pricing in ₹. You control who books and when.</p>
+    </details>
+    <details class="ns-faq__item">
+      <summary>How do I contact support?</summary>
+      <p>Use our <a href="/contact" class="ns-link">contact form</a> or email <a href="mailto:support@nullstay.com" class="ns-link">support@nullstay.com</a> — we typically reply within one business day.</p>
+    </details>
+  </section>
+
+  <section class="ns-static-cta">
+    <h3>Still stuck?</h3>
+    <p>Our team is here for booking issues, payments, and account help.</p>
+    <div class="ns-static-cta__actions">
+      <a href="/contact" class="ns-btn-lg-white"><i class="fa-solid fa-envelope"></i> Contact us</a>
+      <a href="/" class="ns-btn-lg-outline">Back to home</a>
+    </div>
+  </section>
+</div>

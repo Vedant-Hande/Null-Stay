@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: null-stay
+    env: node
+    buildCommand: npm install
+    startCommand: node index.js
+    branch: main
