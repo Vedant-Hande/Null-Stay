@@ -33,28 +33,13 @@ export function serializeListingForApi(listing) {
 
 /** Payload for listings grid + infinite scroll */
 export function serializeListingForGrid(listing) {
-  const priceUnit = listing.priceUnit || "month";
   return {
     _id: String(listing._id),
     title: listing.title,
     location: listing.location,
     country: listing.country,
-    city: listing.city || "",
-    area: listing.area || "",
-    propertyType: listing.propertyType || "",
-    priceUnit,
     price: listing.price,
-    cleaningFee: listing.cleaningFee,
-    serviceFee: listing.serviceFee,
-    guests: listing.guests,
-    priceLabel:
-      listing.price !== null && listing.price !== undefined
-        ? priceUnit === "night"
-          ? `₹${Number(listing.price).toLocaleString("en-IN")}/night`
-          : `₹${Number(listing.price).toLocaleString("en-IN")}/mo`
-        : "N/A",
     imageUrl: listing.image?.url || DEFAULTS.IMAGE_URL,
-    media: getListingMediaUrls(listing),
     avgRating: averageRating(listing.reviews),
   };
 }

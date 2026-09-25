@@ -25,18 +25,14 @@
   }
 
   function checkoutPreview(listing) {
-    const unit = listing.priceUnit || "month";
-    const base = listing.price || 0;
-    const multiplier = unit === "night" ? NIGHTS : 1;
-    const subtotal = base * multiplier;
+    const nightly = listing.price || 0;
+    const subtotal = nightly * NIGHTS;
     const cleaning =
       listing.cleaningFee !== null ? listing.cleaningFee : DEFAULT_CLEANING;
     const service =
       listing.serviceFee !== null ? listing.serviceFee : DEFAULT_SERVICE;
     return {
-      unit,
-      base,
-      multiplier,
+      nightly,
       subtotal,
       cleaning,
       service,
@@ -49,7 +45,6 @@
     Object.entries(params).forEach(([k, v]) => {
       if (v !== null && String(v).trim() !== "") qs.set(k, String(v).trim());
     });
-    qs.set("format", "grid");
     const res = await fetch(`/api/listings/search?${qs}`);
     if (!res.ok) throw new Error("Search failed");
     return res.json();
@@ -74,18 +69,12 @@
   }
 
   function listingCardHtml(listing) {
-    const loc = [
-      listing.area || "",
-      listing.city || listing.location || "",
-      listing.country || "",
-    ]
-      .filter(Boolean)
-      .join(", ");
+    const loc = `${listing.location}, ${listing.country}`;
     return `<a href="/listings/${listing._id}" class="ns-mock-card ns-mock-card--live">
       <div class="ns-mock-card__img">${videoTourHtml(listing.media)}</div>
       <div class="ns-mock-card__info">
         <div class="ns-mock-card__loc">${escapeHtml(loc)}</div>
-        <div class="ns-mock-card__price">${escapeHtml(listing.priceLabel || "")}</div>
+        <div class="ns-mock-card__price">&#8377;${formatInr(listing.price)} <span>night</span></div>
       </div>
     </a>`;
   }
@@ -148,10 +137,6 @@
       return;
     }
     const p = checkoutPreview(listing);
-    const label =
-      p.unit === "night"
-        ? `${p.multiplier} nights × &#8377;${formatInr(p.base)}`
-        : `1 month × &#8377;${formatInr(p.base)}`;
     body.innerHTML = `
       <div class="ns-checkout-preview">
         <div class="ns-checkout-preview__stay">
@@ -161,7 +146,7 @@
             <span>${escapeHtml(listing.location)}, ${escapeHtml(listing.country)}</span>
           </div>
         </div>
-        <div class="ns-checkout-line"><span>${label}</span><strong>&#8377;${formatInr(p.subtotal)}</strong></div>
+        <div class="ns-checkout-line"><span>${NIGHTS} nights × &#8377;${formatInr(p.nightly)}</span><strong>&#8377;${formatInr(p.subtotal)}</strong></div>
         <div class="ns-checkout-line"><span>Service fee</span><strong>&#8377;${formatInr(p.service)}</strong></div>
         <div class="ns-checkout-line"><span>Cleaning</span><strong>&#8377;${formatInr(p.cleaning)}</strong></div>
         <div class="ns-checkout-total"><span>Total</span><span>&#8377;${formatInr(p.total)}</span></div>
@@ -176,7 +161,7 @@
     if (!listing) {
       if (body) {
         body.innerHTML =
-          "<div class=\"ns-mock-empty\">Search a stay to start chatting</div>";
+          "<div class=\"ns-mock-empty\">Search a villa or city to start chatting</div>";
       }
       if (searchInput) searchInput.placeholder = "Messages — search a stay…";
       return;

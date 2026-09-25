@@ -30,7 +30,7 @@
             <header class="booking-card__header margin-bottom-large gap-medium">
               <div class="booking-card__price gap-xs">
                 <span class="booking-card__amount">&#8377;<%= pricePerNight.toLocaleString("en-IN") %></span>
-                <span class="booking-card__per-night"><%= (listing.priceUnit || 'month') === 'month' ? 'month' : 'night' %></span>
+                <span class="booking-card__per-night">night</span>
               </div>
               <% if (!(typeof isOwner !== 'undefined' && isOwner)) { %>
                 <span class="booking-card__book-type">

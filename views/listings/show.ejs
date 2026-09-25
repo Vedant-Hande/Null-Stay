@@ -6,14 +6,6 @@
       <h1 class="text-3xl font-semibold text-gray-900">
         <%= listing.title %>
       </h1>
-      <div class="flex flex-wrap gap-2 mb-2">
-        <% if (listing.city) { %><span class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-800"><%= getCityLabel(listing.city) %><% if (listing.area) { %> · <%= listing.area %><% } %></span><% } %>
-        <% if (listing.propertyType) { %><span class="text-xs font-semibold px-3 py-1 rounded-full bg-blue-50 text-blue-900"><%= getPropertyTypeLabel(listing.propertyType) %></span><% } %>
-        <% if (listing.priceUnit) { %><span class="text-xs font-medium px-3 py-1 rounded-full bg-gray-50 text-gray-600"><%= listing.priceUnit === 'month' ? 'Monthly rent' : 'Per night' %></span><% } %>
-        <% if (listing.suitableFor && listing.suitableFor.length) { listing.suitableFor.forEach((tag) => { %>
-          <span class="text-xs px-2 py-1 rounded-full border border-gray-200 text-gray-600"><%= getSuitableForLabel(tag) %></span>
-        <% }) } %>
-      </div>
       <div class="flex flex-row items-center justify-between flex-wrap gap-4">
         <div class="flex flex-row items-center gap-2 sm:gap-4 text-sm font-medium text-gray-800 flex-wrap">
           <span class="flex items-center gap-1"><i class="fa-solid fa-star"></i>
@@ -26,14 +18,13 @@
             Superhost</span>
           <span class="text-gray-400 hidden sm:inline">·</span>
           <span class="underline cursor-pointer">
-            <%= listing.location %><% if (listing.city) { %>, <%= getCityLabel(listing.city) %><% } else { %>, <%= listing.country %><% } %>
+            <%= listing.location %>, <%= listing.country %>
           </span>
         </div>
         <div class="flex flex-row gap-4 text-sm font-medium underline">
-          <button type="button" data-share-trigger data-share-title="<%= listing.title %>"
-            class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition">
+          <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition">
             <i class="fa-solid fa-arrow-up-from-bracket"></i> Share
-          </button>
+          </div>
           <% if (currentUser) { %>
             <button type="button" data-wishlist-toggle data-listing-id="<%= listing._id %>"
               class="wishlist-heart wishlist-heart--pill <%= isWishlisted ? 'is-saved' : '' %>"

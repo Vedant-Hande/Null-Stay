@@ -82,18 +82,15 @@
             <form action="/listings" method="GET"
                 class="bg-white rounded-[32px] shadow-[0_6px_20px_rgba(0,0,0,0.2)] border border-gray-200 p-2 flex flex-col md:flex-row items-stretch md:items-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
                 <div class="flex-1 px-6 py-4">
-                    <label class="block text-xs font-bold text-gray-800 mb-1">City</label>
-                    <select name="city" class="w-full text-sm text-gray-800 outline-none bg-transparent">
-                        <option value="">All cities</option>
-                        <% (localStays.CITIES || []).forEach((c) => { %>
-                            <option value="<%= c.id %>" <%= searchQuery && searchQuery.city === c.id ? 'selected' : '' %>><%= c.label %></option>
-                        <% }) %>
-                    </select>
+                    <label class="block text-xs font-bold text-gray-800 mb-1">Where</label>
+                    <input type="text" name="q" placeholder="Search destinations"
+                        value="<%= typeof searchQuery !== 'undefined' && searchQuery.q ? searchQuery.q : '' %>"
+                        class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
                 </div>
                 <div class="flex-1 px-6 py-4">
-                    <label class="block text-xs font-bold text-gray-800 mb-1">Area or keyword</label>
-                    <input type="text" name="q" placeholder="Hinjewadi, College Road…"
-                        value="<%= typeof searchQuery !== 'undefined' && searchQuery.q ? searchQuery.q : '' %>"
+                    <label class="block text-xs font-bold text-gray-800 mb-1">Country</label>
+                    <input type="text" name="country" placeholder="Any country"
+                        value="<%= typeof searchQuery !== 'undefined' && searchQuery.country ? searchQuery.country : '' %>"
                         class="w-full text-sm text-gray-600 placeholder-gray-400 outline-none bg-transparent" />
                 </div>
                 <div class="px-6 py-4 w-full md:w-28">
@@ -125,7 +122,7 @@
         <!-- Navbar -->
         <div class="site-chrome">
             <nav class="sticky top-0 bg-white z-50 border-b border-gray-200">
-                <div class="<%= typeof isListingsPage !== 'undefined' && isListingsPage ? 'w-full xl:px-20 md:px-10 sm:px-2 px-4' : 'max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4' %>">
+                <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
                     <div class="flex flex-row items-center justify-between py-3 gap-3 md:gap-0">
 
                         <!-- Logo -->
@@ -246,25 +243,41 @@
                     </div>
                 </div>
 
-                <!-- Property type & city filters -->
+                <!-- Categories Bar -->
                 <% if (typeof isListingsPage !== 'undefined' && isListingsPage) { %>
-                    <div class="w-full xl:px-20 md:px-10 sm:px-2 px-4 py-2">
-                        <div class="flex flex-row items-center overflow-x-auto gap-6 pt-1 hide-scrollbar">
-                            <% (localStays.PROPERTY_TYPES || []).forEach((p) => { %>
-                            <a href="/listings?propertyType=<%= p.id %><%= searchQuery && searchQuery.city ? '&city=' + searchQuery.city : '' %>"
-                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 min-w-max transition <%= searchQuery && searchQuery.propertyType === p.id ? 'border-neutral-800 text-neutral-800' : 'border-transparent text-neutral-500 opacity-70 hover:border-neutral-300' %>">
-                                <i class="fa-solid fa-building text-lg"></i>
-                                <div class="text-xs font-medium"><%= p.label %></div>
+                    <div class="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-2">
+                        <div
+                            class="flex flex-row items-center justify-between overflow-x-auto gap-8 pt-1 hide-scrollbar">
+                            <a href="/listings?category=pools"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'pools' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-water text-lg"></i>
+                                <div class="text-xs font-medium">Amazing pools</div>
                             </a>
-                            <% }) %>
-                        </div>
-                        <div class="flex flex-wrap gap-2 mt-2 pb-1">
-                            <% (localStays.CITIES || []).forEach((c) => { %>
-                            <a href="/listings?city=<%= c.id %>"
-                                class="text-xs font-semibold px-3 py-1 rounded-full border <%= searchQuery && searchQuery.city === c.id ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400' %>">
-                                <%= c.label %>
+                            <a href="/listings?category=beachfront"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'beachfront' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-umbrella-beach text-lg"></i>
+                                <div class="text-xs font-medium">Beachfront</div>
                             </a>
-                            <% }) %>
+                            <a href="/listings?category=castles"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'castles' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-brands fa-fort-awesome text-lg"></i>
+                                <div class="text-xs font-medium">Castles</div>
+                            </a>
+                            <a href="/listings?category=treehouses"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'treehouses' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-tree text-lg"></i>
+                                <div class="text-xs font-medium">Treehouses</div>
+                            </a>
+                            <a href="/listings?category=cabins"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'cabins' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-house-user text-lg"></i>
+                                <div class="text-xs font-medium">Cabins</div>
+                            </a>
+                            <a href="/listings?category=cities"
+                                class="flex flex-col items-center justify-center gap-1.5 pb-2 border-b-2 <%= searchQuery && searchQuery.category === 'cities' ? 'border-neutral-800 text-neutral-800 opacity-100' : 'border-transparent text-neutral-500 opacity-70' %> hover:border-neutral-300 hover:text-neutral-800 cursor-pointer min-w-max transition">
+                                <i class="fa-solid fa-city text-lg"></i>
+                                <div class="text-xs font-medium">Iconic cities</div>
+                            </a>
                         </div>
                         <style>
                             .hide-scrollbar::-webkit-scrollbar {
@@ -283,7 +296,7 @@
 
         <!-- Main Content -->
         <main
-            class="flex-grow w-full <%= typeof isHomePage !== 'undefined' && isHomePage ? 'p-0 max-w-none' : (typeof isListingsPage !== 'undefined' && isListingsPage ? 'w-full xl:px-20 md:px-10 sm:px-2 px-4 py-8' : 'max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-8') %>">
+            class="flex-grow w-full <%= typeof isHomePage !== 'undefined' && isHomePage ? 'p-0 max-w-none' : 'max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-8' %>">
             <% if (typeof isHomePage==='undefined' || !isHomePage) { %>
                 <%- include("../includes/flash.ejs") %>
                     <% } %>
@@ -375,12 +388,10 @@
             });
         </script>
 
-        <%- include('../includes/shareModal.ejs') %>
         <%- include('../includes/landingFooter.ejs') %>
 
             <link rel="stylesheet" href="/css/ui-dialog.css">
             <script src="/js/nullstay-ui.js"></script>
-            <script src="/js/share.js"></script>
             <script src="/js/script.js"></script>
             <script src="/js/newListing.js"></script>
             <% if (typeof isHomePage !== 'undefined' && isHomePage) { %>

@@ -65,14 +65,15 @@
         <div class="flex flex-col">
           <div class="flex flex-row justify-between items-start gap-2">
             <div class="font-semibold text-base text-gray-900 truncate pr-2 flex-1 min-w-0">
-              ${listing.area ? `${escapeHtml(listing.area)}, ` : ""}${escapeHtml(listing.city || listing.location)}${listing.city ? "" : `, ${escapeHtml(listing.country)}`}
+              ${escapeHtml(listing.location)}, ${escapeHtml(listing.country)}
             </div>
             ${ratingHtml}
           </div>
           <div class="font-light text-neutral-500 text-sm truncate">${escapeHtml(listing.title)}</div>
           <div class="font-light text-neutral-500 text-sm">Added recently</div>
           <div class="flex flex-row items-center gap-1 mt-1 text-gray-900">
-            <div class="font-semibold">${escapeHtml(listing.priceLabel || `₹ ${formatPrice(listing.price)}/mo`)}</div>
+            <div class="font-semibold">&#8377; ${formatPrice(listing.price)}</div>
+            <div class="font-light text-sm">night</div>
           </div>
         </div>
       </a>

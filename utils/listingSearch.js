@@ -1,24 +1,14 @@
-import {
-  CATEGORY_KEYWORDS,
-  PROPERTY_TYPE_IDS,
-} from "./localStaysConfig.js";
-
-export { CATEGORY_KEYWORDS };
+const CATEGORY_KEYWORDS = {
+  pools: ["pool", "swim"],
+  beachfront: ["beach", "ocean", "sea", "coast"],
+  castles: ["castle", "fort"],
+  treehouses: ["treehouse", "tree house", "tree-house"],
+  cabins: ["cabin", "cottage", "lodge"],
+  cities: ["city", "apartment", "downtown", "urban"],
+};
 
 export function buildListingFilter(query = {}) {
-  const {
-    q,
-    minPrice,
-    maxPrice,
-    country,
-    guests,
-    category,
-    city,
-    area,
-    propertyType,
-    suitableFor,
-    priceUnit,
-  } = query;
+  const { q, minPrice, maxPrice, country, guests, category } = query;
   const filter = {};
 
   const terms = [];
@@ -30,37 +20,13 @@ export function buildListingFilter(query = {}) {
   }
 
   if (terms.length) {
-    const pattern = terms
-      .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-      .join("|");
+    const pattern = terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
     filter.$or = [
       { title: { $regex: pattern, $options: "i" } },
       { desc: { $regex: pattern, $options: "i" } },
       { location: { $regex: pattern, $options: "i" } },
       { country: { $regex: pattern, $options: "i" } },
-      { city: { $regex: pattern, $options: "i" } },
-      { area: { $regex: pattern, $options: "i" } },
     ];
-  }
-
-  if (city?.trim()) {
-    filter.city = city.trim().toLowerCase();
-  }
-
-  if (area?.trim()) {
-    filter.area = { $regex: area.trim(), $options: "i" };
-  }
-
-  if (propertyType?.trim() && PROPERTY_TYPE_IDS.includes(propertyType.trim())) {
-    filter.propertyType = propertyType.trim();
-  }
-
-  if (suitableFor?.trim()) {
-    filter.suitableFor = suitableFor.trim();
-  }
-
-  if (priceUnit === "night" || priceUnit === "month") {
-    filter.priceUnit = priceUnit;
   }
 
   if (country?.trim()) {
@@ -89,3 +55,5 @@ export function buildListingFilter(query = {}) {
 
   return filter;
 }
+
+export { CATEGORY_KEYWORDS };

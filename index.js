@@ -80,7 +80,6 @@ import { getCachedFeaturedListings } from "./utils/listingCache.js";
 import { getWishlistedIdsForUser } from "./utils/wishlistIds.js";
 import seoRoute from "./routes/seoRoute.js";
 import { assignSeo, buildHomeSeo, buildDefaultSeo } from "./utils/seo.js";
-import * as localStays from "./utils/localStaysConfig.js";
 import {
   logger,
   logStartup,
@@ -214,12 +213,6 @@ app.use(async (req, res, next) => {
   res.locals.isHomePage = req.originalUrl === "/" || req.originalUrl === "";
   res.locals.searchQuery = res.locals.searchQuery || {};
   res.locals.seo = buildDefaultSeo(req);
-  res.locals.localStays = localStays;
-  res.locals.formatPriceLabel = localStays.formatPriceLabel;
-  res.locals.formatPriceShort = localStays.formatPriceShort;
-  res.locals.getCityLabel = localStays.getCityLabel;
-  res.locals.getPropertyTypeLabel = localStays.getPropertyTypeLabel;
-  res.locals.getSuitableForLabel = localStays.getSuitableForLabel;
 
   if (req.user) {
     try {
